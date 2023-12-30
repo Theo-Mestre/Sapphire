@@ -1,6 +1,7 @@
 project "Glad"
     kind "StaticLib"
     language "C"
+    warnings "off"
 
     targetdir ("../../../Binaries/" .. OutputDir .. "/%{prj.name}")
     objdir ("../../../Binaries/Intermediates/" .. OutputDir ..  "/%{prj.name}")

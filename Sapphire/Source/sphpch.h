@@ -1,5 +1,5 @@
-#ifndef CORE_PCH_H
-#define CORE_PCH_H
+#ifndef SPH_PCH_H
+#define SPH_PCH_H
 
 #include <iostream>
 #include <memory>
@@ -14,4 +14,8 @@
 
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #endif

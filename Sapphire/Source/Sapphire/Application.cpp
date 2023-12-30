@@ -1,6 +1,9 @@
 #include "sphpch.h"
-#include "Application.h"
 
+#include <glad/glad.h>
+
+#include "Application.h"
+#include "Sapphire/Input.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
 
 namespace sph
@@ -51,6 +54,8 @@ namespace sph
 		m_window = Window::Create();
 
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
+
+		Input::Init(m_window);
 	}
 
 	void Application::OnEvent(sph::Event& _event)
@@ -63,12 +68,15 @@ namespace sph
 
 	void Application::OnUpdate()
 	{
-		m_window->OnUpdate();
+		glClearColor(1, 0, 1, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		for (Layer* layer : m_layerStack)
+		for (sph::Layer* layer : m_layerStack)
 		{
 			layer->OnUpdate();
 		}
+
+		m_window->OnUpdate();
 	}
 
 	void Application::OnRender()

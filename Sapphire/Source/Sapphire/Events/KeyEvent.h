@@ -1,5 +1,5 @@
-#ifndef CORE_KEY_EVENT_H
-#define CORE_KEY_EVENT_H
+#ifndef SPH_KEY_EVENT_H
+#define SPH_KEY_EVENT_H
 
 #include "sphpch.h"
 
@@ -57,6 +57,23 @@ namespace sph
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	class KeyTypedEvent
+		: public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int _keycode)
+			: KeyEvent(_keycode) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent: " << m_keyCode;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
 	};
 }
 #endif

@@ -9,10 +9,10 @@
 #	error Only Windows x64 is supported!
 #endif
 
-#define SPH_ENABLE_ASSERTS
+#define SPH_ENABLE_ASSERTS 1
 #define SPH_ENABLE_INFO_LOG
 
-#ifdef SPH_ENABLE_ASSERTS
+#if SPH_ENABLE_ASSERTS
 #	define ASSERT(x, ...) { if(!(x)) { LogError("Assertion Failed: {}", __VA_ARGS__); __debugbreak(); } }
 #else
 #	define ASSERT(x, ...)

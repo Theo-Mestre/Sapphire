@@ -12,8 +12,12 @@
 #include "Sapphire/Events/KeyEvent.h"
 #include "Sapphire/Events/MouseEvent.h"
 
+#include "WindowsInput.h"
+
 namespace sph
 {
+	Input* Input::s_instance = new WindowsInput();
+
 	static void GLFWErrorCallback(int _error, const char* _description)
 	{
 		LogError("GLFW Error {}: {}", _error, _description);
@@ -70,6 +74,8 @@ namespace sph
 		glfwSetWindowUserPointer(m_window, &m_data);
 
 		InitEventCallbacks();
+
+		Input::Init(this);
 	}
 
 	void WinWindow::InitEventCallbacks(void)
@@ -119,6 +125,14 @@ namespace sph
 					break;
 				}
 				}
+			});
+
+		glfwSetCharCallback(m_window, [](GLFWwindow* _window, unsigned int _key)
+			{
+				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(_window);
+
+				KeyTypedEvent event(_key);
+				data.EventCallback(event);
 			});
 
 		// Mouse button event

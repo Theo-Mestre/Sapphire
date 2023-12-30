@@ -1,5 +1,5 @@
-#ifndef CORE_MOUSE_EVENT_H
-#define CORE_MOUSE_EVENT_H
+#ifndef SPH_MOUSE_EVENT_H
+#define SPH_MOUSE_EVENT_H
 
 #include "sphpch.h"
 

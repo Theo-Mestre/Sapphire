@@ -18,4 +18,5 @@ public:
 private:
 	void Init() override;
 	void OnEvent(sph::Event& _event) override;
+	void OnUpdate() override;
 };

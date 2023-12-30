@@ -30,6 +30,23 @@ void Sandbox::OnEvent(sph::Event& _event)
 	{
 		(*--it)->OnEvent(_event);
 	}
+
+	if (_event.GetEventType() == sph::EventType::KeyPressed)
+	{
+		sph::KeyPressedEvent& e = (sph::KeyPressedEvent&)_event;
+		if (e.GetKeyCode() == sph::KeyCode::A)
+		{
+			LogInfo("Tab key is pressed (event)!");
+		}
+	}
+}
+
+void Sandbox::OnUpdate()
+{
+	sph::Application::OnUpdate();
+
+	auto [x, y] = sph::Input::GetMousePosition();
+	//LogDebug("{} - {}", x, y);
 }
 
 sph::Application* sph::CreateApplication()

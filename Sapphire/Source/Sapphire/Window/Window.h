@@ -1,5 +1,5 @@
-#ifndef CORE_WINDOW_INTERFACE_H
-#define CORE_WINDOW_INTERFACE_H
+#ifndef SPH_WINDOW_INTERFACE_H
+#define SPH_WINDOW_INTERFACE_H
 
 #include "Sapphire/Core.h"
 #include "Sapphire/Events/Event.h"
@@ -44,6 +44,8 @@ namespace sph
 		virtual int GetHeight() const = 0;
 
 		virtual void SetEventCallback(const EventCallbackFunction& callback) = 0;
+
+		virtual void* GetNativeWindow() const = 0;
 
 		static Window* Create(const WindowProperties& properties = WindowProperties());
 	};

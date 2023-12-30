@@ -1,5 +1,5 @@
-#ifndef CORE_ENTRYPOINT_H
-#define CORE_ENTRYPOINT_H
+#ifndef SPH_ENTRYPOINT_H
+#define SPH_ENTRYPOINT_H
 
 #include "Application.h"
 

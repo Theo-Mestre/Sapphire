@@ -3,6 +3,7 @@ project "ImGui"
 	cppdialect "C++20"
 	language "C++"
     staticruntime "off"
+	warnings "off"
 
 	targetdir ("../../../Binaries/" .. OutputDir .. "/%{prj.name}")
     objdir ("../../../Binaries/Intermediates/" .. OutputDir ..  "/%{prj.name}")

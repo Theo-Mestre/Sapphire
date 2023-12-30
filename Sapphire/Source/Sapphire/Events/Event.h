@@ -1,5 +1,5 @@
-#ifndef CORE_EVENT_H
-#define CORE_EVENT_H
+#ifndef SPH_EVENT_H
+#define SPH_EVENT_H
 
 #include "sphpch.h"
 #include "Sapphire/Core.h"

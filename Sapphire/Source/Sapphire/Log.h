@@ -1,5 +1,5 @@
-#ifndef CORE_LOG_H
-#define CORE_LOG_H
+#ifndef SPH_LOG_H
+#define SPH_LOG_H
 
 #include "sphpch.h"
 #include "Sapphire/Core.h"
@@ -25,7 +25,7 @@ namespace sph
 	};
 
 }
-#ifdef CORE_BUILD_DLL
+#ifdef SPH_BUILD_DLL
 #define SAPPHIRE_GET_CURRENT_LOGGER ::Sapphire::Logger::GetSapphireLogger()
 #else
 #define SAPPHIRE_GET_CURRENT_LOGGER ::sph::Logger::GetClientLogger()

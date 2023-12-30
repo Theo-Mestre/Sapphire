@@ -1,5 +1,5 @@
-#ifndef CORE_WINDOW_H
-#define CORE_WINDOW_H
+#ifndef SPH_WINDOW_H
+#define SPH_WINDOW_H
 
 #include "Sapphire/Core.h"
 #include "Sapphire/Window/Window.h"
@@ -16,12 +16,14 @@ namespace sph
 		WinWindow(const WindowProperties& _properties);
 		~WinWindow();
 
-		void OnUpdate(void) override;
+		void virtual OnUpdate(void) override;
 
-		inline int GetWidth(void) const override { return m_data.Width; }
-		inline int GetHeight(void) const override { return m_data.Height; }
+		inline virtual int GetWidth(void) const override { return m_data.Width; }
+		inline virtual int GetHeight(void) const override { return m_data.Height; }
 
-		inline void SetEventCallback(const EventCallbackFunction& _callback) override { m_data.EventCallback = _callback; }
+		inline virtual void SetEventCallback(const EventCallbackFunction& _callback) override { m_data.EventCallback = _callback; }
+
+		inline virtual void* GetNativeWindow(void) const override { return m_window; }
 
 	private:
 		virtual void Init(const WindowProperties& _properties);

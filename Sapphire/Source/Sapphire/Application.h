@@ -1,5 +1,5 @@
-#ifndef CORE_APPLICATION_H
-#define CORE_APPLICATION_H
+#ifndef SPH_APPLICATION_H
+#define SPH_APPLICATION_H
 
 #include "Sapphire/Core.h"
 #include "Sapphire/Layers/LayerStack.h"

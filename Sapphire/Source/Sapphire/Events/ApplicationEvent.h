@@ -1,5 +1,5 @@
-#ifndef CORE_APPLICATION_EVENT_H
-#define CORE_APPLICATION_EVENT_H
+#ifndef SPH_APPLICATION_EVENT_H
+#define SPH_APPLICATION_EVENT_H
 
 #include "sphpch.h"
 #include "Event.h"
