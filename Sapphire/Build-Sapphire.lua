@@ -12,7 +12,7 @@ project (projectName)
    libdirs { "../Vendor/lib" }
 
    pchheader "sphpch.h"
-   pchsource "Sapphire/Source/sphpch.cpp"
+   pchsource "Source/sphpch.cpp"
 
    defines { string.upper(projectName) .. "_BUILD_DLL", string.upper(projectName) .. "_ENABLE_ASSERTS" }
 
@@ -30,7 +30,8 @@ project (projectName)
 
    postbuildcommands   
    {
-       "copy /y $(OutDir)$(TargetName).dll $(OutDir)..\\App"
+        "if not exist \"$(OutDir)..\\App\\App.exe\" (mkdir \"$(OutDir)..\\App\")",
+        "copy /y $(OutDir)$(TargetName).dll $(OutDir)..\\App"
    }
 
    links    
