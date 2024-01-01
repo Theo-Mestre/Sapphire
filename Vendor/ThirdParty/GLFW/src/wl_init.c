@@ -1,5 +1,5 @@
 //========================================================================
-// GLFW 3.4 Wayland - www.glfw.org
+// GLFW 3.3 Wayland - www.glfw.org
 //------------------------------------------------------------------------
 // Copyright (c) 2014 Jonas Ådahl <jadahl@gmail.com>
 //
@@ -26,9 +26,9 @@
 // It is fine to use C99 in this file because it will not be built with VS
 //========================================================================
 
-#include "internal.h"
+#define _POSIX_C_SOURCE 200809L
 
-#if defined(_GLFW_WAYLAND)
+#include "internal.h"
 
 #include <errno.h>
 #include <limits.h>
@@ -39,49 +39,8 @@
 #include <sys/mman.h>
 #include <sys/timerfd.h>
 #include <unistd.h>
-#include <time.h>
+#include <wayland-client.h>
 #include <assert.h>
-
-#include "wayland-client-protocol.h"
-#include "wayland-xdg-shell-client-protocol.h"
-#include "wayland-xdg-decoration-client-protocol.h"
-#include "wayland-viewporter-client-protocol.h"
-#include "wayland-relative-pointer-unstable-v1-client-protocol.h"
-#include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
-#include "wayland-idle-inhibit-unstable-v1-client-protocol.h"
-
-// NOTE: Versions of wayland-scanner prior to 1.17.91 named every global array of
-//       wl_interface pointers 'types', making it impossible to combine several unmodified
-//       private-code files into a single compilation unit
-// HACK: We override this name with a macro for each file, allowing them to coexist
-
-#define types _glfw_wayland_types
-#include "wayland-client-protocol-code.h"
-#undef types
-
-#define types _glfw_xdg_shell_types
-#include "wayland-xdg-shell-client-protocol-code.h"
-#undef types
-
-#define types _glfw_xdg_decoration_types
-#include "wayland-xdg-decoration-client-protocol-code.h"
-#undef types
-
-#define types _glfw_viewporter_types
-#include "wayland-viewporter-client-protocol-code.h"
-#undef types
-
-#define types _glfw_relative_pointer_types
-#include "wayland-relative-pointer-unstable-v1-client-protocol-code.h"
-#undef types
-
-#define types _glfw_pointer_constraints_types
-#include "wayland-pointer-constraints-unstable-v1-client-protocol-code.h"
-#undef types
-
-#define types _glfw_idle_inhibit_types
-#include "wayland-idle-inhibit-unstable-v1-client-protocol-code.h"
-#undef types
 
 static void wmBaseHandlePing(void* userData,
                              struct xdg_wm_base* wmBase,
@@ -185,7 +144,9 @@ static void registryHandleGlobalRemove(void* userData,
                                        struct wl_registry* registry,
                                        uint32_t name)
 {
-    for (int i = 0; i < _glfw.monitorCount; ++i)
+    int i;
+
+    for (i = 0; i < _glfw.monitorCount; ++i)
     {
         _GLFWmonitor* monitor = _glfw.monitors[i];
         if (monitor->wl.name == name)
@@ -237,6 +198,8 @@ static const struct wl_callback_listener libdecorReadyListener =
 //
 static void createKeyTables(void)
 {
+    int scancode;
+
     memset(_glfw.wl.keycodes, -1, sizeof(_glfw.wl.keycodes));
     memset(_glfw.wl.scancodes, -1, sizeof(_glfw.wl.scancodes));
 
@@ -359,7 +322,7 @@ static void createKeyTables(void)
     _glfw.wl.keycodes[KEY_KPENTER]    = GLFW_KEY_KP_ENTER;
     _glfw.wl.keycodes[KEY_102ND]      = GLFW_KEY_WORLD_2;
 
-    for (int scancode = 0;  scancode < 256;  scancode++)
+    for (scancode = 0;  scancode < 256;  scancode++)
     {
         if (_glfw.wl.keycodes[scancode] > 0)
             _glfw.wl.scancodes[_glfw.wl.keycodes[scancode]] = scancode;
@@ -403,136 +366,7 @@ static GLFWbool loadCursorTheme(void)
 //////                       GLFW platform API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-GLFWbool _glfwConnectWayland(int platformID, _GLFWplatform* platform)
-{
-    const _GLFWplatform wayland =
-    {
-        GLFW_PLATFORM_WAYLAND,
-        _glfwInitWayland,
-        _glfwTerminateWayland,
-        _glfwGetCursorPosWayland,
-        _glfwSetCursorPosWayland,
-        _glfwSetCursorModeWayland,
-        _glfwSetRawMouseMotionWayland,
-        _glfwRawMouseMotionSupportedWayland,
-        _glfwCreateCursorWayland,
-        _glfwCreateStandardCursorWayland,
-        _glfwDestroyCursorWayland,
-        _glfwSetCursorWayland,
-        _glfwGetScancodeNameWayland,
-        _glfwGetKeyScancodeWayland,
-        _glfwSetClipboardStringWayland,
-        _glfwGetClipboardStringWayland,
-#if defined(GLFW_BUILD_LINUX_JOYSTICK)
-        _glfwInitJoysticksLinux,
-        _glfwTerminateJoysticksLinux,
-        _glfwPollJoystickLinux,
-        _glfwGetMappingNameLinux,
-        _glfwUpdateGamepadGUIDLinux,
-#else
-        _glfwInitJoysticksNull,
-        _glfwTerminateJoysticksNull,
-        _glfwPollJoystickNull,
-        _glfwGetMappingNameNull,
-        _glfwUpdateGamepadGUIDNull,
-#endif
-        _glfwFreeMonitorWayland,
-        _glfwGetMonitorPosWayland,
-        _glfwGetMonitorContentScaleWayland,
-        _glfwGetMonitorWorkareaWayland,
-        _glfwGetVideoModesWayland,
-        _glfwGetVideoModeWayland,
-        _glfwGetGammaRampWayland,
-        _glfwSetGammaRampWayland,
-        _glfwCreateWindowWayland,
-        _glfwDestroyWindowWayland,
-        _glfwSetWindowTitleWayland,
-        _glfwSetWindowIconWayland,
-        _glfwGetWindowPosWayland,
-        _glfwSetWindowPosWayland,
-        _glfwGetWindowSizeWayland,
-        _glfwSetWindowSizeWayland,
-        _glfwSetWindowSizeLimitsWayland,
-        _glfwSetWindowAspectRatioWayland,
-        _glfwGetFramebufferSizeWayland,
-        _glfwGetWindowFrameSizeWayland,
-        _glfwGetWindowContentScaleWayland,
-        _glfwIconifyWindowWayland,
-        _glfwRestoreWindowWayland,
-        _glfwMaximizeWindowWayland,
-        _glfwShowWindowWayland,
-        _glfwHideWindowWayland,
-        _glfwRequestWindowAttentionWayland,
-        _glfwFocusWindowWayland,
-        _glfwSetWindowMonitorWayland,
-        _glfwWindowFocusedWayland,
-        _glfwWindowIconifiedWayland,
-        _glfwWindowVisibleWayland,
-        _glfwWindowMaximizedWayland,
-        _glfwWindowHoveredWayland,
-        _glfwFramebufferTransparentWayland,
-        _glfwGetWindowOpacityWayland,
-        _glfwSetWindowResizableWayland,
-        _glfwSetWindowDecoratedWayland,
-        _glfwSetWindowFloatingWayland,
-        _glfwSetWindowOpacityWayland,
-        _glfwSetWindowMousePassthroughWayland,
-        _glfwPollEventsWayland,
-        _glfwWaitEventsWayland,
-        _glfwWaitEventsTimeoutWayland,
-        _glfwPostEmptyEventWayland,
-        _glfwGetEGLPlatformWayland,
-        _glfwGetEGLNativeDisplayWayland,
-        _glfwGetEGLNativeWindowWayland,
-        _glfwGetRequiredInstanceExtensionsWayland,
-        _glfwGetPhysicalDevicePresentationSupportWayland,
-        _glfwCreateWindowSurfaceWayland,
-    };
-
-    void* module = _glfwPlatformLoadModule("libwayland-client.so.0");
-    if (!module)
-    {
-        if (platformID == GLFW_PLATFORM_WAYLAND)
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "Wayland: Failed to load libwayland-client");
-        }
-
-        return GLFW_FALSE;
-    }
-
-    PFN_wl_display_connect wl_display_connect = (PFN_wl_display_connect)
-        _glfwPlatformGetModuleSymbol(module, "wl_display_connect");
-    if (!wl_display_connect)
-    {
-        if (platformID == GLFW_PLATFORM_WAYLAND)
-        {
-            _glfwInputError(GLFW_PLATFORM_ERROR,
-                            "Wayland: Failed to load libwayland-client entry point");
-        }
-
-        _glfwPlatformFreeModule(module);
-        return GLFW_FALSE;
-    }
-
-    struct wl_display* display = wl_display_connect(NULL);
-    if (!display)
-    {
-        if (platformID == GLFW_PLATFORM_WAYLAND)
-            _glfwInputError(GLFW_PLATFORM_ERROR, "Wayland: Failed to connect to display");
-
-        _glfwPlatformFreeModule(module);
-        return GLFW_FALSE;
-    }
-
-    _glfw.wl.display = display;
-    _glfw.wl.client.handle = module;
-
-    *platform = wayland;
-    return GLFW_TRUE;
-}
-
-int _glfwInitWayland(void)
+int _glfwPlatformInit(void)
 {
     // These must be set before any failure checks
     _glfw.wl.keyRepeatTimerfd = -1;
@@ -540,69 +374,7 @@ int _glfwInitWayland(void)
 
     _glfw.wl.tag = glfwGetVersionString();
 
-    _glfw.wl.client.display_flush = (PFN_wl_display_flush)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_flush");
-    _glfw.wl.client.display_cancel_read = (PFN_wl_display_cancel_read)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_cancel_read");
-    _glfw.wl.client.display_dispatch_pending = (PFN_wl_display_dispatch_pending)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_dispatch_pending");
-    _glfw.wl.client.display_read_events = (PFN_wl_display_read_events)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_read_events");
-    _glfw.wl.client.display_disconnect = (PFN_wl_display_disconnect)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_disconnect");
-    _glfw.wl.client.display_roundtrip = (PFN_wl_display_roundtrip)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_roundtrip");
-    _glfw.wl.client.display_get_fd = (PFN_wl_display_get_fd)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_get_fd");
-    _glfw.wl.client.display_prepare_read = (PFN_wl_display_prepare_read)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_display_prepare_read");
-    _glfw.wl.client.proxy_marshal = (PFN_wl_proxy_marshal)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_marshal");
-    _glfw.wl.client.proxy_add_listener = (PFN_wl_proxy_add_listener)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_add_listener");
-    _glfw.wl.client.proxy_destroy = (PFN_wl_proxy_destroy)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_destroy");
-    _glfw.wl.client.proxy_marshal_constructor = (PFN_wl_proxy_marshal_constructor)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_marshal_constructor");
-    _glfw.wl.client.proxy_marshal_constructor_versioned = (PFN_wl_proxy_marshal_constructor_versioned)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_marshal_constructor_versioned");
-    _glfw.wl.client.proxy_get_user_data = (PFN_wl_proxy_get_user_data)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_get_user_data");
-    _glfw.wl.client.proxy_set_user_data = (PFN_wl_proxy_set_user_data)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_set_user_data");
-    _glfw.wl.client.proxy_get_tag = (PFN_wl_proxy_get_tag)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_get_tag");
-    _glfw.wl.client.proxy_set_tag = (PFN_wl_proxy_set_tag)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_set_tag");
-    _glfw.wl.client.proxy_get_version = (PFN_wl_proxy_get_version)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_get_version");
-    _glfw.wl.client.proxy_marshal_flags = (PFN_wl_proxy_marshal_flags)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.client.handle, "wl_proxy_marshal_flags");
-
-    if (!_glfw.wl.client.display_flush ||
-        !_glfw.wl.client.display_cancel_read ||
-        !_glfw.wl.client.display_dispatch_pending ||
-        !_glfw.wl.client.display_read_events ||
-        !_glfw.wl.client.display_disconnect ||
-        !_glfw.wl.client.display_roundtrip ||
-        !_glfw.wl.client.display_get_fd ||
-        !_glfw.wl.client.display_prepare_read ||
-        !_glfw.wl.client.proxy_marshal ||
-        !_glfw.wl.client.proxy_add_listener ||
-        !_glfw.wl.client.proxy_destroy ||
-        !_glfw.wl.client.proxy_marshal_constructor ||
-        !_glfw.wl.client.proxy_marshal_constructor_versioned ||
-        !_glfw.wl.client.proxy_get_user_data ||
-        !_glfw.wl.client.proxy_set_user_data ||
-        !_glfw.wl.client.proxy_get_tag ||
-        !_glfw.wl.client.proxy_set_tag)
-    {
-        _glfwInputError(GLFW_PLATFORM_ERROR,
-                        "Wayland: Failed to load libwayland-client entry point");
-        return GLFW_FALSE;
-    }
-
-    _glfw.wl.cursor.handle = _glfwPlatformLoadModule("libwayland-cursor.so.0");
+    _glfw.wl.cursor.handle = _glfw_dlopen("libwayland-cursor.so.0");
     if (!_glfw.wl.cursor.handle)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
@@ -611,15 +383,15 @@ int _glfwInitWayland(void)
     }
 
     _glfw.wl.cursor.theme_load = (PFN_wl_cursor_theme_load)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.cursor.handle, "wl_cursor_theme_load");
+        _glfw_dlsym(_glfw.wl.cursor.handle, "wl_cursor_theme_load");
     _glfw.wl.cursor.theme_destroy = (PFN_wl_cursor_theme_destroy)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.cursor.handle, "wl_cursor_theme_destroy");
+        _glfw_dlsym(_glfw.wl.cursor.handle, "wl_cursor_theme_destroy");
     _glfw.wl.cursor.theme_get_cursor = (PFN_wl_cursor_theme_get_cursor)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.cursor.handle, "wl_cursor_theme_get_cursor");
+        _glfw_dlsym(_glfw.wl.cursor.handle, "wl_cursor_theme_get_cursor");
     _glfw.wl.cursor.image_get_buffer = (PFN_wl_cursor_image_get_buffer)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.cursor.handle, "wl_cursor_image_get_buffer");
+        _glfw_dlsym(_glfw.wl.cursor.handle, "wl_cursor_image_get_buffer");
 
-    _glfw.wl.egl.handle = _glfwPlatformLoadModule("libwayland-egl.so.1");
+    _glfw.wl.egl.handle = _glfw_dlopen("libwayland-egl.so.1");
     if (!_glfw.wl.egl.handle)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
@@ -628,13 +400,13 @@ int _glfwInitWayland(void)
     }
 
     _glfw.wl.egl.window_create = (PFN_wl_egl_window_create)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.egl.handle, "wl_egl_window_create");
+        _glfw_dlsym(_glfw.wl.egl.handle, "wl_egl_window_create");
     _glfw.wl.egl.window_destroy = (PFN_wl_egl_window_destroy)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.egl.handle, "wl_egl_window_destroy");
+        _glfw_dlsym(_glfw.wl.egl.handle, "wl_egl_window_destroy");
     _glfw.wl.egl.window_resize = (PFN_wl_egl_window_resize)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.egl.handle, "wl_egl_window_resize");
+        _glfw_dlsym(_glfw.wl.egl.handle, "wl_egl_window_resize");
 
-    _glfw.wl.xkb.handle = _glfwPlatformLoadModule("libxkbcommon.so.0");
+    _glfw.wl.xkb.handle = _glfw_dlopen("libxkbcommon.so.0");
     if (!_glfw.wl.xkb.handle)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
@@ -643,101 +415,110 @@ int _glfwInitWayland(void)
     }
 
     _glfw.wl.xkb.context_new = (PFN_xkb_context_new)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_context_new");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_context_new");
     _glfw.wl.xkb.context_unref = (PFN_xkb_context_unref)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_context_unref");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_context_unref");
     _glfw.wl.xkb.keymap_new_from_string = (PFN_xkb_keymap_new_from_string)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_keymap_new_from_string");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_keymap_new_from_string");
     _glfw.wl.xkb.keymap_unref = (PFN_xkb_keymap_unref)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_keymap_unref");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_keymap_unref");
     _glfw.wl.xkb.keymap_mod_get_index = (PFN_xkb_keymap_mod_get_index)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_keymap_mod_get_index");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_keymap_mod_get_index");
     _glfw.wl.xkb.keymap_key_repeats = (PFN_xkb_keymap_key_repeats)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_keymap_key_repeats");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_keymap_key_repeats");
     _glfw.wl.xkb.keymap_key_get_syms_by_level = (PFN_xkb_keymap_key_get_syms_by_level)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_keymap_key_get_syms_by_level");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_keymap_key_get_syms_by_level");
     _glfw.wl.xkb.state_new = (PFN_xkb_state_new)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_new");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_state_new");
     _glfw.wl.xkb.state_unref = (PFN_xkb_state_unref)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_unref");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_state_unref");
     _glfw.wl.xkb.state_key_get_syms = (PFN_xkb_state_key_get_syms)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_key_get_syms");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_state_key_get_syms");
     _glfw.wl.xkb.state_update_mask = (PFN_xkb_state_update_mask)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_update_mask");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_state_update_mask");
     _glfw.wl.xkb.state_key_get_layout = (PFN_xkb_state_key_get_layout)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_key_get_layout");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_state_key_get_layout");
     _glfw.wl.xkb.state_mod_index_is_active = (PFN_xkb_state_mod_index_is_active)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_state_mod_index_is_active");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_state_mod_index_is_active");
+
     _glfw.wl.xkb.compose_table_new_from_locale = (PFN_xkb_compose_table_new_from_locale)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_table_new_from_locale");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_table_new_from_locale");
     _glfw.wl.xkb.compose_table_unref = (PFN_xkb_compose_table_unref)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_table_unref");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_table_unref");
     _glfw.wl.xkb.compose_state_new = (PFN_xkb_compose_state_new)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_state_new");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_state_new");
     _glfw.wl.xkb.compose_state_unref = (PFN_xkb_compose_state_unref)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_state_unref");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_state_unref");
     _glfw.wl.xkb.compose_state_feed = (PFN_xkb_compose_state_feed)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_state_feed");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_state_feed");
     _glfw.wl.xkb.compose_state_get_status = (PFN_xkb_compose_state_get_status)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_state_get_status");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_state_get_status");
     _glfw.wl.xkb.compose_state_get_one_sym = (PFN_xkb_compose_state_get_one_sym)
-        _glfwPlatformGetModuleSymbol(_glfw.wl.xkb.handle, "xkb_compose_state_get_one_sym");
+        _glfw_dlsym(_glfw.wl.xkb.handle, "xkb_compose_state_get_one_sym");
+
+    _glfw.wl.display = wl_display_connect(NULL);
+    if (!_glfw.wl.display)
+    {
+        _glfwInputError(GLFW_PLATFORM_ERROR,
+                        "Wayland: Failed to connect to display");
+        return GLFW_FALSE;
+    }
 
     if (_glfw.hints.init.wl.libdecorMode == GLFW_WAYLAND_PREFER_LIBDECOR)
-        _glfw.wl.libdecor.handle = _glfwPlatformLoadModule("libdecor-0.so.0");
+        _glfw.wl.libdecor.handle = _glfw_dlopen("libdecor-0.so.0");
 
     if (_glfw.wl.libdecor.handle)
     {
         _glfw.wl.libdecor.libdecor_new_ = (PFN_libdecor_new)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_new");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_new");
         _glfw.wl.libdecor.libdecor_unref_ = (PFN_libdecor_unref)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_unref");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_unref");
         _glfw.wl.libdecor.libdecor_get_fd_ = (PFN_libdecor_get_fd)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_get_fd");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_get_fd");
         _glfw.wl.libdecor.libdecor_dispatch_ = (PFN_libdecor_dispatch)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_dispatch");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_dispatch");
         _glfw.wl.libdecor.libdecor_decorate_ = (PFN_libdecor_decorate)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_decorate");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_decorate");
         _glfw.wl.libdecor.libdecor_frame_unref_ = (PFN_libdecor_frame_unref)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_unref");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_unref");
         _glfw.wl.libdecor.libdecor_frame_set_app_id_ = (PFN_libdecor_frame_set_app_id)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_app_id");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_app_id");
         _glfw.wl.libdecor.libdecor_frame_set_title_ = (PFN_libdecor_frame_set_title)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_title");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_title");
         _glfw.wl.libdecor.libdecor_frame_set_minimized_ = (PFN_libdecor_frame_set_minimized)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_minimized");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_minimized");
         _glfw.wl.libdecor.libdecor_frame_set_fullscreen_ = (PFN_libdecor_frame_set_fullscreen)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_fullscreen");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_fullscreen");
         _glfw.wl.libdecor.libdecor_frame_unset_fullscreen_ = (PFN_libdecor_frame_unset_fullscreen)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_unset_fullscreen");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_unset_fullscreen");
         _glfw.wl.libdecor.libdecor_frame_map_ = (PFN_libdecor_frame_map)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_map");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_map");
         _glfw.wl.libdecor.libdecor_frame_commit_ = (PFN_libdecor_frame_commit)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_commit");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_commit");
         _glfw.wl.libdecor.libdecor_frame_set_min_content_size_ = (PFN_libdecor_frame_set_min_content_size)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_min_content_size");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_min_content_size");
         _glfw.wl.libdecor.libdecor_frame_set_max_content_size_ = (PFN_libdecor_frame_set_max_content_size)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_max_content_size");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_max_content_size");
         _glfw.wl.libdecor.libdecor_frame_set_maximized_ = (PFN_libdecor_frame_set_maximized)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_maximized");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_maximized");
         _glfw.wl.libdecor.libdecor_frame_unset_maximized_ = (PFN_libdecor_frame_unset_maximized)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_unset_maximized");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_unset_maximized");
         _glfw.wl.libdecor.libdecor_frame_set_capabilities_ = (PFN_libdecor_frame_set_capabilities)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_capabilities");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_capabilities");
         _glfw.wl.libdecor.libdecor_frame_unset_capabilities_ = (PFN_libdecor_frame_unset_capabilities)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_unset_capabilities");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_unset_capabilities");
         _glfw.wl.libdecor.libdecor_frame_set_visibility_ = (PFN_libdecor_frame_set_visibility)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_set_visibility");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_set_visibility");
         _glfw.wl.libdecor.libdecor_frame_get_xdg_toplevel_ = (PFN_libdecor_frame_get_xdg_toplevel)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_frame_get_xdg_toplevel");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_frame_get_xdg_toplevel");
         _glfw.wl.libdecor.libdecor_configuration_get_content_size_ = (PFN_libdecor_configuration_get_content_size)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_configuration_get_content_size");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_configuration_get_content_size");
         _glfw.wl.libdecor.libdecor_configuration_get_window_state_ = (PFN_libdecor_configuration_get_window_state)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_configuration_get_window_state");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_configuration_get_window_state");
         _glfw.wl.libdecor.libdecor_state_new_ = (PFN_libdecor_state_new)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_state_new");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_state_new");
         _glfw.wl.libdecor.libdecor_state_free_ = (PFN_libdecor_state_free)
-            _glfwPlatformGetModuleSymbol(_glfw.wl.libdecor.handle, "libdecor_state_free");
+            _glfw_dlsym(_glfw.wl.libdecor.handle, "libdecor_state_free");
 
         if (!_glfw.wl.libdecor.libdecor_new_ ||
             !_glfw.wl.libdecor.libdecor_unref_ ||
@@ -765,7 +546,7 @@ int _glfwInitWayland(void)
             !_glfw.wl.libdecor.libdecor_state_new_ ||
             !_glfw.wl.libdecor.libdecor_state_free_)
         {
-            _glfwPlatformFreeModule(_glfw.wl.libdecor.handle);
+            _glfw_dlclose(_glfw.wl.libdecor.handle);
             memset(&_glfw.wl.libdecor, 0, sizeof(_glfw.wl.libdecor));
         }
     }
@@ -788,6 +569,13 @@ int _glfwInitWayland(void)
 
     // Sync so we got all initial output events
     wl_display_roundtrip(_glfw.wl.display);
+
+#ifdef __linux__
+    if (!_glfwInitJoysticksLinux())
+        return GLFW_FALSE;
+#endif
+
+    _glfwInitTimerPOSIX();
 
     if (_glfw.wl.libdecor.handle)
     {
@@ -841,8 +629,11 @@ int _glfwInitWayland(void)
     return GLFW_TRUE;
 }
 
-void _glfwTerminateWayland(void)
+void _glfwPlatformTerminate(void)
 {
+#ifdef __linux__
+    _glfwTerminateJoysticksLinux();
+#endif
     _glfwTerminateEGL();
     _glfwTerminateOSMesa();
 
@@ -853,13 +644,13 @@ void _glfwTerminateWayland(void)
 
     if (_glfw.wl.libdecor.handle)
     {
-        _glfwPlatformFreeModule(_glfw.wl.libdecor.handle);
+        _glfw_dlclose(_glfw.wl.libdecor.handle);
         _glfw.wl.libdecor.handle = NULL;
     }
 
     if (_glfw.wl.egl.handle)
     {
-        _glfwPlatformFreeModule(_glfw.wl.egl.handle);
+        _glfw_dlclose(_glfw.wl.egl.handle);
         _glfw.wl.egl.handle = NULL;
     }
 
@@ -873,7 +664,7 @@ void _glfwTerminateWayland(void)
         xkb_context_unref(_glfw.wl.xkb.context);
     if (_glfw.wl.xkb.handle)
     {
-        _glfwPlatformFreeModule(_glfw.wl.xkb.handle);
+        _glfw_dlclose(_glfw.wl.xkb.handle);
         _glfw.wl.xkb.handle = NULL;
     }
 
@@ -883,14 +674,14 @@ void _glfwTerminateWayland(void)
         wl_cursor_theme_destroy(_glfw.wl.cursorThemeHiDPI);
     if (_glfw.wl.cursor.handle)
     {
-        _glfwPlatformFreeModule(_glfw.wl.cursor.handle);
+        _glfw_dlclose(_glfw.wl.cursor.handle);
         _glfw.wl.cursor.handle = NULL;
     }
 
     for (unsigned int i = 0; i < _glfw.wl.offerCount; i++)
         wl_data_offer_destroy(_glfw.wl.offers[i].offer);
 
-    _glfw_free(_glfw.wl.offers);
+    free(_glfw.wl.offers);
 
     if (_glfw.wl.cursorSurface)
         wl_surface_destroy(_glfw.wl.cursorSurface);
@@ -941,8 +732,20 @@ void _glfwTerminateWayland(void)
     if (_glfw.wl.cursorTimerfd >= 0)
         close(_glfw.wl.cursorTimerfd);
 
-    _glfw_free(_glfw.wl.clipboardString);
+    free(_glfw.wl.clipboardString);
 }
 
-#endif // _GLFW_WAYLAND
-
+const char* _glfwPlatformGetVersionString(void)
+{
+    return _GLFW_VERSION_NUMBER " Wayland EGL OSMesa"
+#if defined(_POSIX_TIMERS) && defined(_POSIX_MONOTONIC_CLOCK)
+        " clock_gettime"
+#else
+        " gettimeofday"
+#endif
+        " evdev"
+#if defined(_GLFW_BUILD_DLL)
+        " shared"
+#endif
+        ;
+}

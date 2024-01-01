@@ -2,26 +2,29 @@ project "App"
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
+   staticruntime "on"
+   
    targetdir "Binaries/%{cfg.buildcfg}"
-   staticruntime "off"
 
    files { "Source/**.h", "Source/**.cpp", "Source/**.inl"}
 
    includedirs
    {
       "Source",
-      "../Vendor/include",
-
+      
 	  -- Include Sapphire
-	  "../Sapphire/Source"
-   }
+	  "../Sapphire/Source",
+
+      -- Include Third party libs 
+      "../Vendor/ThirdParty/ImGui",
+      "../Vendor/ThirdParty/spdlog",
+      "../Vendor/include",   
+    }
 
    links
    {
 	  "Sapphire"
    }
-
-   libdirs { "../Vendor/lib" }
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
    objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
@@ -33,17 +36,16 @@ project "App"
    filter "configurations:Debug"
        defines { "DEBUG" }
        runtime "Debug"
-       symbols "On"
-       debugdir "../Assets/"
+       symbols "on"
 
    filter "configurations:Release"
        defines { "RELEASE" }
        runtime "Release"
-       optimize "On"
-       symbols "On"
+       optimize "on"
+       symbols "off"
 
    filter "configurations:Dist"
        defines { "DIST" }
        runtime "Release"
-       optimize "On"
-       symbols "Off"
+       optimize "on"
+       symbols "off"

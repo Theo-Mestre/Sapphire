@@ -26,12 +26,6 @@
 
 #define BIT(x) (1 << x)
 
-#ifdef SAPPHIRE_BUILD_DLL
-#	define SPH_API __declspec(dllexport)
-#else
-#	define SPH_API __declspec(dllimport)
-#endif
-
 #define BIND_EVENT_METHOD(method) std::bind(&method, this, std::placeholders::_1)
 
 #pragma warning(disable : 4251)

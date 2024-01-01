@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Sapphire/Application.h"
-#include "DefaultLayer.h"
 
 namespace sph
 {
@@ -13,10 +12,10 @@ class Sandbox
 {
 public:
 	Sandbox();
-	~Sandbox() = default;
+	virtual ~Sandbox() = default;
 
 private:
-	void Init() override;
-	void OnEvent(sph::Event& _event) override;
-	void OnUpdate() override;
+	virtual void Init() override;
+	virtual void OnEvent(sph::Event& _event) override;
+	virtual void OnUpdate() override;
 };

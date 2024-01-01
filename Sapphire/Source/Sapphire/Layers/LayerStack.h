@@ -14,7 +14,7 @@ namespace sph
 	 * Layer are pushed before overlays.
 	 * The stack is updated from the bottom to the top so the overlays are updated first.
 	 */
-	class SPH_API LayerStack
+	class  LayerStack
 	{
 	public:
 		using Iterator = std::vector<Layer*>::iterator;

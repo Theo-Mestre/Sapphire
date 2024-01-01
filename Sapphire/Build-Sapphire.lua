@@ -1,13 +1,14 @@
 local projectName = "Sapphire"
 
 project (projectName)
-   kind "SharedLib"
+   kind "StaticLib"
    language "C++"
    cppdialect "C++20"
+   staticruntime "on"
+   
    targetdir "Binaries/%{cfg.buildcfg}"
-   staticruntime "off"
-
    targetdir ("../Binaries/" .. OutputDir .. "/" .. projectName)
+
    objdir ("../Binaries/Intermediates/" .. OutputDir .. "/" .. projectName)
    libdirs { "../Vendor/lib" }
 
@@ -28,12 +29,6 @@ project (projectName)
         "../Vendor/ThirdParty/spdlog",
    }
 
-   postbuildcommands   
-   {
-        "if not exist \"$(OutDir)..\\App\\App.exe\" (mkdir \"$(OutDir)..\\App\")",
-        "copy /y $(OutDir)$(TargetName).dll $(OutDir)..\\App"
-   }
-
    links    
    {	  
        "GLFW",
@@ -49,16 +44,14 @@ project (projectName)
    filter "configurations:Debug"
        defines { "DEBUG" }
        runtime "Debug"
-       symbols "On"
+       symbols "on"
 
    filter "configurations:Release"
        defines { "RELEASE" }
        runtime "Release"
-       optimize "On"
-       symbols "On"
+       optimize "on"
 
    filter "configurations:Dist"
        defines { "DIST" }
        runtime "Release"
        optimize "On"
-       symbols "Off"

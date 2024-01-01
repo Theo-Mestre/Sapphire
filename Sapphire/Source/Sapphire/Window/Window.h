@@ -12,7 +12,7 @@ namespace sph
 	/**
 	 * @brief Window properties
 	 */
-	struct SPH_API WindowProperties
+	struct  WindowProperties
 	{
 		uint32_t Width;
 		uint32_t Height;
@@ -33,7 +33,7 @@ namespace sph
 	/**
 	* @brief Window interface
 	*/
-	class SPH_API Window
+	class  Window
 	{
 	public:
 		virtual ~Window() = default;

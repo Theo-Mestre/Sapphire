@@ -1,6 +1,6 @@
 # Sapphire Game Engine
 
-**Sapphire** is a game engine developed in C++ using OpenGL, inspired by The Cherno's game engine series. This project serves as a learning platform for understanding the intricacies of game engine development and project management.
+**Sapphire** is a game engine project developed in C++ using OpenGL, inspired by The Cherno's game engine series. This project serves as a learning platform for understanding the intricacies of game engine development and project management.
 
 ## Features
 #### OpenGL Rendering: 
@@ -16,11 +16,11 @@ Clone the repository: git clone https://github.com/Theo-gamedev/sapphire.git.
 Build the project using the SetupWindows.bat inside the Scripts folder
 
 ## Dependencies
-#### [GLFW](https://github.com/glfw/glfw)
-#### [Glad](https://github.com/Dav1dde/glad)
-#### [Spdlog](https://github.com/gabime/spdlog)
-#### [ImGui](https://github.com/ocornut/imgui)
-#### [GLM](https://github.com/g-truc/glm)
+**[GLFW]**(https://github.com/glfw/glfw)
+**[Glad]**(https://github.com/Dav1dde/glad)
+**[Spdlog]**(https://github.com/gabime/spdlog)
+**[ImGui]**(https://github.com/ocornut/imgui)
+**[GLM]**(https://github.com/g-truc/glm)
 
 All Dependencies are included as standalone projects in the project.
 

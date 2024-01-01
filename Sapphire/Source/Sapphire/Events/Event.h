@@ -24,6 +24,8 @@ namespace sph
 		EventCategoryMouseButton = BIT(4)
 	};
 
+
+#pragma warning(disable: 5103)
 #define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
@@ -31,7 +33,7 @@ namespace sph
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
 	// Base event class for all events types
-	class SPH_API Event
+	class  Event
 	{
 	public:
 		virtual ~Event() = default;
@@ -52,7 +54,7 @@ namespace sph
 	};
 	using EventCallbackFunction = std::function<void(Event&)>;
 
-	class SPH_API EventDispatcher
+	class  EventDispatcher
 	{
 	public:
 		EventDispatcher(Event& _event)

@@ -8,10 +8,11 @@
 namespace sph
 {
 	class Window;
-
+	
+#pragma warning(disable: 5103)
 #define INPUT_CALL_IMPL(x) ASSERT(s_instance, "Input not initializer") return s_instance->##x
 
-	class SPH_API Input
+	class  Input
 	{
 	public:
 		inline static bool IsKeyPressed(int _key) { INPUT_CALL_IMPL(IsKeyPressedImpl(_key)); }

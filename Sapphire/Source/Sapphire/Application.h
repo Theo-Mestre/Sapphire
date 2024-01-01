@@ -7,8 +7,9 @@
 namespace sph
 {
 	class Window;
+	class ImGuiLayer;
 
-	class SPH_API Application
+	class  Application
 	{
 	public:
 		Application();
@@ -29,6 +30,7 @@ namespace sph
 
 	protected:
 		LayerStack m_layerStack;
+		ImGuiLayer* m_imGuiLayer;
 		Window* m_window;
 		bool m_isRunning;
 	};

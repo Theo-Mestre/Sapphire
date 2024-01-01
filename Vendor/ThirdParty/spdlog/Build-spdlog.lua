@@ -3,7 +3,6 @@ project "spdlog"
 	cppdialect "C++17"
 	language "C++"
     staticruntime "off"
-	warnings "off"
 
 	targetdir ("../../../Binaries/" .. OutputDir .. "/%{prj.name}")
     objdir ("../../../Binaries/Intermediates/" .. OutputDir ..  "/%{prj.name}")
@@ -15,6 +14,8 @@ project "spdlog"
 	}
 
 	includedirs "$(SolutionDir)Vendor/ThirdParty/spdlog"
+	
+	warnings "Off"
 
 	filter "system:windows"
 		systemversion "latest"

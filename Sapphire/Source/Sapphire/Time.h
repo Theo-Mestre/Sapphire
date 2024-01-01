@@ -3,7 +3,7 @@
 
 #include "Sapphire/Core.h"
 
-class SPH_API Time
+class  Time
 {
 public:
 	static void Update();

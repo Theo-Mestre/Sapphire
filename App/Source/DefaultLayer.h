@@ -13,4 +13,5 @@ public:
 	void OnDetach() override;
 	void OnUpdate() override;
 	void OnEvent(sph::Event& _event) override;
+	void OnImGuiRender() override;
 };

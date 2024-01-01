@@ -6,7 +6,7 @@
 
 namespace sph
 {
-	class SPH_API Logger
+	class  Logger
 	{
 	public:
 		static void Init();

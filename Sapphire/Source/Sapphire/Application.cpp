@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "Sapphire/Input.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
+#include "Sapphire/ImGui/ImGuiLayer.h"
 
 namespace sph
 {
@@ -12,7 +13,9 @@ namespace sph
 		: m_layerStack()
 		, m_window(nullptr)
 		, m_isRunning(true)
+		, m_imGuiLayer(nullptr)
 	{
+		Init();
 	}
 
 	Application::~Application()
@@ -51,9 +54,16 @@ namespace sph
 
 	void Application::Init()
 	{
+		sph::Logger::Init();
+		LogInfo("Hello Client!");
+
 		m_window = Window::Create();
 
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
+
+		// Initialize ImGui layer
+		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
+		m_layerStack.PushOverlay(m_imGuiLayer);
 
 		Input::Init(m_window);
 	}
@@ -75,6 +85,13 @@ namespace sph
 		{
 			layer->OnUpdate();
 		}
+
+		m_imGuiLayer->Begin();
+		for (sph::Layer* layer : m_layerStack)
+		{
+			layer->OnImGuiRender();
+		}
+		m_imGuiLayer->End();
 
 		m_window->OnUpdate();
 	}

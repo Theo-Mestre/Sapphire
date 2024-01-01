@@ -1,7 +1,7 @@
 #include "Sapphire.h"
 
 #include "App.h"
-#include "Sapphire/ImGui/ImGuiLayer.h"
+#include "DefaultLayer.h"
 
 Sandbox::Sandbox()
 	: sph::Application()
@@ -11,14 +11,7 @@ Sandbox::Sandbox()
 
 void Sandbox::Init()
 {
-	sph::Logger::Init();
-	LogInfo("Hello Client!");
-
-	m_window = sph::Window::Create(sph::WindowProperties(1280, 720, "MyApp"));
-
-	m_window->SetEventCallback(BIND_EVENT_METHOD(Sandbox::OnEvent));
-
-	m_layerStack.PushOverlay(new sph::ImGuiLayer(*m_window));
+	PushLayer(new DefaultLayer());
 }
 
 void Sandbox::OnEvent(sph::Event& _event)

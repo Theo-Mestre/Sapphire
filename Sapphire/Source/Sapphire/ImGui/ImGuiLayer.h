@@ -15,27 +15,20 @@ namespace sph
 	class WindowResizeEvent;
 	class KeyTypedEvent;
 
-	class SPH_API ImGuiLayer
+	class  ImGuiLayer
 		: public Layer
 	{
 	public:
 		ImGuiLayer(Window& _window);
 		~ImGuiLayer();
 
-		void OnAttach() override;
-		void OnDetach() override;
-		void OnUpdate() override;
-		void OnEvent(Event& _event) override;
-	private:
-		bool OnMouseButtonPressedEvent(MouseButtonPressedEvent& _event);
-		bool OnMouseButtonReleasedEvent(MouseButtonReleasedEvent& _event);
-		bool OnMouseMovedEvent(MouseMovedEvent& _event);
-		bool OnMouseScrolledEvent(MouseScrolledEvent& _event);
-		bool OnKeyPressedEvent(KeyPressedEvent& _event);
-		bool OnKeyReleasedEvent(KeyReleasedEvent& _event);
-		bool OnKeyTypedEvent(KeyTypedEvent& _event);
-		bool OnWindowResizeEvent(WindowResizeEvent& _event);
+		virtual void OnAttach() override;
+		virtual void OnDetach() override;
+		virtual void OnUpdate() override;
+		virtual void OnImGuiRender() override;
 
+		void Begin();
+		void End();
 	private:
 		Window& m_window;
 		float m_time = 0.0f;

@@ -9,7 +9,7 @@ namespace sph
 	/**
 	 * @brief Windows implementation of the Window class
 	 */
-	class SPH_API WinWindow
+	class  WinWindow
 		: public Window
 	{
 	public:

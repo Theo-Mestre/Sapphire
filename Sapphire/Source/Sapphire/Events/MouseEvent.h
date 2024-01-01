@@ -7,7 +7,7 @@
 
 namespace sph
 {
-	class SPH_API MouseMovedEvent 
+	class  MouseMovedEvent 
 		: public Event
 	{
 	public:
@@ -31,7 +31,7 @@ namespace sph
 		float m_mouseX, m_mouseY;
 	};
 
-	class SPH_API MouseScrolledEvent 
+	class  MouseScrolledEvent 
 		: public Event
 	{
 	public:
@@ -55,7 +55,7 @@ namespace sph
 		float m_xOffset, m_yOffset;
 	};
 
-	class SPH_API MouseButtonEvent 
+	class  MouseButtonEvent 
 		: public Event
 	{
 	public:
@@ -70,7 +70,7 @@ namespace sph
 		int m_button;
 	};
 
-	class SPH_API MouseButtonPressedEvent 
+	class  MouseButtonPressedEvent 
 		: public MouseButtonEvent
 	{
 	public:
@@ -87,7 +87,7 @@ namespace sph
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class SPH_API MouseButtonReleasedEvent 
+	class  MouseButtonReleasedEvent 
 		: public MouseButtonEvent
 	{
 	public:

@@ -6,7 +6,7 @@
 
 namespace sph
 {
-	class SPH_API ApplicationEvent : public Event
+	class  ApplicationEvent : public Event
 	{
 	public:
 		ApplicationEvent() = default;
@@ -15,7 +15,7 @@ namespace sph
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class SPH_API WindowResizeEvent : public ApplicationEvent
+	class  WindowResizeEvent : public ApplicationEvent
 	{
 
 	public:
@@ -38,7 +38,7 @@ namespace sph
 		unsigned int m_Width, m_Height;
 	};
 
-	class SPH_API WindowCloseEvent : public ApplicationEvent
+	class  WindowCloseEvent : public ApplicationEvent
 	{
 	public:
 		WindowCloseEvent() = default;
@@ -47,7 +47,7 @@ namespace sph
 		EVENT_CLASS_TYPE(WindowClose)
 	};
 
-	class SPH_API AppTickEvent : public ApplicationEvent
+	class  AppTickEvent : public ApplicationEvent
 	{
 	public:
 		AppTickEvent() = default;
@@ -56,7 +56,7 @@ namespace sph
 		EVENT_CLASS_TYPE(AppTick)
 	};
 
-	class SPH_API AppUpdateEvent : public ApplicationEvent
+	class  AppUpdateEvent : public ApplicationEvent
 	{
 	public:
 		AppUpdateEvent() = default;
@@ -65,7 +65,7 @@ namespace sph
 		EVENT_CLASS_TYPE(AppUpdate)
 	};
 
-	class SPH_API AppRenderEvent : public ApplicationEvent
+	class  AppRenderEvent : public ApplicationEvent
 	{
 	public:
 		AppRenderEvent() = default;
