@@ -25,11 +25,12 @@ namespace sph
 	};
 
 }
-#ifdef SPH_BUILD_DLL
-#define SAPPHIRE_GET_CURRENT_LOGGER ::Sapphire::Logger::GetSapphireLogger()
+#ifdef SPH_BUILD
+#	define SAPPHIRE_GET_CURRENT_LOGGER ::sph::Logger::GetSapphireLogger()
 #else
-#define SAPPHIRE_GET_CURRENT_LOGGER ::sph::Logger::GetClientLogger()
+#	define SAPPHIRE_GET_CURRENT_LOGGER ::sph::Logger::GetClientLogger()
 #endif
+
 #define LogTrace(...)	SAPPHIRE_GET_CURRENT_LOGGER->trace(__VA_ARGS__)
 #define LogDebug(...)	SAPPHIRE_GET_CURRENT_LOGGER->debug(__VA_ARGS__)
 #define LogInfo(...)	SAPPHIRE_GET_CURRENT_LOGGER->info(__VA_ARGS__)

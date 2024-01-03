@@ -14,8 +14,11 @@
 #include "Sapphire/KeyCode.h"
 #include "Sapphire/MouseButton.h"
 
+#include "Sapphire/Layers/LayerStack.h"
 #include "Sapphire/Window/Window.h"	
 
-#include "Sapphire/Layers/LayerStack.h"
-
+#include "Sapphire/Renderer/Renderer.h"
+#include "Sapphire/Renderer/Shader.h"
+#include "Sapphire/Renderer/Buffer.h"
+#include "Sapphire/Renderer/VertexArray.h"
 #endif

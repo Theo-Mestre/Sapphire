@@ -26,12 +26,12 @@ void DefaultLayer::OnUpdate()
 
 void DefaultLayer::OnEvent(sph::Event& _event)
 {
-	LogInfo(_event.ToString());
+	//LogInfo(_event.ToString());
 }
 
 void DefaultLayer::OnImGuiRender()
 {
-	//ImGui::Begin("Test");
-	//ImGui::Text("Hello World!");
-	//ImGui::End();
+	ImGui::Begin("Test");
+	ImGui::Text("Hello World!");
+	ImGui::End();
 }

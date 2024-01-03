@@ -1,6 +1,5 @@
 #include "sphpch.h"
 
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "WinWindow.h"
@@ -11,8 +10,9 @@
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Events/KeyEvent.h"
 #include "Sapphire/Events/MouseEvent.h"
-
 #include "WindowsInput.h"
+
+#include "Sapphire/Platform/OpenGL/OpenGLContext.h"
 
 namespace sph
 {
@@ -37,7 +37,7 @@ namespace sph
 	void WinWindow::OnUpdate(void)
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_window);
+		m_context->SwapBuffers();
 	}
 
 	void WinWindow::Init(const WindowProperties& _properties)
@@ -65,17 +65,13 @@ namespace sph
 		m_window = glfwCreateWindow(_properties.Width, _properties.Height, _properties.Title.c_str(), nullptr, nullptr);
 		ASSERT(m_window, "Failed to create a GLFW window");
 
-		// Create a OpenGL context and bind it to the current window
-		glfwMakeContextCurrent(m_window);
-
-		int gladLoadResult = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-		ASSERT(gladLoadResult, "Failed to initialize Glad");
+		// Create the graphics context
+		m_context = new OpenGLContext(m_window);
+		m_context->Init();
 
 		glfwSetWindowUserPointer(m_window, &m_data);
 
 		InitEventCallbacks();
-
-		Input::Init(this);
 	}
 
 	void WinWindow::InitEventCallbacks(void)

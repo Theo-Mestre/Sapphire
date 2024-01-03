@@ -1,13 +1,19 @@
 #ifndef SPH_APPLICATION_H
 #define SPH_APPLICATION_H
 
+#include <memory>
+
 #include "Sapphire/Core.h"
 #include "Sapphire/Layers/LayerStack.h"
+
+#include "Sapphire/Renderer/Buffer.h"
 
 namespace sph
 {
 	class Window;
 	class ImGuiLayer;
+	class Shader;
+	class VertexArray;
 
 	class  Application
 	{
@@ -23,10 +29,10 @@ namespace sph
 		virtual void PopLayer(Layer* _layer);
 		virtual void PopOverlay(Layer* _overlay);
 	protected:
-		virtual void Init();
-		virtual void OnEvent(sph::Event& _event);
-		virtual void OnUpdate();
-		virtual void OnRender();
+		virtual void Init() {}
+		virtual void OnEvent(Event& _event) {}
+		virtual void OnUpdate() {}
+		virtual void OnRender() {}
 
 	protected:
 		LayerStack m_layerStack;

@@ -15,7 +15,7 @@ project (projectName)
    pchheader "sphpch.h"
    pchsource "Source/sphpch.cpp"
 
-   defines { string.upper(projectName) .. "_BUILD_DLL", string.upper(projectName) .. "_ENABLE_ASSERTS" }
+   defines { "SPH_BUILD", string.upper(projectName) .. "_ENABLE_ASSERTS" }
 
    files { "Source/**.h", "Source/**.cpp", "Source/**.inl" }
 

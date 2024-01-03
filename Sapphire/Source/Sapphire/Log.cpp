@@ -18,6 +18,9 @@ namespace sph
 		s_clientLogger->set_level(spdlog::level::trace);
 
 		s_initialized = true;
+
+		LogInfo("Logger initialized!");
+
 	}
 
 	Logger::Logger()

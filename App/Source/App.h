@@ -5,6 +5,8 @@
 namespace sph
 {
 	class Window;
+	class VextexArray;
+	class Shader;
 }
 
 class Sandbox
@@ -18,4 +20,10 @@ private:
 	virtual void Init() override;
 	virtual void OnEvent(sph::Event& _event) override;
 	virtual void OnUpdate() override;
+	virtual void OnRender() override;
+
+private:
+	std::shared_ptr<sph::VertexArray> m_triVA;
+	std::shared_ptr<sph::VertexArray> m_rectVA;
+	std::shared_ptr<sph::Shader> m_shader;
 };

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Sapphire/Layers/Layer.h"
 
 class DefaultLayer

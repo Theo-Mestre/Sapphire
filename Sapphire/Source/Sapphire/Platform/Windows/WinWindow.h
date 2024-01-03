@@ -6,6 +6,8 @@
 
 namespace sph
 {
+	class  GraphicsContext;
+
 	/**
 	 * @brief Windows implementation of the Window class
 	 */
@@ -43,6 +45,7 @@ namespace sph
 		inline static bool s_GLFWInitialized = false;
 		GLFWwindow* m_window;
 		WindowData m_data;
+		GraphicsContext* m_context;
 	};
 }
 #endif

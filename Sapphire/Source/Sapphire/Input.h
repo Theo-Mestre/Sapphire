@@ -1,8 +1,6 @@
 #ifndef SPH_INPUT_H
 #define SPH_INPUT_H
 
-#include "Core.h"
-
 #include "Log.h"
 
 namespace sph
@@ -26,6 +24,7 @@ namespace sph
 		{
 			ASSERT(s_instance, "Input not initialized");
 			s_instance->m_window = _window;
+			LogInfo("Input initialized");
 		}
 
 		Input() = default;

@@ -19,7 +19,7 @@
 #endif
 
 #ifdef SPH_ENABLE_INFO_LOG
-#	define Info(...)	SAPPHIRE_GET_CURRENT_LOGGER->info(__VA_ARGS__)
+#	define Info(...)	LogInfo(__VA_ARGS__)
 #else
 #	define Info(...)
 #endif
