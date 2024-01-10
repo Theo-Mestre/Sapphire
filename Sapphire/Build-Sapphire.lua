@@ -17,7 +17,7 @@ project (projectName)
 
    defines { "SPH_BUILD", string.upper(projectName) .. "_ENABLE_ASSERTS" }
 
-   files { "Source/**.h", "Source/**.cpp", "Source/**.inl" }
+   files { "Source/**.h", "Source/**.cpp", "Source/**.inl", "../Vendor/include/stb_image.cpp" }
 
    includedirs
    {

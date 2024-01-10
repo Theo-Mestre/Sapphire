@@ -18,7 +18,16 @@
 #include "Sapphire/Window/Window.h"	
 
 #include "Sapphire/Renderer/Renderer.h"
+#include "Sapphire/Renderer/VertexArray.h"
 #include "Sapphire/Renderer/Shader.h"
 #include "Sapphire/Renderer/Buffer.h"
-#include "Sapphire/Renderer/VertexArray.h"
+#include "Sapphire/Renderer/Material.h"
+#include "Sapphire/Renderer/Texture.h"
+
+#include "Sapphire/Renderer/Camera.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <imgui.h>
 #endif

@@ -1,11 +1,16 @@
 #pragma once
 
+#include <memory>
+
 #include "Sapphire/Application.h"
 
 namespace sph
 {
-	class Window;
+	class OrthographicCamera;
 	class VextexArray;
+	class Texture2D;
+	class Material;
+	class Window;
 	class Shader;
 }
 
@@ -22,8 +27,19 @@ private:
 	virtual void OnUpdate() override;
 	virtual void OnRender() override;
 
+	void InitShaders();
+
 private:
-	std::shared_ptr<sph::VertexArray> m_triVA;
-	std::shared_ptr<sph::VertexArray> m_rectVA;
-	std::shared_ptr<sph::Shader> m_shader;
+	sph::Ref<sph::VertexArray> m_spriteVA;
+	sph::Ref<sph::VertexArray> m_rectVA;
+	sph::Ref<sph::Material> m_defaultMaterial;
+	sph::Ref<sph::Material> m_colorMaterial;
+	sph::Ref<sph::Material> m_textureMaterial;
+	sph::Ref<sph::Texture2D> m_texture;
+	glm::mat4 m_squareTransform;
+
+	glm::vec4 m_color1;
+	glm::vec4 m_color2;
+
+	sph::Scope<sph::OrthographicCamera> m_camera;
 };

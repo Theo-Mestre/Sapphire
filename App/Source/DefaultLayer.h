@@ -1,6 +1,8 @@
 #pragma once
 #include "Sapphire/Layers/Layer.h"
 
+#include <glm/glm.hpp>
+
 class DefaultLayer
 	: public sph::Layer
 {
@@ -13,4 +15,14 @@ public:
 	void OnUpdate() override;
 	void OnEvent(sph::Event& _event) override;
 	void OnImGuiRender() override;
+
+	void SetColors(glm::vec4* _color1, glm::vec4* _color2)
+	{
+		m_color1 = _color1;
+		m_color2 = _color2;
+	}
+
+private:
+	glm::vec4* m_color1;
+	glm::vec4* m_color2;
 };

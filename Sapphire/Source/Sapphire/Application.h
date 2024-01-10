@@ -1,11 +1,8 @@
 #ifndef SPH_APPLICATION_H
 #define SPH_APPLICATION_H
 
-#include <memory>
-
 #include "Sapphire/Core.h"
 #include "Sapphire/Layers/LayerStack.h"
-
 #include "Sapphire/Renderer/Buffer.h"
 
 namespace sph

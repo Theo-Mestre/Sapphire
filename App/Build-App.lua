@@ -3,8 +3,6 @@ project "App"
    language "C++"
    cppdialect "C++20"
    staticruntime "on"
-   
-   targetdir "Binaries/%{cfg.buildcfg}"
 
    files { "Source/**.h", "Source/**.cpp", "Source/**.inl"}
 
@@ -28,6 +26,7 @@ project "App"
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
    objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
+   debugdir "Assets"
 
    filter "system:windows"
        systemversion "latest"

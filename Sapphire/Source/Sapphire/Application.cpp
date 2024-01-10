@@ -1,6 +1,7 @@
 #include "sphpch.h"
 
 #include "Application.h"
+#include "Sapphire/Time.h"
 #include "Sapphire/Input.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
 #include "Sapphire/ImGui/ImGuiLayer.h"
@@ -38,6 +39,8 @@ namespace sph
 	{
 		while (m_isRunning)
 		{
+			Time::Update();
+
 			OnUpdate();
 
 			// Update layers

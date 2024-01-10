@@ -1,6 +1,8 @@
 #ifndef SPH_INDEX_BUFFER_H
 #define SPH_INDEX_BUFFER_H
 
+#include "Sapphire/Core.h"
+
 namespace sph
 {
 	enum class ShaderDataType
