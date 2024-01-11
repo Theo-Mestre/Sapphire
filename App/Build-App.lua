@@ -26,7 +26,7 @@ project "App"
 
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
    objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
-   debugdir "Assets"
+   debugdir "../Assets"
 
    filter "system:windows"
        systemversion "latest"
