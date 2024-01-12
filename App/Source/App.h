@@ -32,6 +32,7 @@ private:
 private:
 	sph::Ref<sph::VertexArray> m_spriteVA;
 	sph::Ref<sph::VertexArray> m_rectVA;
+	sph::Ref<sph::VertexArray> m_triVA;
 	sph::Ref<sph::Material> m_defaultMaterial;
 	sph::Ref<sph::Material> m_colorMaterial;
 	sph::Ref<sph::Material> m_textureMaterial;

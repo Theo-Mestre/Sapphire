@@ -93,6 +93,32 @@ void Sandbox::Init()
 	m_rectVA->SetIndexBuffer(squareIB);
 
 	///////////////////////////////////////////
+	///				Triangle  				///
+	///////////////////////////////////////////
+
+	m_triVA.reset(sph::VertexArray::Create());
+
+	float triVertices[3 * 3] =
+	{
+		-0.5f, -0.5f, 0.0f,
+		 0.5f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f
+	};
+
+	sph::Ref<sph::VertexBuffer> triVB;
+	triVB.reset(sph::VertexBuffer::Create(&triVertices, sizeof(triVertices)));
+	triVB->SetLayout({
+		{ sph::ShaderDataType::Float3, "a_position" }
+		});
+
+	uint32_t triIndices[3] = { 0,1,2 };
+	sph::Ref<sph::IndexBuffer> triIB;
+	triIB.reset(sph::IndexBuffer::Create(triIndices, sizeof(triIndices) / sizeof(uint32_t)));
+
+	m_triVA->AddVertexBuffer(triVB);
+	m_triVA->SetIndexBuffer(triIB);
+
+	///////////////////////////////////////////
 	///				Texture  				///
 	///////////////////////////////////////////
 
@@ -223,6 +249,11 @@ void Sandbox::OnRender()
 				sph::Renderer::Submit(m_rectVA, m_colorMaterial, transform);
 			}
 		}
+		static glm::mat4 triTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-0.80f, -0.40f, 0.0f));
+
+		m_defaultMaterial->Bind();
+		static_cast<sph::OpenGLShader*>(m_defaultMaterial->GetShader().get())->SetUniformFloat("u_time", sph::Time::GameTime);
+		sph::Renderer::Submit(m_triVA, m_defaultMaterial, triTransform);
 
 		sph::Renderer::Submit(m_spriteVA, m_textureMaterial, m_squareTransform);
 
@@ -290,11 +321,13 @@ void Sandbox::InitShaders()
 
 			layout(location = 0) out vec4 color;
 
+			uniform float u_time;
 			in vec3 v_position;
 
 			void main()
 			{
-				color = vec4(v_position * 0.5 + 0.5, 1.0);
+				float colorModifier = cos(u_time);
+				color = vec4(v_position * 0.5 + (0.5 + colorModifier * 0.5), 1.0);
 			}
 		)";
 
