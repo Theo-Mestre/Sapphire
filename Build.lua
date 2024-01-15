@@ -12,6 +12,8 @@ OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 
 group "Sapphire"
 	include "Sapphire/Build-Sapphire.lua"
+	--include "Sapphire/Editor/Build-Editor.lua"
+group "Sapphire/Dependencies"
 	include "Vendor/ThirdParty/Glad/Build-Glad.lua"
 	include "Vendor/ThirdParty/GLFW/Build-GLFW.lua"
 	include "Vendor/ThirdParty/ImGui/Build-ImGui.lua"

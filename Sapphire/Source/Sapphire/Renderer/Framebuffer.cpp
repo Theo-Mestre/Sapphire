@@ -1,0 +1,25 @@
+#include "sphpch.h"
+#include "Framebuffer.h"
+
+#include "RendererAPI.h"
+#include "Sapphire/Log.h"
+#include "Sapphire/Platform/OpenGL/OpenGLFramebuffer.h"
+
+namespace sph
+{
+	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
+	{
+		switch (RendererAPI::GetAPI())
+		{
+		case RendererAPI::API::None:
+			ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLFramebuffer>(spec);
+		default:
+			break;
+		}
+		ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+}

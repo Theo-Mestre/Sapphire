@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Sapphire/Application.h"
 
 namespace sph
@@ -26,6 +24,7 @@ private:
 	virtual void OnEvent(sph::Event& _event) override;
 	virtual void OnUpdate() override;
 	virtual void OnRender() override;
+	virtual void OnImGuiRender() override;
 
 	void InitShaders();
 
@@ -37,6 +36,8 @@ private:
 	sph::Ref<sph::Material> m_colorMaterial;
 	sph::Ref<sph::Material> m_textureMaterial;
 	sph::Ref<sph::Texture2D> m_texture;
+	sph::Ref<sph::Texture2D> m_sapphire;
+	sph::Ref<sph::Framebuffer> m_framebuffer;
 	glm::mat4 m_squareTransform;
 
 	glm::vec4 m_color1;

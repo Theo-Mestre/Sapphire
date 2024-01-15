@@ -30,6 +30,7 @@ namespace sph
 		virtual void OnEvent(Event& _event) {}
 		virtual void OnUpdate() {}
 		virtual void OnRender() {}
+		virtual void OnImGuiRender() {}
 
 	protected:
 		LayerStack m_layerStack;

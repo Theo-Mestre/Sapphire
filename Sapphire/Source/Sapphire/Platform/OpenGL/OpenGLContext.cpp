@@ -20,7 +20,7 @@ void sph::OpenGLContext::Init()
 {
 	glfwMakeContextCurrent(m_windowHandle);
 	int gladLoadResult = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	ASSERT(gladLoadResult, "Failed to initialize Glad");
+	ASSERT(gladLoadResult, "Failed to initialize Glad!");
 
 	Info("OpenGL Info:");
 	Info("  Vendor: {}", (char*)glGetString(GL_VENDOR));

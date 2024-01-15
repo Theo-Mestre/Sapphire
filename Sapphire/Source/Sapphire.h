@@ -23,6 +23,7 @@
 #include "Sapphire/Renderer/Buffer.h"
 #include "Sapphire/Renderer/Material.h"
 #include "Sapphire/Renderer/Texture.h"
+#include "Sapphire/Renderer/Framebuffer.h"
 
 #include "Sapphire/Renderer/Camera.h"
 

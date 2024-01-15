@@ -28,7 +28,7 @@ namespace sph
 		case ShaderDataType::Bool:		return GL_BOOL;
 		}
 
-		ASSERT(false, "Unknown ShaderDataType");
+		ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 

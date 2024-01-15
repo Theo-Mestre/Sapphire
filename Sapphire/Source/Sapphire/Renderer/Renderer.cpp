@@ -13,6 +13,9 @@ namespace sph
 
 	void Renderer::Init()
 	{
+		RenderCommand::Init();
+		//Renderer2D::Init();
+
 	}
 
 	void Renderer::OnWindowResize(uint32_t _width, uint32_t _height)

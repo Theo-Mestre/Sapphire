@@ -3,6 +3,11 @@
 
 #include <glm/glm.hpp>
 
+namespace sph
+{
+	class Framebuffer;
+}
+
 class DefaultLayer
 	: public sph::Layer
 {

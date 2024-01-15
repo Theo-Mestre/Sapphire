@@ -29,7 +29,7 @@ namespace sph
 		case ShaderDataType::Bool:		return 1;
 		}
 
-		ASSERT(false, "Unknown ShaderDataType");
+		ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 

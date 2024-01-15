@@ -54,7 +54,7 @@ namespace sph
 		{
 			// Initialize GLFW
 			int glfwInitResult = glfwInit();
-			ASSERT(glfwInitResult, "Failed to initialize GLFW");
+			ASSERT(glfwInitResult, "Failed to initialize GLFW!");
 
 			// Set GLFW error callback and set initialized flag to true
 			glfwSetErrorCallback(GLFWErrorCallback);
@@ -63,7 +63,7 @@ namespace sph
 
 		// Create a GLFWwindow object that we can use for GLFW's functions
 		m_window = glfwCreateWindow(_properties.Width, _properties.Height, _properties.Title.c_str(), nullptr, nullptr);
-		ASSERT(m_window, "Failed to create a GLFW window");
+		ASSERT(m_window, "Failed to create a GLFW window!");
 
 		// Create the graphics context
 		m_context = new OpenGLContext(m_window);

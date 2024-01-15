@@ -51,6 +51,7 @@ namespace sph
 
 			// Render ImGui
 			m_imGuiLayer->Begin();
+			OnImGuiRender();
 			for (sph::Layer* layer : m_layerStack)
 			{
 				layer->OnImGuiRender();

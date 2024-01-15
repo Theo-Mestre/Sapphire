@@ -9,6 +9,7 @@ DefaultLayer::DefaultLayer()
 	, m_color2(nullptr)
 {
 	LogInfo("DefaultLayer created");
+
 }
 
 void DefaultLayer::OnAttach()
@@ -46,4 +47,13 @@ void DefaultLayer::OnImGuiRender()
 	ImGui::Text("Choose second Color : ");
 	ImGui::ColorEdit4("Color 2", glm::value_ptr(*m_color2));
 	ImGui::End();
+
+	// Dockspace
+	static bool p_open = true;
+	static bool opt_fullscreen_persistant = true;
+	static ImGuiDockNodeFlags opt_flags = ImGuiDockNodeFlags_None;
+	bool opt_fullscreen = opt_fullscreen_persistant;
+		
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	
 }

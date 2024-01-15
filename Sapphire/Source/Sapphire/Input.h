@@ -8,7 +8,7 @@ namespace sph
 	class Window;
 	
 #pragma warning(disable: 5103)
-#define INPUT_CALL_IMPL(x) ASSERT(s_instance, "Input not initializer") return s_instance->##x
+#define INPUT_CALL_IMPL(x) ASSERT(s_instance, "Input not initialized!") return s_instance->##x
 
 	class  Input
 	{
@@ -22,7 +22,7 @@ namespace sph
 
 		inline static void Init(Window* _window)
 		{
-			ASSERT(s_instance, "Input not initialized");
+			ASSERT(s_instance, "Input not initialized!");
 			s_instance->m_window = _window;
 			LogInfo("Input initialized");
 		}
