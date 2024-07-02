@@ -1,7 +1,7 @@
 #ifndef SPH_FRAMEBUFFER_H
 #define SPH_FRAMEBUFFER_H
 
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 
 namespace sph
 {
@@ -13,8 +13,6 @@ namespace sph
 		/*
 			filtering: linear, nearest
 		*/
-
-		bool SwapChainTarget = false;
 	};
 
 	class Framebuffer

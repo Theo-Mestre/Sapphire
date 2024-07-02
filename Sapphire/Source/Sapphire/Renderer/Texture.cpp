@@ -14,7 +14,7 @@ namespace sph
 			ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLTexture2D>(_path);
+			return CreateRef<OpenGLTexture2D>(_path);
 		default:
 			ASSERT(false, "RendererAPI::None is currently not supported!");
 			return nullptr;
@@ -23,6 +23,16 @@ namespace sph
 
 	Ref<Texture2D> sph::Texture2D::Create(uint32_t _width, uint32_t _height)
 	{
-		return Ref<Texture2D>();
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:
+			ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLTexture2D>(_width, _height);
+		default:
+			ASSERT(false, "RendererAPI::None is currently not supported!");
+			return nullptr;
+		}
 	}
 }

@@ -6,13 +6,13 @@
 namespace sph
 {
 	Material::Material()
-		: m_shader(nullptr)
+		: m_material(nullptr)
 		, m_texture(nullptr)
 	{
 	}
 
 	Material::Material(const std::shared_ptr<Shader>& _shader)
-		: m_shader(_shader)
+		: m_material(_shader)
 		, m_texture(nullptr)
 	{
 	}
@@ -23,15 +23,20 @@ namespace sph
 
 	void Material::Bind() const
 	{
-		m_shader->Bind();
+		m_material->Bind();
 		if (m_texture.get())
 			m_texture->Bind();
 	}
 
 	void Material::Unbind() const
 	{
-		m_shader->Unbind();
+		m_material->Unbind();
 		if (m_texture)
 			m_texture->Unbind();
+	}
+
+	Ref<Material> Material::Create(const Ref<Shader>& _shader)
+	{
+		return std::make_shared<Material>(_shader);
 	}
 }

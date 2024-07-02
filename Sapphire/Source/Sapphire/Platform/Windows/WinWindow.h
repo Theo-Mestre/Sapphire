@@ -1,7 +1,7 @@
 #ifndef SPH_WINDOW_H
 #define SPH_WINDOW_H
 
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 #include "Sapphire/Window/Window.h"
 
 namespace sph

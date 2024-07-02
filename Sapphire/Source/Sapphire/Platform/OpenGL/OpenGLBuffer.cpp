@@ -3,7 +3,7 @@
 
 #include "OpenGLBuffer.h"
 #include "Sapphire/Log.h"
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 
 namespace sph
 {

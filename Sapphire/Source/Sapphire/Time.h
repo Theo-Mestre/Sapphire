@@ -1,11 +1,13 @@
 #ifndef ENGINE_TIME_H
 #define ENGINE_TIME_H
 
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 
 namespace sph
 {
-	class  Time
+	using DeltaTime = float;
+
+	class Time
 	{
 	public:
 		static void Update();

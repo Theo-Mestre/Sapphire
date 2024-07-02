@@ -2,6 +2,7 @@
 #define SAPPHIRE_LAYER_H
 
 #include "Sapphire/Events/Event.h"
+#include "Sapphire/Time.h"
 
 namespace sph
 {
@@ -13,7 +14,7 @@ namespace sph
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(DeltaTime _dt) {}
 		virtual void OnEvent(Event& event) {}
 		virtual void OnImGuiRender() {}
 

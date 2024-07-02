@@ -4,7 +4,7 @@
 
 #include "WinWindow.h"
 
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 #include "Sapphire/Log.h"
 
 #include "Sapphire/Events/ApplicationEvent.h"

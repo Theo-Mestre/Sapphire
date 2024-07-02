@@ -10,7 +10,7 @@ namespace sph
 	{
 	public:
 		OpenGLTexture2D(const std::string& _path);
-		//OpenGLTexture2D(uint32_t _width, uint32_t _height);
+		OpenGLTexture2D(uint32_t _width, uint32_t _height);
 		virtual ~OpenGLTexture2D();
 
 		virtual void Bind(uint32_t _slot = 0) const override;
@@ -20,6 +20,8 @@ namespace sph
 		virtual uint32_t GetHeight() const override { return m_height; }
 
 		virtual uint32_t GetRendererID() const override { return m_rendererID; }
+
+		virtual void SetData(void* _data, uint32_t _size) override;
 
 		virtual bool operator==(const Texture& _other) const override
 		{

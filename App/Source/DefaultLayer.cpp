@@ -9,7 +9,6 @@ DefaultLayer::DefaultLayer()
 	, m_color2(nullptr)
 {
 	LogInfo("DefaultLayer created");
-
 }
 
 void DefaultLayer::OnAttach()
@@ -22,7 +21,7 @@ void DefaultLayer::OnDetach()
 	LogInfo("DefaultLayer detached");
 }
 
-void DefaultLayer::OnUpdate()
+void DefaultLayer::OnUpdate(sph::DeltaTime _dt)
 {
 
 }
@@ -34,10 +33,6 @@ void DefaultLayer::OnEvent(sph::Event& _event)
 
 void DefaultLayer::OnImGuiRender()
 {
-	ImGui::Begin("Test");
-	ImGui::Text("Hello World!");
-	ImGui::End();
-
 	if (m_color1 == nullptr ||
 		m_color2 == nullptr) return;
 

@@ -1,6 +1,8 @@
 #ifndef VERTEX_ARRAY_H
 #define VERTEX_ARRAY_H
 
+#include "Sapphire/Core/Core.h"
+
 namespace sph
 {
 	class VertexBuffer;
@@ -21,7 +23,7 @@ namespace sph
 		virtual const std::vector<std::shared_ptr<VertexBuffer>>& GetVertexBuffers() const = 0;
 		virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const = 0;
 
-		static VertexArray* Create();
+		static sph::Ref<VertexArray> Create();
 	};
 }
 

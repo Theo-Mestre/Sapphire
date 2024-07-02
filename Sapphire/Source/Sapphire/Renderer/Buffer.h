@@ -1,7 +1,7 @@
 #ifndef SPH_INDEX_BUFFER_H
 #define SPH_INDEX_BUFFER_H
 
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 
 namespace sph
 {
@@ -56,7 +56,7 @@ namespace sph
 		VertexBuffer() = default;
 		virtual ~VertexBuffer() = default;
 
-		static VertexBuffer* Create(const void* _data, uint32_t _size);
+		static Ref<VertexBuffer> Create(const void* _data, uint32_t _size);
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
@@ -72,7 +72,7 @@ namespace sph
 		IndexBuffer() = default;
 		virtual ~IndexBuffer() = default;
 
-		static IndexBuffer* Create(const uint32_t* _data, uint16_t _count);
+		static Ref<IndexBuffer> Create(const uint32_t* _data, uint16_t _count);
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;

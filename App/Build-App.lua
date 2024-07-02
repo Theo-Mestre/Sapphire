@@ -24,6 +24,12 @@ project "App"
 	  "Sapphire"
    }
 
+   defines 
+   {
+	  "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING",
+	  "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
+   }
+
    targetdir ("../Binaries/" .. OutputDir .. "/%{prj.name}")
    objdir ("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
    debugdir "../Assets"

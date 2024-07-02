@@ -1,7 +1,7 @@
 #ifndef SPH_WINDOW_INTERFACE_H
 #define SPH_WINDOW_INTERFACE_H
 
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 #include "Sapphire/Events/Event.h"
 
 struct GLFWwindow;

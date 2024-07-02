@@ -24,7 +24,7 @@ namespace sph
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnUpdate() override;
+		virtual void OnUpdate(DeltaTime _dt) override;
 		virtual void OnImGuiRender() override;
 
 		void Begin();

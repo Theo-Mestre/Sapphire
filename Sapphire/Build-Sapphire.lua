@@ -15,7 +15,13 @@ project (projectName)
    pchheader "sphpch.h"
    pchsource "Source/sphpch.cpp"
 
-   defines { "SPH_BUILD", string.upper(projectName) .. "_ENABLE_ASSERTS" }
+   defines
+   { 
+       "SPH_BUILD", 
+       string.upper(projectName) .. "_ENABLE_ASSERTS",
+	   "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING", 
+	   "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
+   }
 
    files { "Source/**.h", "Source/**.cpp", "Source/**.inl", "../Vendor/include/stb_image.cpp" }
 

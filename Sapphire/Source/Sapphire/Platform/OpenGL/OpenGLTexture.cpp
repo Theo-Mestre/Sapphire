@@ -19,9 +19,6 @@ namespace sph
 
 		ASSERT(data, "Failed to load image!");
 
-		m_width = m_width;
-		m_height = m_height;
-
 		if (channels == 4)
 		{
 			m_internalFormat = GL_RGBA8;
@@ -41,14 +38,31 @@ namespace sph
 		glTextureParameterf(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameterf(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
 		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 	}
 
-	//OpenGLTexture2D::OpenGLTexture2D(uint32_t _width, uint32_t _height)
-	//{
-	//}
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t _width, uint32_t _height)
+		: m_width(_width)
+		, m_height(_height)
+		, m_internalFormat(GL_RGBA8)
+		, m_dataFormat(GL_RGBA)
+		, m_rendererID(0)
+	{
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
+		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);
+
+		glTextureParameterf(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameterf(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
@@ -63,5 +77,12 @@ namespace sph
 	void OpenGLTexture2D::Unbind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void OpenGLTexture2D::SetData(void* _data, uint32_t _size)
+	{
+		uint32_t bpp = m_dataFormat == GL_RGBA ? 4 : 3;
+		ASSERT(_size == m_width * m_height * bpp, "Data must be entire texture!");
+		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, _data);
 	}
 }

@@ -21,7 +21,11 @@ namespace sph
 		inline const glm::vec3& GetRotation() const { return m_rotation; }
 
 		inline void SetPosition(float x, float y, float z) { m_position = glm::vec3(x, y, z); RecalculateViewMatrix(); }
+		inline void SetPosition(const glm::vec3& position) { m_position = position; RecalculateViewMatrix(); }
+		
 		inline void SetRotation(float x, float y, float z) { m_rotation = glm::vec3(x, y, z); RecalculateViewMatrix(); }
+		inline void SetRotation(const glm::vec3& rotation) { m_rotation = rotation; RecalculateViewMatrix(); }
+		
 		inline void Rotate(float x, float y, float z) { m_rotation += glm::vec3(x, y, z); RecalculateViewMatrix(); }
 		inline void Translate(float x, float y, float z) { m_position += glm::vec3(x, y, z); RecalculateViewMatrix(); }
 

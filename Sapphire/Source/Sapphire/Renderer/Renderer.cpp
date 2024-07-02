@@ -1,10 +1,11 @@
 #include "sphpch.h"
 #include "Renderer.h"
 
-#include "Shader.h"
-#include "Camera.h"
-#include "Material.h"
-#include "VertexArray.h"
+#include "Sapphire/Renderer/Shader.h"
+#include "Sapphire/Renderer/Camera.h"
+#include "Sapphire/Renderer/Material.h"
+#include "Sapphire/Renderer/VertexArray.h"
+#include "Sapphire/Renderer/Renderer2D.h"
 #include "Sapphire/Platform/OpenGL/OpenGLShader.h"
 
 namespace sph
@@ -14,12 +15,17 @@ namespace sph
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
-		//Renderer2D::Init();
+		Renderer2D::Init();
+	}
 
+	void Renderer::Shutdown()
+	{
+		Renderer2D::Shutdown();
 	}
 
 	void Renderer::OnWindowResize(uint32_t _width, uint32_t _height)
 	{
+		RenderCommand::SetViewport(0, 0, _width, _height);
 	}
 
 	void Renderer::BeginScene(const OrthographicCamera& _camera)
@@ -35,9 +41,8 @@ namespace sph
 	{
 		_material->Bind();
 
-		sph::OpenGLShader* shader = static_cast<sph::OpenGLShader*>(_material->GetShader().get());
-		shader->SetUniformMat4f("u_viewProjection", s_sceneData.ViewProjectionMatrix);
-		shader->SetUniformMat4f("u_transform", _transform);
+		_material->GetShader()->SetMat4("u_viewProjection", s_sceneData.ViewProjectionMatrix);
+		_material->GetShader()->SetMat4("u_transform", _transform);
 
 		_vertexArray->Bind();
 		RenderCommand::DrawIndexed(_vertexArray);

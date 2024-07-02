@@ -2,7 +2,7 @@
 #define SPH_EVENT_H
 
 #include "sphpch.h"
-#include "Sapphire/Core.h"
+#include "Sapphire/Core/Core.h"
 
 namespace sph
 {
@@ -47,7 +47,11 @@ namespace sph
 			return GetCategoryFlags() & category;
 		}
 
-		friend std::ostream& operator<<(std::ostream& _os, const Event& _e);
+		friend std::ostream& operator<<(std::ostream& _os, const Event& _e)
+		{
+			return _os << _e.ToString();
+		}
+
 		friend class EventDispatcher;
 	private:
 		bool m_handled = false;
@@ -74,10 +78,4 @@ namespace sph
 		Event& m_event;
 	};
 }
-
-inline std::ostream& operator<<(std::ostream& _os, const sph::Event& _e)
-{
-	return _os << _e.ToString();
-}
-
 #endif

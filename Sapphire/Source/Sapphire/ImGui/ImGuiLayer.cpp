@@ -66,7 +66,7 @@ namespace sph
 		ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::OnUpdate()
+	void ImGuiLayer::OnUpdate(DeltaTime _dt)
 	{
 	}
 

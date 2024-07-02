@@ -7,7 +7,7 @@ namespace sph
 {
 	void Time::Update()
 	{
-		GameTime = glfwGetTime();
+		GameTime = (float)glfwGetTime();
 
 		UnscaledDeltaTime = GameTime - LastTime;
 		DeltaTime = UnscaledDeltaTime * TimeScale;

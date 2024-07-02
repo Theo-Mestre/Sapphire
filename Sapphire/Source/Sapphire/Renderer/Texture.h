@@ -1,7 +1,7 @@
 #ifndef SPH_TEXTURE_H
 #define SPH_TEXTURE_H
 
-#include "Sapphire/Core.h"	
+#include "Sapphire/Core/Core.h"	
 
 namespace sph
 {
@@ -25,8 +25,10 @@ namespace sph
 		: public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(const std::string& _path);
 		static Ref<Texture2D> Create(uint32_t _width, uint32_t _height);
+		static Ref<Texture2D> Create(const std::string& _path);
+
+		virtual void SetData(void* _data, uint32_t _size) = 0;
 	};
 }
 #endif

@@ -4,7 +4,7 @@
 
 namespace sph
 {
-	class OrthographicCamera;
+	class OrthographicCameraController;
 	class VextexArray;
 	class Texture2D;
 	class Material;
@@ -27,14 +27,17 @@ private:
 	virtual void OnImGuiRender() override;
 
 	void InitShaders();
-
 private:
 	sph::Ref<sph::VertexArray> m_spriteVA;
 	sph::Ref<sph::VertexArray> m_rectVA;
 	sph::Ref<sph::VertexArray> m_triVA;
+
+	sph::ShaderLibrary m_shaderLibrary;
 	sph::Ref<sph::Material> m_defaultMaterial;
 	sph::Ref<sph::Material> m_colorMaterial;
 	sph::Ref<sph::Material> m_textureMaterial;
+	
+	
 	sph::Ref<sph::Texture2D> m_texture;
 	sph::Ref<sph::Texture2D> m_sapphire;
 	sph::Ref<sph::Framebuffer> m_framebuffer;
@@ -43,5 +46,5 @@ private:
 	glm::vec4 m_color1;
 	glm::vec4 m_color2;
 
-	sph::Scope<sph::OrthographicCamera> m_camera;
+	sph::Scope<sph::OrthographicCameraController> m_cameraController;
 };

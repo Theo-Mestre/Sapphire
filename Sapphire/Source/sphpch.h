@@ -10,6 +10,8 @@
 #include <array>
 #include <vector>
 
+#include <fstream>
+
 #include <chrono>
 
 #pragma warning(push, 0)

@@ -17,7 +17,7 @@ public:
 
 	void OnAttach() override;
 	void OnDetach() override;
-	void OnUpdate() override;
+	void OnUpdate(sph::DeltaTime _dt) override;
 	void OnEvent(sph::Event& _event) override;
 	void OnImGuiRender() override;
 

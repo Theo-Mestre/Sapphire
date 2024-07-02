@@ -13,6 +13,13 @@ project "spdlog"
 		"spdlog/**.cpp",
 	}
 
+	defines
+	{
+		"SPDLOG_COMPILED_LIB",
+		"_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING", 
+		"_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
+	}
+
 	includedirs "$(SolutionDir)Vendor/ThirdParty/spdlog"
 	
 	warnings "Off"

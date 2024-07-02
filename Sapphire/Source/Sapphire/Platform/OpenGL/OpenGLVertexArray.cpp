@@ -60,7 +60,7 @@ namespace sph
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& _vertexBuffer)
+	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& _vertexBuffer)
 	{
 		ASSERT(_vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
@@ -77,14 +77,14 @@ namespace sph
 				ShaderDataTypeToOpenGLBaseType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				layout.GetStride(),
-				(const void*)element.offset);
+				reinterpret_cast<const void*>(static_cast<uintptr_t>(element.offset)));
 			index++;
 		}
 
 		m_vertexBuffers.push_back(_vertexBuffer);
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& _indexBuffer)
+	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& _indexBuffer)
 	{
 		glBindVertexArray(m_rendererID);
 		_indexBuffer->Bind();

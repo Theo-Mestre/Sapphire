@@ -1,8 +1,11 @@
 #ifndef SPH_LOG_H
 #define SPH_LOG_H
 
-#include "sphpch.h"
-#include "Sapphire/Core.h"
+#pragma warning(push, 0)
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#pragma warning(pop)
+#include "Sapphire/Core/Core.h"
 
 namespace sph
 {
