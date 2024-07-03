@@ -3,7 +3,7 @@
 
 #include "OpenGLVertexArray.h"
 #include "Sapphire/Renderer/Buffer.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 
 namespace sph
 {

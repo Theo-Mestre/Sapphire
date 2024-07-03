@@ -5,7 +5,7 @@
 #include "WinWindow.h"
 
 #include "Sapphire/Core/Core.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Events/KeyEvent.h"

@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 
 #include "OpenGLBuffer.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 #include "Sapphire/Core/Core.h"
 
 namespace sph

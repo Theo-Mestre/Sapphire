@@ -2,7 +2,7 @@
 #include "Framebuffer.h"
 
 #include "RendererAPI.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 #include "Sapphire/Platform/OpenGL/OpenGLFramebuffer.h"
 
 namespace sph

@@ -3,7 +3,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 
 namespace sph
 {

@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 
 #include "Shader.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 #include "Sapphire/Renderer/Renderer.h"
 
 #include "Sapphire/Platform/OpenGL/OpenGLShader.h"

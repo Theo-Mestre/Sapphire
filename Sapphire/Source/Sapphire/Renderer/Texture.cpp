@@ -1,7 +1,7 @@
 #include "sphpch.h"
 #include "Texture.h"
 #include "Renderer.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 #include "Sapphire/Platform/OpenGL/OpenGLTexture.h"
 
 namespace sph

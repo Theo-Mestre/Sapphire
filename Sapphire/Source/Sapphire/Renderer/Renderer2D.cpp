@@ -7,6 +7,7 @@
 #include "Sapphire/Renderer/Camera.h"
 #include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Renderer/Texture.h"
+#include "Sapphire/Profiling/Profiler.h"
 
 namespace sph
 {
@@ -21,6 +22,8 @@ namespace sph
 
 	void Renderer2D::Init()
 	{
+		PROFILE_FUNCTION();
+
 		s_data = new Renderer2DData();
 
 		float vertices[4 * 5] = {
@@ -53,7 +56,6 @@ namespace sph
 		s_data->whiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_data->whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
-		
 	}
 
 	void Renderer2D::Shutdown()

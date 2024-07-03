@@ -2,9 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#include "Sapphire/Core/Core.h"
 #include "OpenGLContext.h" 
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Core.h"
+#include "Sapphire/Core/Log.h"
 
 
 sph::OpenGLContext::OpenGLContext(GLFWwindow* _window)

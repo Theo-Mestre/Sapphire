@@ -1,7 +1,7 @@
 #ifndef SPH_WINDOWS_INPUT_H
 #define SPH_WINDOWS_INPUT_H
 
-#include "Sapphire/Input.h"
+#include "Sapphire/Core/Input.h"
 
 namespace sph
 {

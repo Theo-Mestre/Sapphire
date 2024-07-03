@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 
 #include "OpenGLShader.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 
 namespace sph
 {

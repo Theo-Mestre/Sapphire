@@ -1,7 +1,5 @@
 #include "TestRenderer.h"
 
-#include "Sapphire/Platform/OpenGL/OpenGLShader.h"
-
 TestRenderer::TestRenderer()
 	: Layer("TestRenderer")
 {
@@ -20,22 +18,24 @@ void TestRenderer::OnDetach()
 
 void TestRenderer::OnUpdate(sph::DeltaTime _dt)
 {
-	m_rotation += _dt;
+	m_rotation += _dt * 45;
 
 	m_cameraController->OnUpdate(_dt);
 
 	sph::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 	sph::RenderCommand::Clear();
 
-	sph::Renderer2D::BeginScene(m_cameraController->GetCamera());
-
 	{
-		sph::Renderer2D::DrawQuad({ -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_color);
-		sph::Renderer2D::DrawQuad({ 0.8f, 0.2f, 0.0f }, { 0.2f, 1.5f }, m_rotation, glm::vec4(0.8f, -0.2f, 0.3f, 1.0f));
-		sph::Renderer2D::DrawQuad({ -1.5f, 0.9f, 0.0f }, { 0.1f, 0.1f }, m_texture);
-	}
+		sph::Renderer2D::BeginScene(m_cameraController->GetCamera());
 
-	sph::Renderer::EndScene();
+		{
+			sph::Renderer2D::DrawQuad({ -1.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, m_color);
+			sph::Renderer2D::DrawQuad({ 0.8f, 0.2f, 0.0f }, { 0.2f, 1.5f }, m_rotation, glm::vec4(0.8f, -0.2f, 0.3f, 1.0f));
+			sph::Renderer2D::DrawQuad({ -1.5f, 0.9f, 0.0f }, { 0.1f, 0.1f }, m_texture);
+		}
+
+		sph::Renderer::EndScene();
+	}
 }
 
 void TestRenderer::OnImGuiRender()

@@ -2,7 +2,7 @@
 #define SAPPHIRE_ORTHOGRAPHIC_CAMERA_CONTROLLER_H
 
 #include "Sapphire/Renderer/Camera.h"
-#include "Sapphire/Time.h"
+#include "Sapphire/Core/Time.h"
 
 namespace sph
 {

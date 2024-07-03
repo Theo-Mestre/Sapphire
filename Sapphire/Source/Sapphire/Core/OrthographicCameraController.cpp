@@ -1,8 +1,8 @@
 #include "sphpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Sapphire/Input.h"
-#include "Sapphire/KeyCode.h"
+#include "Sapphire/Core/Input.h"
+#include "Sapphire/Core/KeyCode.h"
 #include "Sapphire/Events/MouseEvent.h"
 #include "Sapphire/Events/ApplicationEvent.h"
 

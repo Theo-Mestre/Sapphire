@@ -4,7 +4,7 @@
 #include <stb_image.h>
 
 #include "OpenGLTexture.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 
 #include <fstream>
 

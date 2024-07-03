@@ -4,7 +4,7 @@
 #include "Buffer.h"
 #include "Renderer.h"
 #include "Sapphire/Platform/OpenGL/OpenGLBuffer.h"
-#include "Sapphire/Log.h"
+#include "Sapphire/Core/Log.h"
 
 namespace sph
 {
