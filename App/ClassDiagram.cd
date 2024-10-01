@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Sandbox2D">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Source\App.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::Application" Collapsed="true">
+    <Position X="4.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CQAAAgAAADCAAAAAAEAAAgAAAAICEAAARAACIAMAAAI=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Core\Application.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::ApplicationEvent" Collapsed="true">
+    <Position X="10" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\ApplicationEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::AppRenderEvent" Collapsed="true">
+    <Position X="8" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\ApplicationEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::AppTickEvent" Collapsed="true">
+    <Position X="10" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQACAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\ApplicationEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::AppUpdateEvent" Collapsed="true">
+    <Position X="12.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\ApplicationEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::BufferLayout" Collapsed="true">
+    <Position X="8" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAgACAAAAAAAAgAAAAQAQAAABAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Renderer\Buffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::Event" Collapsed="true">
+    <Position X="10" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAIAAAAIAAAEEAAAAEAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\Event.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::EventDispatcher" Collapsed="true">
+    <Position X="8" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAgAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\Event.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::KeyEvent" Collapsed="true">
+    <Position X="16.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAACAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\KeyEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::KeyPressedEvent" Collapsed="true">
+    <Position X="16.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAABAAAIAAABAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\KeyEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::KeyReleasedEvent" Collapsed="true">
+    <Position X="14.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\KeyEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::KeyTypedEvent" Collapsed="true">
+    <Position X="18.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\KeyEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::MouseButtonEvent" Collapsed="true">
+    <Position X="22" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAMAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\MouseEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::MouseButtonPressedEvent" Collapsed="true">
+    <Position X="21" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\MouseEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::MouseButtonReleasedEvent" Collapsed="true">
+    <Position X="23.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\MouseEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::MouseMovedEvent" Collapsed="true">
+    <Position X="25.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAEAAADAAAAAAAAAAAAYAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\MouseEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="sph::MouseScrolledEvent" Collapsed="true">
+    <Position X="27.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAMAAAAAAEAAAAAAAAgAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\MouseEvent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="sph::EventCategory" Collapsed="true">
+    <Position X="8" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAQAAAAAAAAAAAAAAAAAAAQAAQAAEAAIA=</HashCode>
+      <FileName>C:\Users\gmest\Desktop\sapphire\Sapphire\Source\Sapphire\Events\Event.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -9,6 +9,7 @@ namespace sph
 		: public VertexBuffer
 	{
 	public:
+		OpenGLVertexBuffer(uint32_t _size);
 		OpenGLVertexBuffer(float* _vertices, uint32_t _size);
 		virtual ~OpenGLVertexBuffer();
 

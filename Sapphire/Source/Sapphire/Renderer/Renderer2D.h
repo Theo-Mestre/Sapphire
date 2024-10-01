@@ -8,6 +8,8 @@ namespace sph
 	class Texture2D;
 	class OrthographicCamera;
 
+	inline static uint32_t DrawCalls;
+
 	class Renderer2D
 	{
 	public:
@@ -16,6 +18,7 @@ namespace sph
 
 		static void BeginScene(const OrthographicCamera& _camera);
 		static void EndScene();
+		static void Flush();
 
 		static void DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
 		static void DrawQuad(const glm::vec2& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color);

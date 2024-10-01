@@ -56,6 +56,7 @@ namespace sph
 		VertexBuffer() = default;
 		virtual ~VertexBuffer() = default;
 
+		static Ref<VertexBuffer> Create(uint32_t _size);
 		static Ref<VertexBuffer> Create(const void* _data, uint32_t _size);
 
 		virtual void Bind() const = 0;

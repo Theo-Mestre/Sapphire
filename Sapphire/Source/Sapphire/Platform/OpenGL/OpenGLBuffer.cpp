@@ -7,6 +7,15 @@
 
 namespace sph
 {
+	OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t _size)
+		: m_rendererID(0)
+		, m_layout()
+	{
+		glCreateBuffers(1, &m_rendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
+		glBufferData(GL_ARRAY_BUFFER, _size, nullptr, GL_DYNAMIC_DRAW);
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float* _vertices, uint32_t _size)
 		: m_rendererID(0)
 		, m_layout()
