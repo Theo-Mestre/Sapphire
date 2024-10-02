@@ -39,5 +39,6 @@ namespace sph
 #define LogInfo(...)	SAPPHIRE_GET_CURRENT_LOGGER->info(__VA_ARGS__)
 #define LogWarn(...)	SAPPHIRE_GET_CURRENT_LOGGER->warn(__VA_ARGS__)
 #define LogError(...)	SAPPHIRE_GET_CURRENT_LOGGER->error(__VA_ARGS__)
-#define LogFatal(...)	SAPPHIRE_GET_CURRENT_LOGGER->fatal(__VA_ARGS__)
+#define LogCritical(...)	SAPPHIRE_GET_CURRENT_LOGGER->critical(__VA_ARGS__)
+
 #endif

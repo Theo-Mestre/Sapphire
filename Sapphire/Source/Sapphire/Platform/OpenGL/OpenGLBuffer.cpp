@@ -42,7 +42,7 @@ namespace sph
 
 	void OpenGLVertexBuffer::SetData(const void* _data, uint32_t _size)
 	{
-		Bind();
+		glBindBuffer(GL_ARRAY_BUFFER, m_rendererID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, _size, _data);
 	}
 

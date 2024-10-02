@@ -4,9 +4,31 @@
 #include "OpenGLRendererAPI.h"
 #include "Sapphire/Renderer/Buffer.h"
 #include "Sapphire/Renderer/VertexArray.h"
+#include "Sapphire/Core/Log.h"
+
+static void OpenGLMessageCallback(unsigned _source, unsigned _type, unsigned _id, unsigned _severity, int _length, const char* _message, const void* _userParam)
+{
+	switch (_severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:			LogCritical(_message); return;
+	case GL_DEBUG_SEVERITY_MEDIUM:			LogError(_message); return;
+	case GL_DEBUG_SEVERITY_LOW:				LogWarn(_message); return;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:	LogTrace(_message); return;
+	}
+
+	ASSERT(false, "Unknown severity level!");
+}
 
 void sph::OpenGLRendererAPI::Init()
 {
+#ifdef DEBUG
+	glEnable(GL_DEBUG_OUTPUT);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(OpenGLMessageCallback, nullptr);
+
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+#endif
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

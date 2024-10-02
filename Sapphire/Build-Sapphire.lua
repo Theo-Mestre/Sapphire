@@ -25,6 +25,11 @@ project (projectName)
 
    files { "Source/**.h", "Source/**.cpp", "Source/**.inl", "../Vendor/include/stb_image.cpp" }
 
+   flags
+   {
+       "MultiProcessorCompile"
+   }
+
    includedirs
    {
         "Source",

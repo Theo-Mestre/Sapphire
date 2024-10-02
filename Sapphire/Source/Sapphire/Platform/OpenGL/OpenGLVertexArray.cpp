@@ -67,18 +67,17 @@ namespace sph
 		glBindVertexArray(m_rendererID);
 		_vertexBuffer->Bind();
 
-		uint32_t index = 0;
 		const auto& layout = _vertexBuffer->GetLayout();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
+			glEnableVertexAttribArray(m_vertexBufferIndex);
+			glVertexAttribPointer(m_vertexBufferIndex,
 				element.GetComponentCount(),
 				ShaderDataTypeToOpenGLBaseType(element.type),
 				element.normalized ? GL_TRUE : GL_FALSE,
 				layout.GetStride(),
 				reinterpret_cast<const void*>(static_cast<uintptr_t>(element.offset)));
-			index++;
+			m_vertexBufferIndex++;
 		}
 
 		m_vertexBuffers.push_back(_vertexBuffer);

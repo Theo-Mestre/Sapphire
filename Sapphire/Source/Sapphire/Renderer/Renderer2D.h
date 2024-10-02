@@ -8,8 +8,6 @@ namespace sph
 	class Texture2D;
 	class OrthographicCamera;
 
-	inline static uint32_t DrawCalls;
-
 	class Renderer2D
 	{
 	public:
@@ -23,12 +21,15 @@ namespace sph
 		static void DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color);
 		static void DrawQuad(const glm::vec2& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color);
 		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const glm::vec4& _color);
-		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation ,const glm::vec4& _color);
+		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color);
 		static void DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture);
 		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture);
 
-	private:
-
+		struct Stats
+		{
+			inline static uint32_t DrawCalls = 0;
+			inline static uint32_t QuadCount = 0;
+		};
 	};
 }
 #endif

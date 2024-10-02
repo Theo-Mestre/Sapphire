@@ -7,17 +7,17 @@ layout(location = 2) in vec2 a_texCoord;
 layout(location = 3) in float a_texIndex;
 layout(location = 4) in float a_tilingFactor;
 
+uniform mat4 u_viewProjection;
+
 out vec2 v_texCoord;
 out vec4 v_color;
 out float v_texIndex;
 out float v_tilingFactor;
 
-uniform mat4 u_viewProjection;
-
 void main()
 {
-	v_texCoord = a_texCoord;
 	v_color = a_color;
+	v_texCoord = a_texCoord;
 	v_texIndex = a_texIndex;
 	v_tilingFactor = a_tilingFactor;
 
@@ -34,9 +34,10 @@ in vec4 v_color;
 in float v_texIndex;
 in float v_tilingFactor;
 
+uniform sampler2D u_textures[32];
+
 void main()
 {
-	//vec4 texColor = texture(v_texIndex, v_texCoord * m_tillingFactor);
-	//color = v_color * texColor;
-	color = v_color;
+	vec4 texColor = texture(u_textures[int(v_texIndex)], v_texCoord * v_tilingFactor);
+	color = v_color * texColor;
 }
