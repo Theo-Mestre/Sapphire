@@ -17,7 +17,7 @@ namespace sph
 		stbi_set_flip_vertically_on_load(1);
 		auto data = stbi_load(_path.c_str(), (int*)&m_width, (int*)&m_height, &channels, 0);
 
-		ASSERT(data, "Failed to load image!");
+		ASSERT(data, "Failed to load image : \"" + _path + "\"!");
 
 		if (channels == 4)
 		{

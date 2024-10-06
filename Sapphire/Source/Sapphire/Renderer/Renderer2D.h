@@ -6,6 +6,7 @@
 namespace sph
 {
 	class Texture2D;
+	class SubTexture2D;
 	class OrthographicCamera;
 
 	class Renderer2D
@@ -24,12 +25,17 @@ namespace sph
 		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color);
 		static void DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture);
 		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture);
+		static void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture);
 
 		struct Stats
 		{
-			inline static uint32_t DrawCalls = 0;
-			inline static uint32_t QuadCount = 0;
+			uint32_t DrawCalls = 0;
+			uint32_t QuadCount = 0;
+
+			static void Reset();
 		};
+
+		inline static Stats s_stats;
 	};
 }
 #endif

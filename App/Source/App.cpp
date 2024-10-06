@@ -15,7 +15,9 @@ public:
 
 sph::Application* sph::CreateApplication()
 {
-	return new Sandbox2D();
+	auto app = new sph::Application();
+	app->PushLayer(new TestRenderer());
+	return app;
 }
 
 /*//////////////// ImGui Code //////////////

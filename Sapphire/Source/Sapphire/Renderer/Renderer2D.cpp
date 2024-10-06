@@ -6,7 +6,7 @@
 #include "Sapphire/Renderer/Buffer.h"
 #include "Sapphire/Renderer/Camera.h"
 #include "Sapphire/Renderer/RenderCommand.h"
-#include "Sapphire/Renderer/Texture.h"
+#include "Sapphire/Renderer/SubTexture2D.h"
 #include "Sapphire/Profiling/Profiler.h"
 #include "Sapphire/Core/Log.h"
 
@@ -27,10 +27,18 @@ namespace sph
 		static const uint32_t maxVertices = maxQuads * 4;
 		static const uint32_t maxIndices = maxQuads * 6;
 		static const uint32_t maxTextureSlots = 32;
+		static constexpr glm::vec2 defaultTexCoords[4] =
+		{
+			{ 0.0f, 0.0f },
+			{ 1.0f, 0.0f },
+			{ 1.0f, 1.0f },
+			{ 0.0f, 1.0f }
+		};
 
 		uint32_t quadIndexCount = 0;
 		QuadVertex* quadVertexBufferBase = nullptr;
 		QuadVertex* quadVertexBufferPointer = nullptr;
+		glm::vec4 quadTransform[4];
 
 		Ref<VertexArray> vertexArray;
 		Ref<VertexBuffer> vertexBuffer;
@@ -44,42 +52,32 @@ namespace sph
 
 	static Renderer2DData s_data;
 
-	static void UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor)
+
+	static void UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = s_data.defaultTexCoords)
 	{
-		s_data.quadVertexBufferPointer->position = _position;
-		s_data.quadVertexBufferPointer->color = _color;
-		s_data.quadVertexBufferPointer->texIndex = _texID;
-		s_data.quadVertexBufferPointer->texCoord = { 0.0f, 0.0f };
-		s_data.quadVertexBufferPointer->tilingFactor = _tilingFactor;
-		s_data.quadVertexBufferPointer++;
+		constexpr uint32_t vertexCount = 4;
 
-		s_data.quadVertexBufferPointer->position = { _position.x + _size.x, _position.y, _position.z };
-		s_data.quadVertexBufferPointer->color = _color;
-		s_data.quadVertexBufferPointer->texIndex = _texID;
-		s_data.quadVertexBufferPointer->texCoord = { 1.0f, 0.0f };
-		s_data.quadVertexBufferPointer->tilingFactor = _tilingFactor;
-		s_data.quadVertexBufferPointer++;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position) *
+			glm::rotate(glm::mat4(1.0f), glm::radians(_rotation), { 0.0f, 0.0f, 1.0f }) *
+			glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
-		s_data.quadVertexBufferPointer->position = { _position.x + _size.x, _position.y + _size.y, _position.z };
-		s_data.quadVertexBufferPointer->color = _color;
-		s_data.quadVertexBufferPointer->texIndex = _texID;
-		s_data.quadVertexBufferPointer->texCoord = { 1.0f, 1.0f };
-		s_data.quadVertexBufferPointer->tilingFactor = _tilingFactor;
-		s_data.quadVertexBufferPointer++;
-
-		s_data.quadVertexBufferPointer->position = { _position.x, _position.y + _size.y, _position.z };
-		s_data.quadVertexBufferPointer->color = _color;
-		s_data.quadVertexBufferPointer->texIndex = _texID;
-		s_data.quadVertexBufferPointer->texCoord = { 0.0f, 1.0f };
-		s_data.quadVertexBufferPointer->tilingFactor = _tilingFactor;
-		s_data.quadVertexBufferPointer++;
+		for (uint32_t i = 0; i < vertexCount; i++)
+		{
+			s_data.quadVertexBufferPointer->position = transform * s_data.quadTransform[i];
+			s_data.quadVertexBufferPointer->color = _color;
+			s_data.quadVertexBufferPointer->texIndex = _texID;
+			s_data.quadVertexBufferPointer->texCoord = _texCoords[i];
+			s_data.quadVertexBufferPointer->tilingFactor = _tilingFactor;
+			s_data.quadVertexBufferPointer++;
+		}
 
 		s_data.quadIndexCount += 6;
 	}
-	static void ResetQuadData()
+	static void ResetBatchStates()
 	{
 		s_data.quadIndexCount = 0;
 		s_data.quadVertexBufferPointer = s_data.quadVertexBufferBase;
+		s_data.textureSlotIndex = 1;
 	}
 
 	void Renderer2D::Init()
@@ -142,7 +140,12 @@ namespace sph
 		// Quad Vertex Buffer
 		s_data.quadVertexBufferBase = new QuadVertex[s_data.maxVertices];
 
-		Renderer2D::Stats::DrawCalls = 0;
+		s_stats.DrawCalls = 0;
+
+		s_data.quadTransform[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_data.quadTransform[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		s_data.quadTransform[2] = { 0.5f, 0.5f, 0.0f, 1.0f };
+		s_data.quadTransform[3] = { -0.5f, 0.5f, 0.0f, 1.0f };
 	}
 
 	void Renderer2D::Shutdown()
@@ -156,11 +159,7 @@ namespace sph
 		s_data.shader->Bind();
 		s_data.shader->SetMat4("u_viewProjection", _camera.GetViewProjectionMatrix());
 
-		ResetQuadData();
-		s_data.textureSlotIndex = 1;
-
-		Renderer2D::Stats::DrawCalls = 0;
-		Renderer2D::Stats::QuadCount = 0;
+		ResetBatchStates();
 	}
 
 	void Renderer2D::EndScene()
@@ -182,10 +181,9 @@ namespace sph
 
 		// Draw the vertices
 		RenderCommand::DrawIndexed(s_data.vertexArray, s_data.quadIndexCount);
-		Renderer2D::Stats::DrawCalls++;
+		s_stats.DrawCalls++;
 
-		ResetQuadData();
-		s_data.textureSlotIndex = 1;
+		ResetBatchStates();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const glm::vec4& _color)
@@ -213,7 +211,7 @@ namespace sph
 		float textureIndex = 0.0f;
 		UpdateCurrentQuadVertex(_position, _size, _rotation, _color, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		s_stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
@@ -253,6 +251,46 @@ namespace sph
 
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		s_stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
+	{
+		if (s_data.quadIndexCount >= s_data.maxIndices)
+		{
+			Flush();
+		}
+
+		float textureIndex = 0.0f;
+		for (uint32_t i = 1; i < s_data.textureSlotIndex; i++)
+		{
+			if (*s_data.textureSlots[i] == *(_subTexture->GetTexture()))
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0.0f)
+		{
+			if (s_data.textureSlotIndex >= s_data.maxTextureSlots)
+			{
+				Flush();
+				s_data.textureSlotIndex = 0;
+			}
+
+			textureIndex = (float)s_data.textureSlotIndex;
+			s_data.textureSlots[s_data.textureSlotIndex] = _subTexture->GetTexture();
+			s_data.textureSlotIndex++;
+		}
+
+		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f, _subTexture->GetTexCoords());
+
+		s_stats.QuadCount++;
+	}
+
+	void Renderer2D::Stats::Reset()
+	{
+		memset(&s_stats, 0, sizeof(Renderer2D::Stats));
 	}
 }

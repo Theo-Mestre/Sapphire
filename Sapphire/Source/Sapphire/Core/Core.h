@@ -26,7 +26,7 @@
 
 #define BIT(x) (1 << x)
 
-#define BIND_EVENT_METHOD(method) std::bind(&method, this, std::placeholders::_1)
+#define BIND_EVENT_METHOD(method) [this](auto&&... args) -> decltype(auto) { return this->method(std::forward<decltype(args)>(args)...); }
 
 #include <memory>
 

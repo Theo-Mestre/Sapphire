@@ -24,6 +24,10 @@
 #include "Sapphire/Renderer/Material.h"
 #include "Sapphire/Renderer/Texture.h"
 #include "Sapphire/Renderer/Framebuffer.h"
+#include "Sapphire/Renderer/RenderCommand.h"
+#include "Sapphire/Renderer/Camera.h"
+#include "Sapphire/Renderer/Texture.h"
+#include "Sapphire/Renderer/SubTexture2D.h"
 
 #include "Sapphire/Core/OrthographicCameraController.h"
 
