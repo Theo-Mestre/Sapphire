@@ -2,9 +2,9 @@
 #include <glad/glad.h>
 
 #include "Buffer.h"
-#include "Renderer.h"
 #include "Sapphire/Platform/OpenGL/OpenGLBuffer.h"
 #include "Sapphire/Core/Log.h"
+#include "Sapphire/Renderer/RendererAPI.h"
 
 namespace sph
 {
@@ -81,12 +81,12 @@ namespace sph
 
 	Ref<VertexBuffer> VertexBuffer::Create(uint32_t _size)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
 			ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLVertexBuffer>(_size);
+			return CreateRef<OpenGLVertexBuffer>(_size);
 		}
 		ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
@@ -94,12 +94,12 @@ namespace sph
 
 	Ref<VertexBuffer> VertexBuffer::Create(const void* _data, uint32_t _size)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
 			ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLVertexBuffer>((float*)_data, _size);
+			return CreateRef<OpenGLVertexBuffer>((float*)_data, _size);
 		}
 		ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
@@ -107,12 +107,12 @@ namespace sph
 
 	Ref<IndexBuffer> IndexBuffer::Create(const uint32_t* _data, uint16_t _count)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
 			ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLIndexBuffer>(_data, _count);
+			return CreateRef<OpenGLIndexBuffer>(_data, _count);
 		}
 		ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;

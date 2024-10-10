@@ -4,7 +4,7 @@
 #include "Sapphire/Core/Time.h"
 #include "Sapphire/Core/Input.h"
 #include "Sapphire/ImGui/ImGuiLayer.h"
-#include "Sapphire/Renderer/Renderer.h"
+#include "Sapphire/Renderer/BatchRenderer2D.h"
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
 #include "Sapphire/Layers/ProfilingLayer.h"
@@ -19,25 +19,7 @@ namespace sph
 		, m_isRunning(true)
 		, m_minimized(false)
 	{
-
 		sph::Logger::Init();
-
-		m_window = Window::Create();
-		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
-
-		Renderer::Init();
-
-#ifndef DIST // Disable ImGui in Distribution build
-		// Initialize ImGui layer
-		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
-		m_layerStack.PushOverlay(m_imGuiLayer);
-#endif
-
-#ifdef SPH_VISUAL_PROFILING_ENABLED
-			m_layerStack.PushOverlay(new ProfilingLayer());
-#endif
-
-		Input::Init(m_window);
 	}
 
 	Application::~Application()
@@ -47,6 +29,8 @@ namespace sph
 
 	void Application::Run()
 	{
+		Init();
+
 		while (m_isRunning)
 		{
 			PROFILE_BEGIN_FRAME();
@@ -78,7 +62,12 @@ namespace sph
 
 			if (m_minimized == false)
 			{
-				OnRender();
+				OnRender(m_renderer);
+
+				for (sph::Layer* layer : m_layerStack)
+				{
+					layer->OnRender(m_renderer);
+				}
 			}
 
 			PROFILE_END_FRAME();
@@ -103,6 +92,24 @@ namespace sph
 	void Application::PopOverlay(Layer* _overlay)
 	{
 		m_layerStack.PopOverlay(_overlay);
+	}
+
+	void Application::Init()
+	{
+		m_window = Window::Create();
+		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
+		Input::Init(m_window);
+
+		m_renderer->Init();
+
+#ifndef DIST // Disable ImGui in Distribution build
+		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
+		m_layerStack.PushOverlay(m_imGuiLayer);
+#endif
+
+#ifdef SPH_VISUAL_PROFILING_ENABLED
+		m_layerStack.PushOverlay(new ProfilingLayer());
+#endif
 	}
 
 	void Application::OnEvent(Event& _event)
@@ -142,7 +149,7 @@ namespace sph
 
 		m_minimized = false;
 
-		Renderer::OnWindowResize(_event.GetWidth(), _event.GetHeight());
+		m_renderer->OnWindowResize(_event.GetWidth(), _event.GetHeight());
 
 		return false;
 	}

@@ -6,6 +6,8 @@
 
 namespace sph
 {
+	class Renderer2D;
+
 	class Layer
 	{
 	public:
@@ -15,6 +17,7 @@ namespace sph
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate(DeltaTime _dt) {}
+		virtual void OnRender(const Ref<Renderer2D>& _renderer) {}
 		virtual void OnEvent(Event& event) {}
 		virtual void OnImGuiRender() {}
 

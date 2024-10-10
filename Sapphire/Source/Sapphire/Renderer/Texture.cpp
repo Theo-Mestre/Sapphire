@@ -1,14 +1,14 @@
 #include "sphpch.h"
 #include "Texture.h"
-#include "Renderer.h"
 #include "Sapphire/Core/Log.h"
+#include "RendererAPI.h"
 #include "Sapphire/Platform/OpenGL/OpenGLTexture.h"
 
 namespace sph
 {
 	Ref<Texture2D> sph::Texture2D::Create(const std::string& _path)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
 			ASSERT(false, "RendererAPI::None is currently not supported!");
@@ -23,7 +23,7 @@ namespace sph
 
 	Ref<Texture2D> sph::Texture2D::Create(uint32_t _width, uint32_t _height)
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
 			ASSERT(false, "RendererAPI::None is currently not supported!");

@@ -27,19 +27,17 @@ namespace sph
 		m_frameTimeData->Update(Time::DeltaTime, Time::GameTime);
 	}
 
-	void ProfilingLayer::OnEvent(Event& event)
-	{
-	}
-
 	void ProfilingLayer::OnImGuiRender()
 	{
 		ImGui::Begin("Metrics");
+		ImGui::Text(" Frame Time: %f", Time::DeltaTime);
+		ImGui::Text(" FPS: %f", 1.f / Time::DeltaTime);
+		ImGui::SetWindowSize(ImVec2(430, 255 ));
 		if (ImPlot::BeginPlot("Frame Time"))
 		{
-			ImGui::SetWindowSize(ImVec2(300, 200));
-			ImPlot::GetStyle().PlotDefaultSize = ImVec2(300, 200);
 			ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
 			ImPlot::GetStyle().PlotBorderSize = 0;
+			ImPlot::GetStyle().PlotDefaultSize = ImVec2(300, 200);
 
 			ImPlot::SetupAxisLimits(ImAxis_X1, sph::Time::GameTime - 2, sph::Time::GameTime, ImGuiCond_Always);
 			ImPlot::SetupAxisLimits(ImAxis_Y1, 0.f, 0.125f);
@@ -50,5 +48,4 @@ namespace sph
 		}
 		ImGui::End();
 	}
-
 }

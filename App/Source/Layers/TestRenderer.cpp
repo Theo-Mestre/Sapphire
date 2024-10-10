@@ -5,11 +5,12 @@ TestRenderer::TestRenderer(sph::Application& _app)
 	, m_tileMapData()
 	, m_app(_app)
 {
-	m_app.GetWindow().SetVSync(false);
 }
 
 void TestRenderer::OnAttach()
 {
+	m_app.GetWindow().SetVSync(false);
+
 	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(1280.0f / 720.0f, true);
 
 	m_texture = sph::Texture2D::Create("TileSheet.png");
@@ -27,14 +28,17 @@ void TestRenderer::OnDetach()
 
 void TestRenderer::OnUpdate(sph::DeltaTime _dt)
 {
-	PROFILE_FUNCTION();
-
 	m_cameraController->OnUpdate(_dt);
+}
+
+void TestRenderer::OnRender(const sph::Ref<sph::Renderer2D>& _renderer)
+{
+	PROFILE_FUNCTION();
 
 	sph::Renderer2D::s_stats.Reset();
 	sph::RenderCommand::Clear();
 
-	sph::Renderer2D::BeginScene(m_cameraController->GetCamera());
+	_renderer->BeginScene(m_cameraController->GetCamera());
 	{
 		//sph::Renderer2D::DrawQuad({ 0.0f,0.0f, 0.0f }, { 1.0f, 1.0f }, m_subTexture);
 		const float tileSize = (60.0f / 1920.0f);
@@ -47,12 +51,12 @@ void TestRenderer::OnUpdate(sph::DeltaTime _dt)
 				if (tileIndex == -1)
 					continue;
 
-				glm::vec2 position = { x * tileSize, 1 - y * tileSize };
-				sph::Renderer2D::DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[0]);
+				glm::vec3 position = { x * tileSize, 1 - y * tileSize, 0.0f };
+				_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[0]);
 			}
 		}
 	}
-	sph::Renderer2D::EndScene();
+	_renderer->EndScene();
 }
 
 void TestRenderer::OnImGuiRender()
@@ -103,5 +107,4 @@ void TestRenderer::LoadTileMap()
 		}
 		row++;
 	}
-	LogDebug("TileMap loaded");
 }

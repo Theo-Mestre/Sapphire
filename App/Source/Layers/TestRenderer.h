@@ -2,9 +2,9 @@
 
 #include "Sapphire.h"
 
-#define MAP_SIZE_X 120
-#define MAP_SIZE_Y 65
-#define MAX_SUB_TEXTURE 4
+constexpr auto MAP_SIZE_X = 120;
+constexpr auto MAP_SIZE_Y = 65;
+constexpr auto MAX_SUB_TEXTURE = 4;
 
 class TestRenderer
 	: public sph::Layer
@@ -16,6 +16,7 @@ public:
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 	virtual void OnUpdate(sph::DeltaTime _dt) override;
+	virtual void OnRender(const sph::Ref<sph::Renderer2D>& _renderer) override;	
 	virtual void OnImGuiRender() override;
 	virtual void OnEvent(sph::Event& _event) override;
 private:

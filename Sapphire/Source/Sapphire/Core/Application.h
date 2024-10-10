@@ -34,11 +34,13 @@ namespace sph
 		virtual void PopOverlay(Layer* _overlay);
 
 		inline Window& GetWindow() { return *m_window; }
+
+		void SetRenderer(Ref<Renderer2D> _renderer) { m_renderer = _renderer; }
 	protected:
-		virtual void Init() {}
+		virtual void Init();
 		virtual void OnEvent(Event& _event);
 		virtual void OnUpdate() {}
-		virtual void OnRender() {}
+		virtual void OnRender(const Ref<Renderer2D>& _renderer) {}
 		virtual void OnImGuiRender();
 
 		bool OnWindowClosed(sph::WindowCloseEvent& _event);
@@ -50,6 +52,8 @@ namespace sph
 		Window* m_window;
 		bool m_isRunning;
 		bool m_minimized;
+
+		Ref<Renderer2D> m_renderer;
 	};
 
 	Application* CreateApplication();

@@ -23,7 +23,7 @@ namespace sph
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& _vertexArray, uint32_t _indexCount = 0) = 0;
 
-		inline static API GetAPI() { return s_api; }
+		inline static const API GetAPI() { return s_api; }
 	private:
 		static API s_api;
 	};

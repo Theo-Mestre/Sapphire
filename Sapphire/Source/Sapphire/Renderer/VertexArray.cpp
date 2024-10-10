@@ -1,7 +1,7 @@
 #include "sphpch.h"
 
 #include "VertexArray.h"
-#include "Renderer.h"
+#include "RendererAPI.h"
 
 #include "Sapphire/Core/Log.h"
 #include "Sapphire/Platform/OpenGL/OpenGLVertexArray.h"
@@ -10,7 +10,7 @@ namespace sph
 {
 	sph::Ref<VertexArray> VertexArray::Create()
 	{
-		switch (Renderer::GetAPI())
+		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
 			ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;

@@ -7,8 +7,12 @@ class Sandbox2D
 	: public sph::Application
 {
 public:
-	Sandbox2D()
+	virtual void Init() override
 	{
+		SetRenderer(sph::BatchRenderer2D::Create());
+
+		Application::Init();
+
 		PushLayer(new TestRenderer(*this));
 	}
 };

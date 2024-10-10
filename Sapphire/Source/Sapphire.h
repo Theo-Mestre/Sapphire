@@ -16,8 +16,7 @@
 #include "Sapphire/Layers/LayerStack.h"
 #include "Sapphire/Window/Window.h"	
 
-#include "Sapphire/Renderer/Renderer.h"
-#include "Sapphire/Renderer/Renderer2D.h"
+#include "Sapphire/Renderer/Renderering2D.h"
 #include "Sapphire/Renderer/VertexArray.h"
 #include "Sapphire/Renderer/Shader.h"
 #include "Sapphire/Renderer/Buffer.h"
