@@ -9,15 +9,13 @@ class Sandbox2D
 public:
 	Sandbox2D()
 	{
-		PushLayer(new TestRenderer());
+		PushLayer(new TestRenderer(*this));
 	}
 };
 
 sph::Application* sph::CreateApplication()
 {
-	auto app = new sph::Application();
-	app->PushLayer(new TestRenderer());
-	return app;
+	return new Sandbox2D();
 }
 
 /*//////////////// ImGui Code //////////////

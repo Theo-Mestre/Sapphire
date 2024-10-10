@@ -9,6 +9,8 @@
 #include <string>
 #include <array>
 #include <vector>
+#include <cstring>
+#include <cstdint>
 
 #include <fstream>
 
@@ -21,5 +23,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include <imgui.h>
+#include <implot.h>
 #pragma warning(pop)
 #endif

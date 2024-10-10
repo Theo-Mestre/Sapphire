@@ -253,6 +253,11 @@ namespace sph
 
 		s_stats.QuadCount++;
 	}
+	void Renderer2D::DrawQuad(const glm::vec2& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
+	{
+		DrawQuad({ _position.x, _position.y, 0.0f }, _size, _subTexture);
+	}
+
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
 	{

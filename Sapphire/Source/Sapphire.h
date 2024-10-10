@@ -38,4 +38,5 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <imgui.h>
+#include <implot.h>
 #endif

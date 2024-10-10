@@ -3,6 +3,7 @@
 
 #include "Sapphire/Core/Core.h"
 #include "Sapphire/Layers/LayerStack.h"
+#include "Sapphire/Profiling/FrameTimeData.h"
 
 namespace sph
 {
@@ -12,6 +13,11 @@ namespace sph
 	class VertexArray;
 	class WindowCloseEvent;
 	class WindowResizeEvent;
+
+	namespace Profiling
+	{
+		class FrameTimeData;
+	}
 
 	class  Application
 	{
@@ -26,12 +32,14 @@ namespace sph
 
 		virtual void PopLayer(Layer* _layer);
 		virtual void PopOverlay(Layer* _overlay);
+
+		inline Window& GetWindow() { return *m_window; }
 	protected:
 		virtual void Init() {}
 		virtual void OnEvent(Event& _event);
 		virtual void OnUpdate() {}
 		virtual void OnRender() {}
-		virtual void OnImGuiRender() {}
+		virtual void OnImGuiRender();
 
 		bool OnWindowClosed(sph::WindowCloseEvent& _event);
 		bool OnWindowResize(sph::WindowResizeEvent& _event);

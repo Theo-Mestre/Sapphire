@@ -40,6 +40,11 @@ namespace sph
 		m_context->SwapBuffers();
 	}
 
+	void WinWindow::SetVSync(bool enabled)
+	{
+		glfwSwapInterval(enabled ? 1 : 0);
+	}
+
 	void WinWindow::Init(const WindowProperties& _properties)
 	{
 		// Set window data properties

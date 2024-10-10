@@ -9,20 +9,10 @@ namespace sph
 	{
 		using TimeStamp = float;
 
-		namespace ProfileType
-		{
-			enum ProfileType
-			{
-				None = 0,
-				Scoped,
-				Function,
-			};
-		}
-
-		class ProfileResult
+		class FrameData
 		{
 		public:
-			ProfileResult(const char* _name, TimeStamp _start, TimeStamp _end)
+			FrameData(const char* _name, TimeStamp _start, TimeStamp _end)
 				: Name(_name)
 				, Start(_start)
 				, End(_end)
@@ -31,10 +21,7 @@ namespace sph
 			const char* Name = "";
 			TimeStamp Start = 0.0f;
 			TimeStamp End = 0.0f;
-			//ProfileType::ProfileType Type = ProfileType::None;
 		};
-
-		using ProfileResults = std::vector<ProfileResult>;
 
 		template<typename OnStopCallback>
 		class ScopedTimer
@@ -62,8 +49,8 @@ namespace sph
 
 				m_stopped = true;
 
-				ProfileResult pr(m_text, (float)start, (float)end);
-				m_callback(std::move(pr));
+				FrameData fd(m_text, (float)start, (float)end);
+				m_callback(std::move(fd));
 			}
 
 			bool IsStopped() const { return m_stopped; }

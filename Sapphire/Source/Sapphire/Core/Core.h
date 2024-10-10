@@ -25,7 +25,7 @@
 #endif
 
 #define BIT(x) (1 << x)
-
+#define SPH_VISUAL_PROFILING_ENABLED
 #define BIND_EVENT_METHOD(method) [this](auto&&... args) -> decltype(auto) { return this->method(std::forward<decltype(args)>(args)...); }
 
 #include <memory>

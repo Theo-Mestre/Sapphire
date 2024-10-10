@@ -7,7 +7,7 @@
 #include "Sapphire/Renderer/Renderer.h"
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
-
+#include "Sapphire/Layers/ProfilingLayer.h"
 #include "Sapphire/Profiling/Profiler.h"
 
 namespace sph
@@ -27,12 +27,17 @@ namespace sph
 
 		Renderer::Init();
 
+#ifndef DIST // Disable ImGui in Distribution build
 		// Initialize ImGui layer
 		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
 		m_layerStack.PushOverlay(m_imGuiLayer);
+#endif
+
+#ifdef SPH_VISUAL_PROFILING_ENABLED
+			m_layerStack.PushOverlay(new ProfilingLayer());
+#endif
 
 		Input::Init(m_window);
-
 	}
 
 	Application::~Application()
@@ -58,7 +63,7 @@ namespace sph
 					layer->OnUpdate(Time::DeltaTime);
 				}
 			}
-			// Render ImGui
+#ifndef DIST // Disable ImGui in Distribution build
 			m_imGuiLayer->Begin();
 			OnImGuiRender();
 			for (sph::Layer* layer : m_layerStack)
@@ -66,6 +71,7 @@ namespace sph
 				layer->OnImGuiRender();
 			}
 			m_imGuiLayer->End();
+#endif
 
 			// Update window
 			m_window->OnUpdate();
@@ -113,6 +119,11 @@ namespace sph
 			//	break;
 			//}
 		}
+	}
+
+	void Application::OnImGuiRender()
+	{
+
 	}
 
 	bool Application::OnWindowClosed(sph::WindowCloseEvent& _event)

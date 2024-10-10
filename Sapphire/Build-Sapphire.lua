@@ -37,6 +37,7 @@ project (projectName)
         "../Vendor/ThirdParty/GLFW/include",
         "../Vendor/ThirdParty/Glad/include",
         "../Vendor/ThirdParty/ImGui",
+        "../Vendor/ThirdParty/ImPlot",
         "../Vendor/ThirdParty/spdlog",
    }
 
@@ -45,6 +46,7 @@ project (projectName)
        "GLFW",
        "Glad",
        "ImGui",
+       "ImPlot",
        "spdlog"
    }
 

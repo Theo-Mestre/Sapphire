@@ -15,6 +15,7 @@ project "App"
 
       -- Include Third party libs 
       "../Vendor/ThirdParty/ImGui",
+      "../Vendor/ThirdParty/ImPlot",
       "../Vendor/ThirdParty/spdlog",
       "../Vendor/include",   
     }
@@ -22,6 +23,11 @@ project "App"
    links
    {
 	  "Sapphire"
+   }
+
+   flags
+   {
+       "MultiProcessorCompile"
    }
 
    defines 

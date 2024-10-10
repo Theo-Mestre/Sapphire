@@ -27,6 +27,8 @@ namespace sph
 
 		inline virtual void* GetNativeWindow(void) const override { return m_window; }
 
+		virtual void SetVSync(bool enabled) override;
+
 	private:
 		virtual void Init(const WindowProperties& _properties);
 		virtual void InitEventCallbacks(void);
