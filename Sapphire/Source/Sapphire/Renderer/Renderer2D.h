@@ -1,44 +1,37 @@
-#ifndef RENDERER_2D_H
-#define RENDERER_2D_H
+#ifndef SPH_RENDERER_H
+#define SPH_RENDERER_H
 
-#include <Sapphire/Core/Core.h>
+#include "Renderer.h"
 
 namespace sph
 {
 	class Texture2D;
 	class SubTexture2D;
 	class OrthographicCamera;
+	class VertexArray;
+	class Shader;
 
 	class Renderer2D
+		: public Renderer
 	{
 	public:
-		Renderer2D() = default;
+		Renderer2D();
 		virtual ~Renderer2D() = default;
 
-		virtual void Init() = 0;
-		virtual void Shutdown() = 0;
+		virtual void Init() override;
+		virtual void Shutdown() override;
 
-		virtual void BeginScene(const OrthographicCamera& _camera) = 0;
-		virtual void EndScene() = 0;
+		virtual void BeginScene(const OrthographicCamera& _camera) override;
+		virtual void EndScene() override;
 
-		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color) = 0;
-		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) = 0;
-		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) = 0;
-
-		void OnWindowResize(uint32_t _width, uint32_t _height);
-
-		struct Stats
-		{
-			uint32_t DrawCalls = 0;
-			uint32_t QuadCount = 0;
-
-			void Reset()
-			{
-				memset(this, 0, sizeof(Stats));	
-			}
-		};
-
-		inline static Stats s_stats;
+		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color) override;
+		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) override;
+		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) override;
+		void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture, const Ref<Shader>& _shader);
+	private:
+		Ref<VertexArray> m_vertexArray;
+		Ref<Texture2D> m_whiteTexture;
+		Ref<Shader> m_shader;
 	};
 }
 #endif

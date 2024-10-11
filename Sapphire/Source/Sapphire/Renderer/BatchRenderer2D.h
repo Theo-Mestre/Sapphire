@@ -1,7 +1,7 @@
 #ifndef BATCH_RENDERER_2D_H
 #define BATCH_RENDERER_2D_H
 
-#include <Sapphire/Renderer/Renderer2D.h>
+#include <Sapphire/Renderer/Renderer.h>
 
 namespace sph
 {
@@ -12,7 +12,7 @@ namespace sph
 	struct QuadVertex;
 
 	class BatchRenderer2D
-		: public Renderer2D
+		: public Renderer
 	{
 	public:
 		BatchRenderer2D() = default;
@@ -30,7 +30,7 @@ namespace sph
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) override;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) override;
 
-		static Ref<Renderer2D> Create();
+		static Ref<Renderer> Create();
 
 	private:
 		void InitShader();

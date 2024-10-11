@@ -164,7 +164,7 @@ namespace sph
 		Renderer2D::s_stats.QuadCount++;
 	}
 
-	Ref<Renderer2D> BatchRenderer2D::Create()
+	Ref<Renderer> BatchRenderer2D::Create()
 	{
 		return CreateRef<BatchRenderer2D>();
 	}

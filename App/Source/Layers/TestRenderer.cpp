@@ -92,19 +92,7 @@ void TestRenderer::LoadTileMap()
 	{
 		if (value == -1) continue;
 
-		// Assign the write coord to the subtexture
 		glm::vec2 index = { value % (int)cellNumber.x, cellNumber.y - (value / (int)cellNumber.x) };
 		m_subTexture[value] = sph::SubTexture2D::Create(m_texture, index, cellSize);
-	}
-
-
-	for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
-	{
-		for (uint32_t x = 0; x < MAP_SIZE_X; x++)
-		{
-			int32_t value = m_tileMapData[y * MAP_SIZE_X + x];
-			std::cout << (value) % (int)cellNumber.x << " " << cellNumber.y - (value / (int)cellNumber.x) << " - ";
-		}
-		std::cout << std::endl;
 	}
 }

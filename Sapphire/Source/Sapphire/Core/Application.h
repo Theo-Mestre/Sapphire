@@ -35,12 +35,12 @@ namespace sph
 
 		inline Window& GetWindow() { return *m_window; }
 
-		void SetRenderer(Ref<Renderer2D> _renderer) { m_renderer = _renderer; }
+		void SetRenderer(Ref<Renderer> _renderer) { m_renderer = _renderer; }
 	protected:
 		virtual void Init();
 		virtual void OnEvent(Event& _event);
 		virtual void OnUpdate() {}
-		virtual void OnRender(const Ref<Renderer2D>& _renderer) {}
+		virtual void OnRender(const Ref<Renderer>& _renderer) {}
 		virtual void OnImGuiRender() {};
 
 		bool OnWindowClosed(sph::WindowCloseEvent& _event);
@@ -53,7 +53,7 @@ namespace sph
 		bool m_isRunning;
 		bool m_minimized;
 
-		Ref<Renderer2D> m_renderer;
+		Ref<Renderer> m_renderer;
 	};
 
 	Application* CreateApplication();
