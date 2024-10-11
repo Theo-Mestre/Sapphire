@@ -96,6 +96,7 @@ namespace sph
 
 	void Application::Init()
 	{
+		PROFILE_FUNCTION();
 		m_window = Window::Create();
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
 		Input::Init(m_window);
@@ -114,6 +115,7 @@ namespace sph
 
 	void Application::OnEvent(Event& _event)
 	{
+		PROFILE_FUNCTION();
 		sph::EventDispatcher dispatcher(_event);
 		dispatcher.Dispatch<sph::WindowCloseEvent>(BIND_EVENT_METHOD(Application::OnWindowClosed));
 		dispatcher.Dispatch<sph::WindowResizeEvent>(BIND_EVENT_METHOD(Application::OnWindowResize));
@@ -126,11 +128,6 @@ namespace sph
 			//	break;
 			//}
 		}
-	}
-
-	void Application::OnImGuiRender()
-	{
-
 	}
 
 	bool Application::OnWindowClosed(sph::WindowCloseEvent& _event)

@@ -10,10 +10,11 @@ public:
 	virtual void Init() override
 	{
 		SetRenderer(sph::BatchRenderer2D::Create());
-
 		Application::Init();
 
-		PushLayer(new TestRenderer(*this));
+		m_window->SetVSync(false);
+
+		PushLayer(new TestRenderer(this));
 	}
 };
 

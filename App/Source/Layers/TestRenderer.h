@@ -2,15 +2,17 @@
 
 #include "Sapphire.h"
 
-constexpr auto MAP_SIZE_X = 120;
-constexpr auto MAP_SIZE_Y = 65;
+#include <unordered_map>
+
+constexpr auto MAP_SIZE_X = 30;
+constexpr auto MAP_SIZE_Y = 20;
 constexpr auto MAX_SUB_TEXTURE = 4;
 
 class TestRenderer
 	: public sph::Layer
 {
 public:
-	TestRenderer(sph::Application& _app);
+	TestRenderer(sph::Application* const _app);
 	~TestRenderer() = default;
 
 	virtual void OnAttach() override;
@@ -22,13 +24,13 @@ public:
 private:
 	void LoadTileMap();
 private:
-	sph::Application& m_app;
+	sph::Application* const m_app;
 
 	glm::vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
 
 	sph::Ref<sph::Texture2D> m_texture;
-	std::array<sph::Ref<sph::SubTexture2D>, MAX_SUB_TEXTURE> m_subTexture;
+	std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_subTexture;
 
 	float m_rotation = 0.0f;
 

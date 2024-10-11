@@ -1,5 +1,6 @@
 #include "sphpch.h"
 #include "ProfilingLayer.h"
+#include "Sapphire/Renderer/Renderer2D.h"
 
 namespace sph
 {
@@ -32,7 +33,9 @@ namespace sph
 		ImGui::Begin("Metrics");
 		ImGui::Text(" Frame Time: %f", Time::DeltaTime);
 		ImGui::Text(" FPS: %f", 1.f / Time::DeltaTime);
-		ImGui::SetWindowSize(ImVec2(430, 255 ));
+		ImGui::Text(" Quad number : %d", Renderer2D::s_stats.QuadCount);
+		ImGui::Text(" Draw call : %d", Renderer2D::s_stats.DrawCalls);
+		ImGui::SetWindowSize(ImVec2(430, 290));
 		if (ImPlot::BeginPlot("Frame Time"))
 		{
 			ImGui::GetStyle().WindowPadding = ImVec2(0, 0);

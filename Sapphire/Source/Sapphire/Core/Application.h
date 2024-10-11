@@ -41,7 +41,7 @@ namespace sph
 		virtual void OnEvent(Event& _event);
 		virtual void OnUpdate() {}
 		virtual void OnRender(const Ref<Renderer2D>& _renderer) {}
-		virtual void OnImGuiRender();
+		virtual void OnImGuiRender() {};
 
 		bool OnWindowClosed(sph::WindowCloseEvent& _event);
 		bool OnWindowResize(sph::WindowResizeEvent& _event);
