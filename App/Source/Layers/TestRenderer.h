@@ -18,7 +18,7 @@ public:
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 	virtual void OnUpdate(sph::DeltaTime _dt) override;
-	virtual void OnRender(const sph::Ref<sph::Renderer2D>& _renderer) override;	
+	virtual void OnRender(const sph::Ref<sph::Renderer>& _renderer) override;	
 	virtual void OnImGuiRender() override;
 	virtual void OnEvent(sph::Event& _event) override;
 private:

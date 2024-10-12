@@ -27,7 +27,7 @@ void TestRenderer::OnUpdate(sph::DeltaTime _dt)
 	m_cameraController->OnUpdate(_dt);
 }
 
-void TestRenderer::OnRender(const sph::Ref<sph::Renderer2D>& _renderer)
+void TestRenderer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 {
 	sph::Renderer2D::s_stats.Reset();
 	sph::RenderCommand::Clear();
@@ -43,7 +43,7 @@ void TestRenderer::OnRender(const sph::Ref<sph::Renderer2D>& _renderer)
 				int32_t tileIndex = m_tileMapData[y * MAP_SIZE_X + x];
 				if (tileIndex == -1) continue;
 
-				glm::vec3 position = { x * tileSize, 1 - y * tileSize, 0.0f };
+				glm::vec3 position = { x * tileSize + glm::epsilon<float>(), 1 - y * tileSize + glm::epsilon<float>(), 0.0f};
 				_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[tileIndex]);
 			}
 		}

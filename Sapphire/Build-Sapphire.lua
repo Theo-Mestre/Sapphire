@@ -19,6 +19,7 @@ project (projectName)
    { 
        "SPH_BUILD", 
        string.upper(projectName) .. "_ENABLE_ASSERTS",
+       "SPH_VISUAL_PROFILING_ENABLED",
 	   "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING", 
 	   "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
    }

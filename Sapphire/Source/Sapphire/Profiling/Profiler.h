@@ -34,8 +34,6 @@ namespace sph
 	}
 }
 
-#define SPH_PROFILING_ENABLED
-
 #ifdef SPH_PROFILING_ENABLED
 #define PROFILE_SCOPE(name) ::sph::Profiling::ScopedTimer timer##__LINE__(name, [&](::sph::Profiling::FrameData&& result) { ::sph::Profiling::Profiler::Instance().AddResult(std::move(result)); })
 #define PROFILE_FUNCTION() PROFILE_SCOPE(__FUNCSIG__)
