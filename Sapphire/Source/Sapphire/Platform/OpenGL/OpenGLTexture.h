@@ -9,8 +9,8 @@ namespace sph
 		: public Texture2D
 	{
 	public:
-		OpenGLTexture2D(const std::string& _path);
-		OpenGLTexture2D(uint32_t _width, uint32_t _height);
+		OpenGLTexture2D(const std::string& _path, const Properties& _properties = Properties());
+		OpenGLTexture2D(uint32_t _width, uint32_t _height, const Properties& _properties = Properties());
 		virtual ~OpenGLTexture2D();
 
 		virtual void Bind(uint32_t _slot = 0) const override;
@@ -27,6 +27,8 @@ namespace sph
 		{
 			return m_rendererID == ((OpenGLTexture2D&)_other).m_rendererID;
 		}
+	private:
+		void InitProperties(const Properties& _properties);
 	private:
 		std::string m_path;
 		uint32_t m_width;

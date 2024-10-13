@@ -10,7 +10,7 @@
 
 namespace sph
 {
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& _path)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& _path, const Properties& _properties)
 		: m_path(_path)
 	{
 		int channels;
@@ -35,18 +35,14 @@ namespace sph
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);
 
-		glTextureParameterf(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameterf(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		InitProperties(_properties);
 
 		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(uint32_t _width, uint32_t _height)
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t _width, uint32_t _height, const Properties& _properties)
 		: m_width(_width)
 		, m_height(_height)
 		, m_internalFormat(GL_RGBA8)
@@ -57,11 +53,7 @@ namespace sph
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);
 
-		glTextureParameterf(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTextureParameterf(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		InitProperties(_properties);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -84,5 +76,14 @@ namespace sph
 		uint32_t bpp = m_dataFormat == GL_RGBA ? 4 : 3;
 		ASSERT(_size == m_width * m_height * bpp, "Data must be entire texture!");
 		glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, m_dataFormat, GL_UNSIGNED_BYTE, _data);
+	}
+
+	void OpenGLTexture2D::InitProperties(const Properties& _properties)
+	{
+		glTextureParameterf(m_rendererID, GL_TEXTURE_MIN_FILTER, (GLfloat)_properties.MinificationFilter);
+		glTextureParameterf(m_rendererID, GL_TEXTURE_MAG_FILTER, (GLfloat)_properties.MagnificationFilter);
+
+		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_S, (GLfloat)_properties.WrapModeS);
+		glTextureParameterf(m_rendererID, GL_TEXTURE_WRAP_T, (GLfloat)_properties.WrapModeT);
 	}
 }

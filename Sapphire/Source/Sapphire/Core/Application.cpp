@@ -97,7 +97,12 @@ namespace sph
 	void Application::Init()
 	{
 		PROFILE_FUNCTION();
-		m_window = Window::Create();
+		WindowProperties props;
+		props.Title = "Sapphire Engine";
+		props.Width = 1280;
+		props.Height = 720;
+
+		m_window = Window::Create(props);
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
 		Input::Init(m_window);
 
