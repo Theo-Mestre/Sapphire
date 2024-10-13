@@ -7,7 +7,6 @@
 namespace sph
 {
 	OpenGLShader::OpenGLShader(const std::string& _filePath)
-		: m_rendererID(0)
 	{
 		std::string source = ParseShaderFile(_filePath);
 		auto [vertexSource, fragmentSource] = PreProcessShaderSource(source);
@@ -21,7 +20,6 @@ namespace sph
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& _name, const std::string& _vertexSource, const std::string& _fragmentSource)
-		: m_rendererID(0)
 	{
 		GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, _vertexSource);
 		GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, _fragmentSource);

@@ -34,7 +34,8 @@ void TestRenderer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 
 	_renderer->BeginScene(m_cameraController->GetCamera());
 	{
-		const float tileSize = (1240 / 30.0f) / 1240;
+		const float tileSize = 0.15;
+		const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
 
 		for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
 		{
@@ -43,7 +44,7 @@ void TestRenderer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 				int32_t tileIndex = m_tileMapData[y * MAP_SIZE_X + x];
 				if (tileIndex == -1) continue;
 
-				glm::vec3 position = { x * tileSize - 1.0f ,1 - y * tileSize - 1.0f, 0.0f};
+				glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f};
 				_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[tileIndex]);
 			}
 		}

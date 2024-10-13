@@ -32,8 +32,11 @@ namespace sph
 		virtual void SetMat3(const std::string& _name, const glm::mat3& _matrix) = 0;
 		virtual void SetMat4(const std::string& _name, const glm::mat4& _matrix) = 0;
 
+		uint32_t GetRendererID() const { return m_rendererID; }
+
 	protected:
 		std::string m_name;
+		uint32_t m_rendererID;
 	};
 
 	class ShaderLibrary
