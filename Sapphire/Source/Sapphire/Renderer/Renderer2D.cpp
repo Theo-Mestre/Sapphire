@@ -92,6 +92,7 @@ namespace sph
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position)
 			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
+		m_shader->Bind();
 		m_shader->SetMat4("u_transform", transform);
 		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
 
@@ -110,7 +111,18 @@ namespace sph
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
 
+		_shader->Unbind();
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const uint32_t _textureID)
+	{
 		m_shader->Bind();
+		m_shader->SetMat4("u_transform", glm::translate(glm::mat4(1.0f), _position)
+			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f }));
+
+		
+		m_vertexArray->Bind();
+		RenderCommand::DrawIndexed(m_vertexArray);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _texture)
@@ -120,6 +132,7 @@ namespace sph
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position)
 			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
+		m_shader->Bind();
 		m_shader->SetMat4("u_transform", transform);
 		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
 

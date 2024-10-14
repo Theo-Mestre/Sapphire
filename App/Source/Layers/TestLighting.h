@@ -21,10 +21,13 @@ private:
 	sph::Application* const m_app;
 	sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
 
+	sph::Ref<sph::Framebuffer> m_framebuffer;
+
 	sph::Scope<sph::Renderer2D> m_renderer2D;
 	sph::Ref<sph::UniformBuffer> m_appDataUniformBuffer;
 	glm::vec3 m_ambiantLightColor;
 	sph::Ref<sph::Texture2D> m_texture;
+	sph::Ref<sph::Texture2D> m_tileMap;
 
 	LightData m_lightData;
 

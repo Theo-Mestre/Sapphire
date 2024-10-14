@@ -5,6 +5,8 @@
 
 namespace sph
 {
+	class Texture2D;
+
 	class OpenGLFramebuffer 
 		: public Framebuffer
 	{
@@ -20,14 +22,12 @@ namespace sph
 		virtual void Resize(uint32_t _width, uint32_t _height) override;
 		virtual void Clear() override;
 
-		virtual uint32_t GetColorAttachmentRendererID() const override { return m_colorAttachment; }
+		virtual const Ref<Texture2D>& GetTextureAttachment() const override { return m_textureAttachment; }
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_specification; }
 
 	private:
-		uint32_t m_rendererID;
-		uint32_t m_colorAttachment;
-		uint32_t m_depthAttachment;
 		FramebufferSpecification m_specification;
+		Ref<Texture2D> m_textureAttachment;
 	};
 }
 

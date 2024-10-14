@@ -9,11 +9,9 @@ namespace sph
 	{
 		uint32_t Width, Height;
 		uint32_t Samples = 1;
-
-		/*
-			filtering: linear, nearest
-		*/
 	};
+
+	class Texture2D;
 
 	class Framebuffer
 	{
@@ -29,13 +27,13 @@ namespace sph
 		virtual void Resize(uint32_t _width, uint32_t _height) = 0;
 		virtual void Clear() = 0;
 
-		virtual uint32_t GetColorAttachmentRendererID() const = 0;
+		virtual const Ref<Texture2D>& GetTextureAttachment() const = 0;
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
 
-	private:
-		uint32_t m_RendererID;
+	protected:
+		uint32_t m_rendererID;
 	};
 }
 #endif

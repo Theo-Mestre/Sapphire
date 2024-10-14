@@ -8,6 +8,8 @@ TestLighting::TestLighting(sph::Application* const _app)
 	, m_ambiantLightColor(0.1f, 0.1f, 0.1f)
 	, m_lightData()
 	, m_mousePosition(0.0f)
+	, m_framebuffer(nullptr)
+	, m_tileMap(nullptr)
 {
 }
 
@@ -26,6 +28,9 @@ void TestLighting::OnAttach()
 	props.WrapModeS = sph::Texture::WrapMode::Repeat;
 	props.WrapModeT = sph::Texture::WrapMode::Repeat;
 	m_texture = sph::Texture2D::Create("Background.png", props);
+	m_tileMap = sph::Texture2D::Create("TileMap.png", props);
+
+	m_framebuffer = sph::Framebuffer::Create({ 1280 / 2, 720 / 2 });
 
 	// AppData buffer
 	float data[2] = { (float)m_app->GetWindow().GetWidth(), (float)m_app->GetWindow().GetHeight() };
@@ -40,7 +45,7 @@ void TestLighting::OnAttach()
 	};
 	m_lightData.UploadLightsData(lights);
 
-	sph::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+	sph::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 }
 
 void TestLighting::OnDetach()
@@ -62,13 +67,29 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	sph::RenderCommand::Clear();
 
 	m_renderer2D->BeginScene(m_cameraController->GetCamera());
+	{
+		auto& lightShader = m_lightData.GetShader();
+		lightShader->Bind();
+		lightShader->SetMat4("u_viewProjection", m_cameraController->GetCamera().GetViewProjectionMatrix());
+		lightShader->SetFloat3("u_ambientLight", m_ambiantLightColor);
 
-	auto& lightShader = m_lightData.GetShader();
-	lightShader->Bind();
-	lightShader->SetMat4("u_viewProjection", m_cameraController->GetCamera().GetViewProjectionMatrix());
-	lightShader->SetFloat3("u_ambientLight", m_ambiantLightColor);
+		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(2.0f, 1.0f), m_texture, lightShader);
+	}
 
-	m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(2.0f, 1.0f), m_texture, lightShader);
+	{ // Render to framebuffer
+		m_framebuffer->Bind();
+		m_framebuffer->AttachTexture();
+		m_framebuffer->Clear();
+
+
+		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(2.0f, 1.0f), m_tileMap);
+
+		m_framebuffer->Unbind();
+	}
+
+	{ // Render framebuffer
+		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(1.0f, .5f), m_framebuffer->GetTextureAttachment());
+	}
 
 	m_renderer2D->EndScene();
 }

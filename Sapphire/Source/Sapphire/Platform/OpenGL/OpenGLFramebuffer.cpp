@@ -2,12 +2,14 @@
 #include <glad/glad.h>
 
 #include "OpenGLFramebuffer.h"
+#include "Sapphire/Renderer/Texture.h"
 #include "Sapphire/Core/Log.h"
 
 namespace sph
 {
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& _specification)
 		: m_specification(_specification)
+		, m_textureAttachment(nullptr)
 	{
 		Resize();
 	}
@@ -29,7 +31,7 @@ namespace sph
 
 	void OpenGLFramebuffer::AttachTexture()
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorAttachment, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureAttachment->GetRendererID(), 0);
 	}
 
 	void OpenGLFramebuffer::Resize()
@@ -38,30 +40,18 @@ namespace sph
 		if (m_rendererID)
 		{
 			glDeleteFramebuffers(1, &m_rendererID);
-			glDeleteTextures(1, &m_colorAttachment);
-			glDeleteTextures(1, &m_depthAttachment);
 		}
 
 		glCreateFramebuffers(1, &m_rendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);
 
-		// Color
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_colorAttachment);
-		glBindTexture(GL_TEXTURE_2D, m_colorAttachment);
+		// Texture Attachment
+		m_textureAttachment = Texture2D::Create(m_specification.Width, m_specification.Height);
+		m_textureAttachment->Bind();
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_specification.Width, m_specification.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureAttachment->GetRendererID(), 0);
 
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorAttachment, 0);
-
-		// Depth
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_depthAttachment);
-		glBindTexture(GL_TEXTURE_2D, m_depthAttachment);
-
-		glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, m_specification.Width, m_specification.Height);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_depthAttachment, 0);
-
+		// Check if the framebuffer is complete
 		ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
