@@ -19,6 +19,11 @@ void main()
 #type fragment
 #version 420 core
 
+layout (std140, binding = 0) uniform AppData 
+{
+    vec2 u_resolution;
+};
+
 struct Light 
 {
     vec3 color;
@@ -27,9 +32,10 @@ struct Light
     float radius;
 };
 
-layout (std140, binding = 0) uniform LightBlock 
+
+layout (std140, binding = 1) uniform LightBlock 
 {
-    int numLights;
+    int lightsCount;
     Light lights[100];
 };
 
@@ -42,13 +48,16 @@ in vec2 v_texCoords;
 
 void main()
 {
-    vec4 texColor = texture(u_texture, v_texCoords);
+    float screenRatio = u_resolution.x / u_resolution.y;
+    vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
+    vec4 texColor = texture(u_texture, v_texCoords * screenRatio);
+
     vec3 finalColor = u_ambientLight * texColor.rgb;
 
-    for (int i = 0; i < numLights; i++) 
+    for (int i = 0; i < lightsCount; i++) 
     {
         Light light = lights[i];
-        vec2 lightDir = light.position - v_texCoords;
+        vec2 lightDir = (light.position - v_texCoords) * aspectRatio;
         float distance = length(lightDir);
         
         float attenuation = clamp(1.0 - (distance / light.radius), 0.0, 1.0);
@@ -59,5 +68,5 @@ void main()
         finalColor += lightEffect * texColor.rgb;
     }
 
-    color = vec4(finalColor, texColor.a); // Output the final color
+    color = vec4(finalColor, texColor.a);
 }

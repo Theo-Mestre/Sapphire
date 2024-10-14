@@ -15,6 +15,8 @@ namespace sph
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+
+		virtual void SetBindingPoint(uint32_t _binding) override;
 	};
 }
 #endif

@@ -12,7 +12,8 @@ namespace sph
 		Mat3, Mat4,
 		Int, Int2, Int3, Int4,
 		UInt, UInt2, UInt3, UInt4,
-		Bool
+		Bool,
+		Custom
 	};
 
 	uint32_t ShaderDataTypeSize(ShaderDataType _type);
@@ -25,7 +26,7 @@ namespace sph
 		uint32_t offset;
 		bool normalized;
 
-		BufferElement() = default;
+		BufferElement();
 		BufferElement(ShaderDataType _type, const std::string& _name, bool _normalized = false);
 		uint32_t GetComponentCount() const;
 	};
@@ -33,7 +34,7 @@ namespace sph
 	class BufferLayout
 	{
 	public:
-		BufferLayout() = default;
+		BufferLayout();
 		BufferLayout(const std::initializer_list<BufferElement>& _elements);
 
 		inline const std::vector<BufferElement>& GetElements() const { return m_elements; }
@@ -47,7 +48,7 @@ namespace sph
 		void CalculateOffsetsAndStride();
 	private:
 		std::vector<BufferElement> m_elements;
-		uint32_t m_stride = 0;
+		uint32_t m_stride;
 	};
 
 	class VertexBuffer

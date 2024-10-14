@@ -27,7 +27,6 @@ namespace sph
 	private:
 		std::vector<BufferElement> m_elements;
 		uint32_t m_stride = 0;
-
 	};
 
 	class UniformBuffer
@@ -44,6 +43,9 @@ namespace sph
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
+
+		virtual void SetBindingPoint(uint32_t _binding) { m_binding = _binding; }
+		virtual uint32_t GetBindingPoint() const { return m_binding; }
 
 		static Ref<UniformBuffer> Create(const UniformBufferLayout& _layout, uint32_t _binding);
 	protected:

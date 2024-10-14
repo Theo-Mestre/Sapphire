@@ -36,4 +36,10 @@ namespace sph
 	{
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
+
+	void OpenGLUniformBuffer::SetBindingPoint(uint32_t _binding)
+	{
+		m_binding = _binding; 
+		glBindBufferBase(GL_UNIFORM_BUFFER, m_binding, m_rendererID);
+	}
 }
