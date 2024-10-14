@@ -1,6 +1,8 @@
-#include "glad/glad.h"
+﻿#include "glad/glad.h"
 
 #include "TestLighting.h"
+
+#define USE_UNIFORM_BUFFER_OBJECT 1
 
 TestLighting::TestLighting(sph::Application* const _app)
 	: Layer("TestLighting")
@@ -24,54 +26,52 @@ void TestLighting::OnAttach()
 
 	sph::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 
-	m_ambiantLightColor = { 0.1f, 0.1f, 0.f };
+	m_ambiantLightColor = { 0.0f, 0.0f, 0.0f };
 
-	GLint structIndex = glGetUniformBlockIndex(m_lightShader->GetRendererID(), "LightBlock");
-	LogDebug("LightData index: {0}", structIndex);
-
-	
-	glGetActiveUniformBlockiv(m_lightShader->GetRendererID(), structIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
-
-	LogDebug("LightData size: {0}", blockSize);
-
-	GLubyte* blockBuffer = new GLubyte[blockSize];
-
-	const GLchar* names[] = { "numLights", "lights.position", "lights.color", "lights.intensity", "lights.radius" };
-
-	GLuint indices[5];
-	glGetUniformIndices(m_lightShader->GetRendererID(), 5, names, indices);
-
-	for (int i = 0; i < 5; i++)
+	// Create Lights
+	constexpr uint32_t lightCount = 4;
+	Light lights[lightCount] =
 	{
-		LogDebug("LightData index {0}: {1}", names[i], indices[i]);
+		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { .5f, .45f }, 1.f, 0.2f },
+		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { .5f, .65f }, 1.f, 0.2f },
+		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { .35f, .5f }, 1.f, 0.2f },
+		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { .65f, .5f }, 1.f, 0.2f }
+	};
+
+
+	// Create Uniform Buffer Layout
+	sph::UniformBufferLayout layout = { { sph::ShaderDataType::Float4, "numLights" }, };
+	for (uint32_t i = 0; i < lightCount; i++)
+	{
+		layout.AddElement(sph::ShaderDataType::Float4, "lights[" + std::to_string(i) + "].color");
+		layout.AddElement(sph::ShaderDataType::Float2, "lights[" + std::to_string(i) + "].position");
+		layout.AddElement(sph::ShaderDataType::Float, "lights[" + std::to_string(i) + "].intensity");
+		layout.AddElement(sph::ShaderDataType::Float, "lights[" + std::to_string(i) + "].radius");
 	}
 
-	GLint offset[5];
-	glGetActiveUniformsiv(m_lightShader->GetRendererID(), 5, indices, GL_UNIFORM_OFFSET, offset);
+	// Create Buffer Data
+	char* blockBuffer = new char[layout.GetStride()];
+	auto elements = layout.GetElements();
 
-	for (int i = 0; i < 5; i++)
+	memcpy(blockBuffer + elements[0].offset, &lightCount, sizeof(int));
+	uint32_t lightID = 0;
+	for (uint32_t i = 0; i < lightCount * 4; i += 4)
 	{
-		LogDebug("LightData offset {0}: {1}", names[i], offset[i]);
+		memcpy(blockBuffer + elements[i + 1].offset, &lights[lightID], sizeof(Light));
+
+		lightID++;
 	}
 
-	Light lightData = { { .5f, .5f }, { 0.8f, 0.5f, 0.7f }, 5.0f, 0.5f };
-	int lightCount = 1;
-
-	memcpy(blockBuffer + offset[0], &lightCount, sizeof(int));
-	memcpy(blockBuffer + offset[1], &lightData.position, sizeof(glm::vec2));
-	memcpy(blockBuffer + offset[2], &lightData.color, sizeof(glm::vec3));
-	memcpy(blockBuffer + offset[3], &lightData.intensity, sizeof(float));
-	memcpy(blockBuffer + offset[4], &lightData.radius, sizeof(float));
-
-	glCreateBuffers(1, &m_UBO);
-	glNamedBufferStorage(m_UBO, blockSize, blockBuffer, GL_DYNAMIC_STORAGE_BIT);
+	// Create Uniform Buffer Object
+	m_ubo = sph::UniformBuffer::Create(layout, 0);
+	m_ubo->SetData(blockBuffer, layout.GetStride());
 
 	delete[] blockBuffer;
 }
 
 void TestLighting::OnDetach()
 {
-	glDeleteBuffers(1, &m_UBO);
+	glDeleteBuffers(1, &m_UBOhandmade);
 
 	m_renderer2D->Shutdown();
 }
@@ -79,6 +79,10 @@ void TestLighting::OnDetach()
 void TestLighting::OnUpdate(sph::DeltaTime _dt)
 {
 	m_cameraController->OnUpdate(_dt);
+
+	glm::vec2 mousePosition = { sph::Input::GetMouseX() / 1280, 1 - sph::Input::GetMouseY() / 720 };
+
+	m_ubo->SetData(&mousePosition, sizeof(glm::vec2), 128);
 }
 
 void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
@@ -92,9 +96,7 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	m_lightShader->SetMat4("u_viewProjection", m_cameraController->GetCamera().GetViewProjectionMatrix());
 	m_lightShader->SetFloat3("u_ambientLight", m_ambiantLightColor);
 
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, m_UBO, 0, blockSize);
-
-	//m_lightShader->SetInt("u_lightCount", m_lightData.count);
+	m_ubo->Bind();
 
 	m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(2.0f, 1.0f), m_texture, m_lightShader);
 

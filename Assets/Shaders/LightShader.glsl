@@ -17,21 +17,20 @@ void main()
 }
 
 #type fragment
-#version 330 core
+#version 420 core
 
 struct Light 
 {
-    vec2 position;
     vec3 color;
+    vec2 position;
     float intensity;
     float radius;
 };
 
-//layout (std140)
-uniform LightBlock 
+layout (std140, binding = 0) uniform LightBlock 
 {
-    Light lights;
     int numLights;
+    Light lights[100];
 };
 
 uniform sampler2D u_texture;
@@ -46,9 +45,9 @@ void main()
     vec4 texColor = texture(u_texture, v_texCoords);
     vec3 finalColor = u_ambientLight * texColor.rgb;
 
-    //for (int i = 0; i < numLights; i++) 
-    //{
-        Light light = lights;//lights[i];
+    for (int i = 0; i < numLights; i++) 
+    {
+        Light light = lights[i];
         vec2 lightDir = light.position - v_texCoords;
         float distance = length(lightDir);
         
@@ -58,7 +57,7 @@ void main()
         vec3 lightEffect = intensity * light.color;
     
         finalColor += lightEffect * texColor.rgb;
-    //}
+    }
 
     color = vec4(finalColor, texColor.a); // Output the final color
 }

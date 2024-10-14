@@ -20,6 +20,7 @@
 #include "Sapphire/Renderer/VertexArray.h"
 #include "Sapphire/Renderer/Shader.h"
 #include "Sapphire/Renderer/Buffer.h"
+#include "Sapphire/Renderer/UniformBuffer.h"
 #include "Sapphire/Renderer/Material.h"
 #include "Sapphire/Renderer/Texture.h"
 #include "Sapphire/Renderer/Framebuffer.h"

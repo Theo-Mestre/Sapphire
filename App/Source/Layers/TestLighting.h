@@ -4,12 +4,17 @@
 
 struct Light
 {
+	glm::vec4 color;
 	glm::vec2 position;
-	glm::vec3 color;
 	float intensity;
 	float radius;
 };
 
+struct LightData
+{
+	int lightCount = 0; // Allign to 16 bytes
+	Light lights[100]; 
+};
 
 class TestLighting
 	: public sph::Layer
@@ -34,6 +39,12 @@ private:
 	sph::Ref<sph::Shader> m_lightShader;
 	sph::Ref<sph::Texture2D> m_texture;
 
+
+	sph::Ref<sph::UniformBuffer> m_ubo;
 	int blockSize;
-	uint32_t m_UBO;
+	uint32_t m_UBOhandmade;
+
+	uint32_t m_ssbo;
+
+	glm::vec2 m_mousePosition;
 };
