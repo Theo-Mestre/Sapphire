@@ -3,8 +3,11 @@
 
 #include "Sapphire/Core/Core.h"
 #include "Sapphire/Core/Application.h"
-#include "Sapphire/Core/Log.h"
 #include "Sapphire/Core/Time.h"
+
+#pragma warning(push, 0)
+#include "Sapphire/Core/Log.h"
+#pragma warning(pop)
 
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Events/KeyEvent.h"
@@ -16,18 +19,18 @@
 #include "Sapphire/Layers/LayerStack.h"
 #include "Sapphire/Window/Window.h"	
 
+#include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Renderer/Renderering2D.h"
 #include "Sapphire/Renderer/VertexArray.h"
 #include "Sapphire/Renderer/Shader.h"
+#include "Sapphire/Renderer/Material.h"
 #include "Sapphire/Renderer/Buffer.h"
 #include "Sapphire/Renderer/UniformBuffer.h"
-#include "Sapphire/Renderer/Material.h"
-#include "Sapphire/Renderer/Texture.h"
 #include "Sapphire/Renderer/Framebuffer.h"
-#include "Sapphire/Renderer/RenderCommand.h"
-#include "Sapphire/Renderer/Camera.h"
 #include "Sapphire/Renderer/Texture.h"
 #include "Sapphire/Renderer/SubTexture2D.h"
+
+#include "Sapphire/Renderer/Camera.h"
 
 #include "Sapphire/Core/OrthographicCameraController.h"
 

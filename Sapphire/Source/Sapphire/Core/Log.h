@@ -1,10 +1,11 @@
 #ifndef SPH_LOG_H
 #define SPH_LOG_H
 
-#pragma warning(push, 0)
+#pragma warning(push, 0) // Disabling spdlod warnings
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #pragma warning(pop)
+
 #include "Sapphire/Core/Core.h"
 
 namespace sph
@@ -34,11 +35,20 @@ namespace sph
 #	define SAPPHIRE_GET_CURRENT_LOGGER ::sph::Logger::GetClientLogger()
 #endif
 
-#define LogTrace(...)	SAPPHIRE_GET_CURRENT_LOGGER->trace(__VA_ARGS__)
-#define LogDebug(...)	SAPPHIRE_GET_CURRENT_LOGGER->debug(__VA_ARGS__)
-#define LogInfo(...)	SAPPHIRE_GET_CURRENT_LOGGER->info(__VA_ARGS__)
-#define LogWarn(...)	SAPPHIRE_GET_CURRENT_LOGGER->warn(__VA_ARGS__)
-#define LogError(...)	SAPPHIRE_GET_CURRENT_LOGGER->error(__VA_ARGS__)
-#define LogCritical(...)	SAPPHIRE_GET_CURRENT_LOGGER->critical(__VA_ARGS__)
+#ifndef DIST
+#	define LogTrace(...)	SAPPHIRE_GET_CURRENT_LOGGER->trace(__VA_ARGS__)
+#	define LogDebug(...)	SAPPHIRE_GET_CURRENT_LOGGER->debug(__VA_ARGS__)
+#	define LogInfo(...)		SAPPHIRE_GET_CURRENT_LOGGER->info(__VA_ARGS__)
+#	define LogWarn(...)		SAPPHIRE_GET_CURRENT_LOGGER->warn(__VA_ARGS__)
+#	define LogError(...)	SAPPHIRE_GET_CURRENT_LOGGER->error(__VA_ARGS__)
+#	define LogCritical(...)	SAPPHIRE_GET_CURRENT_LOGGER->critical(__VA_ARGS__)
+#else
+#	define LogTrace(...)	
+#	define LogDebug(...)	
+#	define LogInfo(...)	
+#	define LogWarn(...)	
+#	define LogError(...)	
+#	define LogCritical(...)	
+#endif
 
 #endif

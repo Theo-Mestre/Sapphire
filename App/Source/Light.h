@@ -44,6 +44,12 @@ public:
 		m_lightCount = (uint32_t)_lights.size();
 		if (m_lightCount <= 0) return;
 
+		if (m_lightCount > GetMaxLightCount())
+		{
+			ASSERT(false, "Light count is greater than the max number of light supported! See LightData::GetMaxLightCount().");
+			return;
+		}
+
 		m_layout.AddElement(sph::ShaderDataType::Float4, "LightsCount");
 		for (uint32_t i = 0; i < m_lightCount; i++)
 		{
@@ -69,6 +75,8 @@ public:
 
 	const sph::Ref<sph::Shader>& GetShader() const { return m_lightShader; }
 	const sph::Ref<sph::UniformBuffer>& GetUniformBuffer() const { return m_uniformBuffer; }
+
+	static constexpr uint32_t GetMaxLightCount() { return 100; }
 
 private:
 	sph::Ref<sph::Shader> m_lightShader;

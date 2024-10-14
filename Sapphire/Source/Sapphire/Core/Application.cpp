@@ -49,7 +49,7 @@ namespace sph
 					layer->OnUpdate(Time::DeltaTime);
 				}
 			}
-#ifndef DIST // Disable ImGui in Distribution build
+#ifndef DIST | SPH_DISABLE_IMGUI // Disable ImGui in Distribution build
 			m_imGuiLayer->Begin();
 			OnImGuiRender();
 			for (sph::Layer* layer : m_layerStack)
@@ -110,7 +110,7 @@ namespace sph
 
 		m_renderer->Init();
 
-#ifndef DIST // Disable ImGui in Distribution build
+#ifndef DIST | SPH_DISABLE_IMGUI // Disable ImGui in Distribution build
 		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
 		m_layerStack.PushOverlay(m_imGuiLayer);
 #endif

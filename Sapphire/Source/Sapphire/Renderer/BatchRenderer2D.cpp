@@ -113,7 +113,7 @@ namespace sph
 		for (uint32_t i = 0; i < textureSlotIndex; i++) { textureSlots[i]->Bind(i); }
 
 		// Send the data of the current batch to the GPU
-		uint64_t dataSize = (uint8_t*)quadVertexBufferPointer - (uint8_t*)quadVertexBufferBase;
+		uint32_t dataSize = (uint8_t*)quadVertexBufferPointer - (uint8_t*)quadVertexBufferBase;
 		vertexBuffer->SetData(quadVertexBufferBase, dataSize);
 
 		// Draw the vertices
