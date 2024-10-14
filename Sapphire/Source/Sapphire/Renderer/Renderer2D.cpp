@@ -20,10 +20,10 @@ namespace sph
 	void Renderer2D::Init()
 	{
 		float vertices[4 * 5] = {
-		   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-		   0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-		   0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-		   -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+		   -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		   1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		   1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+		   -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
 		};
 
 		uint32_t indices[6] =
@@ -47,7 +47,7 @@ namespace sph
 		m_vertexArray->AddVertexBuffer(vertexBuffer);
 		m_vertexArray->SetIndexBuffer(indexBuffer);
 		
-		m_shader = Shader::Create("Shaders/Texture.glsl");
+		m_shader = Shader::Create("Shaders/SingleQuad.glsl");
 		m_shader->Bind();
 		m_shader->SetInt("u_texture", 0);
 		

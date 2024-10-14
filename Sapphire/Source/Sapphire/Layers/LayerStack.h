@@ -27,6 +27,8 @@ namespace sph
 		void PopLayer(Layer* _layer);
 		void PopOverlay(Layer* _overlay);
 
+		void Clear();
+
 		Iterator begin() { return m_layers.begin(); }
 		Iterator end() { return m_layers.end(); }
 	private:

@@ -24,6 +24,8 @@ namespace sph
 
 	Application::~Application()
 	{
+		m_layerStack.Clear();
+
 		delete m_window;
 	}
 

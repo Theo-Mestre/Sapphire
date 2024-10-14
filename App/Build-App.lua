@@ -17,7 +17,11 @@ project "App"
       "../Vendor/ThirdParty/ImGui",
       "../Vendor/ThirdParty/ImPlot",
       "../Vendor/ThirdParty/spdlog",
-      "../Vendor/include",   
+      "../Vendor/include", 
+
+      -- Debug only
+      "../Vendor/ThirdParty/GLFW/include",
+      "../Vendor/ThirdParty/Glad/include",
     }
 
    links

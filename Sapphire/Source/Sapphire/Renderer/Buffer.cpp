@@ -16,7 +16,7 @@ namespace sph
 		case ShaderDataType::Float2:	return 4 * 2;
 		case ShaderDataType::Float3:	return 4 * 3;
 		case ShaderDataType::Float4:	return 4 * 4;
-		case ShaderDataType::Mat3:		return 4 * 3 * 3;
+		case ShaderDataType::Mat3:		return 3 * 3 * 4;
 		case ShaderDataType::Mat4:		return 4 * 4 * 4;
 		case ShaderDataType::Int:		return 4;
 		case ShaderDataType::Int2:		return 4 * 2;
@@ -27,14 +27,29 @@ namespace sph
 		case ShaderDataType::UInt3:		return 4 * 3;
 		case ShaderDataType::UInt4:		return 4 * 4;
 		case ShaderDataType::Bool:		return 1;
+		case ShaderDataType::Custom:	return 0;
 		}
 
 		ASSERT(false, "Unknown ShaderDataType!");
 		return 0;
 	}
 
+
+	BufferElement::BufferElement()
+		: name("")
+		, type(ShaderDataType::None)
+		, size(0)
+		, offset(0)
+		, normalized(false)
+	{
+	}
+
 	BufferElement::BufferElement(ShaderDataType _type, const std::string& _name, bool _normalized)
-		: name(_name), type(_type), size(ShaderDataTypeSize(_type)), offset(0), normalized(_normalized)
+		: name(_name)
+		, type(_type)
+		, size(ShaderDataTypeSize(_type))
+		, offset(0)
+		, normalized(_normalized)
 	{
 	}
 
@@ -63,8 +78,15 @@ namespace sph
 		return 0;
 	}
 
+	BufferLayout::BufferLayout()
+		: m_elements()
+		, m_stride(0)
+	{
+	}
+
 	BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& _elements)
 		: m_elements(_elements)
+		, m_stride(0)
 	{
 		CalculateOffsetsAndStride();
 	}

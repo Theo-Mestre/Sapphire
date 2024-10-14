@@ -49,4 +49,15 @@ namespace sph
 			m_layers.erase(it);
 		}
 	}
+
+	void LayerStack::Clear()
+	{
+		for (Layer* layer : m_layers)
+		{
+			layer->OnDetach();
+			delete layer;
+		}
+		m_layers.clear();
+		m_layerInsertIndex = 0;
+	}
 }

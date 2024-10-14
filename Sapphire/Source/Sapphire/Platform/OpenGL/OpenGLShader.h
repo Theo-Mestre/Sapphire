@@ -47,7 +47,6 @@ namespace sph
 		uint32_t LinkProgram(uint32_t _vertexShader, uint32_t _fragmentShader);
 	private:
 		mutable std::unordered_map<std::string, int32_t> m_uniformLocationCache;
-		uint32_t m_rendererID;
 	};
 }
 
