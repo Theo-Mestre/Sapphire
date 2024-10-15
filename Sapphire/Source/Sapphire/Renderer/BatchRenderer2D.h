@@ -36,26 +36,26 @@ namespace sph
 		void InitShader();
 
 		void ResetBatchStates();
-		void UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = defaultTexCoords);
+		void UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = s_defaultTexCoords);
 
 		float SubmitTexture(const Ref<Texture2D>& _texture);
 	private:
-		uint32_t quadIndexCount = 0;
-		QuadVertex* quadVertexBufferBase = nullptr;
-		QuadVertex* quadVertexBufferPointer = nullptr;
-		glm::vec4 quadTransform[4] = { {} };
+		uint32_t m_quadIndexCount = 0;
+		QuadVertex* m_quadVertexBufferBase = nullptr;
+		QuadVertex* m_quadVertexBufferPointer = nullptr;
+		glm::vec4 m_quadTransform[4] = { {} };
 
-		Ref<VertexArray> vertexArray;
-		Ref<VertexBuffer> vertexBuffer;
-		Ref<Shader> shader;
-		Ref<Texture2D> whiteTexture;
+		Ref<VertexArray> m_vertexArray;
+		Ref<VertexBuffer> m_vertexBuffer;
+		Ref<Shader> m_shader;
+		Ref<Texture2D> m_whiteTexture;
 
 
-		static const uint32_t maxQuads = 10000;
-		static const uint32_t maxVertices = maxQuads * 4;
-		static const uint32_t maxIndices = maxQuads * 6;
-		static const uint32_t maxTextureSlots = 32; // GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS
-		static constexpr glm::vec2 defaultTexCoords[4] =
+		static const uint32_t s_maxQuads = 10000;
+		static const uint32_t s_maxVertices = s_maxQuads * 4;
+		static const uint32_t s_maxIndices = s_maxQuads * 6;
+		static const uint32_t s_maxTextureSlots = 32; // GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS
+		static constexpr glm::vec2 s_defaultTexCoords[4] =
 		{
 			{ 0.0f, 0.0f },
 			{ 1.0f, 0.0f },
@@ -63,9 +63,8 @@ namespace sph
 			{ 0.0f, 1.0f }
 		};
 
-		std::array<Ref<Texture2D>, maxTextureSlots> textureSlots;
-		uint32_t textureSlotIndex = 1;
+		std::array<Ref<Texture2D>, s_maxTextureSlots> m_textureSlots;
+		uint32_t m_textureSlotIndex = 1;
 	};
 }
-
 #endif

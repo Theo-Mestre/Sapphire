@@ -4,7 +4,7 @@
 #include "Layers/TestRenderer.h"
 #include "Layers/TestLighting.h"
 
-#define TESTING_LIGHTING 1
+#define TESTING_LIGHTING 0
 
 class Sandbox2D
 	: public sph::Application

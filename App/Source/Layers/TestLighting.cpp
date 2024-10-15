@@ -58,6 +58,8 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 	m_cameraController->OnUpdate(_dt);
 
 	m_mousePosition = { sph::Input::GetMouseX() / (1280), 1 - sph::Input::GetMouseY() / (720) };
+	m_mousePosition = m_cameraController->PixelToNormalized(m_mousePosition);
+
 	m_lightData.GetUniformBuffer()->SetData(&m_mousePosition, sizeof(glm::vec2), 32);
 }
 
@@ -98,6 +100,11 @@ void TestLighting::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
 	ImGui::ColorEdit3("Ambiant Light Color", glm::value_ptr(m_ambiantLightColor));
+
+	ImGui::Text("Mouse Pos X : %f", m_mousePosition.x);
+	ImGui::Text("Mouse Pos Y : %f", m_mousePosition.y);
+
+	ImGui::Text("Camera Zoom: %.2f", m_cameraController->GetZoomLevel());
 	ImGui::End();
 }
 

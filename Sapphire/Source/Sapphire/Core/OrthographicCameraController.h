@@ -42,6 +42,17 @@ namespace sph
 		inline float GetZoomSpeed() const { return m_zoomSpeed; }
 
 		void SetCameraProjection(float _left, float _right, float _bottom, float _top);
+
+		glm::vec2 NormalizedToPixel(glm::vec2 _pos)
+		{
+			return { _pos.x * m_aspectRatio * m_zoomLevel, _pos.y * m_zoomLevel };
+		}
+
+		glm::vec2 PixelToNormalized(glm::vec2 _pos)
+		{
+			return { _pos.x / (m_aspectRatio * m_zoomLevel), _pos.y / m_zoomLevel };
+		}
+
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& _e);
 		bool OnWindowResized(WindowResizeEvent& _e);

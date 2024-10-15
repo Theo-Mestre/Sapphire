@@ -24,7 +24,7 @@ namespace sph
 
 	BatchRenderer2D::~BatchRenderer2D()
 	{
-		ASSERT(quadVertexBufferBase != nullptr, "BatchRenderer: Shutdown must be called before destroy the renderer!");
+		ASSERT(m_quadVertexBufferBase != nullptr, "BatchRenderer: Shutdown must be called before destroy the renderer!");
 	}
 
 	void BatchRenderer2D::Init()
@@ -33,10 +33,10 @@ namespace sph
 		RenderCommand::Init();
 
 		// Vertex Array Creattion
-		vertexArray = VertexArray::Create();
+		m_vertexArray = VertexArray::Create();
 
 		// Vertex Buffer Creation
-		vertexBuffer = VertexBuffer::Create(maxVertices * sizeof(QuadVertex));
+		m_vertexBuffer = VertexBuffer::Create(s_maxVertices * sizeof(QuadVertex));
 
 		// Buffer Layout
 		BufferLayout layout =
@@ -47,13 +47,13 @@ namespace sph
 			{ ShaderDataType::Float, "a_TexIndex" },
 			{ ShaderDataType::Float, "a_TilingFactor" }
 		};
-		vertexBuffer->SetLayout(layout);
-		vertexArray->AddVertexBuffer(vertexBuffer);
+		m_vertexBuffer->SetLayout(layout);
+		m_vertexArray->AddVertexBuffer(m_vertexBuffer);
 
 		// Index Buffer
-		uint32_t* indices = new uint32_t[maxIndices];
+		uint32_t* indices = new uint32_t[s_maxIndices];
 		uint32_t offset = 0;
-		for (uint32_t i = 0; i < maxIndices; i += 6)
+		for (uint32_t i = 0; i < s_maxIndices; i += 6)
 		{
 			indices[i + 0] = offset + 0;
 			indices[i + 1] = offset + 1;
@@ -65,39 +65,39 @@ namespace sph
 
 			offset += 4;
 		}
-		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(indices, maxIndices);
-		vertexArray->SetIndexBuffer(indexBuffer);
+		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(indices, s_maxIndices);
+		m_vertexArray->SetIndexBuffer(indexBuffer);
 		delete[] indices;
 
 		// White Texture
-		whiteTexture = Texture2D::Create(1, 1);
+		m_whiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
-		whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
-		textureSlots[0] = whiteTexture;
+		m_whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+		m_textureSlots[0] = m_whiteTexture;
 
 		InitShader();
 
 
 		// Quad Vertex Buffer
-		quadVertexBufferBase = new QuadVertex[maxVertices];
+		m_quadVertexBufferBase = new QuadVertex[s_maxVertices];
 
-		quadTransform[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
-		quadTransform[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
-		quadTransform[2] = { 0.5f, 0.5f, 0.0f, 1.0f };
-		quadTransform[3] = { -0.5f, 0.5f, 0.0f, 1.0f };
+		m_quadTransform[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		m_quadTransform[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
+		m_quadTransform[2] = { 0.5f, 0.5f, 0.0f, 1.0f };
+		m_quadTransform[3] = { -0.5f, 0.5f, 0.0f, 1.0f };
 	}
 
 	void BatchRenderer2D::Shutdown()
 	{
-		delete[] quadVertexBufferBase;
-		quadVertexBufferBase = nullptr;
+		delete[] m_quadVertexBufferBase;
+		m_quadVertexBufferBase = nullptr;
 	}
 
 	void BatchRenderer2D::BeginScene(const OrthographicCamera& _camera)
 	{
-		vertexArray->Bind();
-		shader->Bind();
-		shader->SetMat4("u_viewProjection", _camera.GetViewProjectionMatrix());
+		m_vertexArray->Bind();
+		m_shader->Bind();
+		m_shader->SetMat4("u_viewProjection", _camera.GetViewProjectionMatrix());
 
 		ResetBatchStates();
 	}
@@ -109,15 +109,17 @@ namespace sph
 
 	void BatchRenderer2D::Flush()
 	{
+		if (m_quadIndexCount == 0) { return; }
+
 		//// Bind all the textures
-		for (uint32_t i = 0; i < textureSlotIndex; i++) { textureSlots[i]->Bind(i); }
+		for (uint32_t i = 0; i < m_textureSlotIndex; i++) { m_textureSlots[i]->Bind(i); }
 
 		// Send the data of the current batch to the GPU
-		uint32_t dataSize = (uint8_t*)quadVertexBufferPointer - (uint8_t*)quadVertexBufferBase;
-		vertexBuffer->SetData(quadVertexBufferBase, dataSize);
+		uint32_t dataSize = (uint8_t*)m_quadVertexBufferPointer - (uint8_t*)m_quadVertexBufferBase;
+		m_vertexBuffer->SetData(m_quadVertexBufferBase, dataSize);
 
 		// Draw the vertices
-		RenderCommand::DrawIndexed(vertexArray, quadIndexCount);
+		RenderCommand::DrawIndexed(m_vertexArray, m_quadIndexCount);
 		Renderer2D::s_stats.DrawCalls++;
 
 		ResetBatchStates();
@@ -125,7 +127,7 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)
 	{
-		if (quadIndexCount >= maxIndices)
+		if (m_quadIndexCount >= s_maxIndices)
 		{
 			Flush();
 		}
@@ -138,7 +140,7 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
 	{
-		if (quadIndexCount >= maxIndices)
+		if (m_quadIndexCount >= s_maxIndices)
 		{
 			Flush();
 		}
@@ -152,7 +154,7 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
 	{
-		if (quadIndexCount >= maxIndices)
+		if (m_quadIndexCount >= s_maxIndices)
 		{
 			Flush();
 		}
@@ -171,22 +173,22 @@ namespace sph
 
 	void BatchRenderer2D::InitShader()
 	{
-		int32_t samplers[maxTextureSlots] = { 0 };
-		for (int32_t i = 0; i < maxTextureSlots; i++)
+		int32_t samplers[s_maxTextureSlots] = { 0 };
+		for (int32_t i = 0; i < s_maxTextureSlots; i++)
 		{
 			samplers[i] = i;
 		}
 
-		shader = Shader::Create("Shaders/Texture.glsl");
-		shader->Bind();
-		shader->SetIntArray("u_textures", samplers, maxTextureSlots);
+		m_shader = Shader::Create("Shaders/Texture.glsl");
+		m_shader->Bind();
+		m_shader->SetIntArray("u_textures", samplers, s_maxTextureSlots);
 	}
 
 	void BatchRenderer2D::ResetBatchStates()
 	{
-		quadIndexCount = 0;
-		quadVertexBufferPointer = quadVertexBufferBase;
-		textureSlotIndex = 1;
+		m_quadIndexCount = 0;
+		m_quadVertexBufferPointer = m_quadVertexBufferBase;
+		m_textureSlotIndex = 1;
 	}
 
 	void BatchRenderer2D::UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords)
@@ -199,23 +201,23 @@ namespace sph
 
 		for (uint32_t i = 0; i < vertexCount; i++)
 		{
-			quadVertexBufferPointer->position = transform * quadTransform[i];
-			quadVertexBufferPointer->color = _color;
-			quadVertexBufferPointer->texIndex = _texID;
-			quadVertexBufferPointer->texCoord = _texCoords[i];
-			quadVertexBufferPointer->tilingFactor = _tilingFactor;
-			quadVertexBufferPointer++;
+			m_quadVertexBufferPointer->position = transform * m_quadTransform[i];
+			m_quadVertexBufferPointer->color = _color;
+			m_quadVertexBufferPointer->texIndex = _texID;
+			m_quadVertexBufferPointer->texCoord = _texCoords[i];
+			m_quadVertexBufferPointer->tilingFactor = _tilingFactor;
+			m_quadVertexBufferPointer++;
 		}
 
-		quadIndexCount += 6;
+		m_quadIndexCount += 6;
 	}
 
 	float BatchRenderer2D::SubmitTexture(const Ref<Texture2D>& _texture)
 	{
 		float textureIndex = 0.0f;
-		for (uint32_t i = 1; i < textureSlotIndex; i++)
+		for (uint32_t i = 1; i < m_textureSlotIndex; i++)
 		{
-			if (*textureSlots[i] == *(_texture))
+			if (*m_textureSlots[i] == *(_texture))
 			{
 				textureIndex = (float)i;
 				break;
@@ -224,15 +226,15 @@ namespace sph
 
 		if (textureIndex == 0.0f)
 		{
-			if (textureSlotIndex >= maxTextureSlots)
+			if (m_textureSlotIndex >= s_maxTextureSlots)
 			{
 				Flush();
-				textureSlotIndex = 0;
+				m_textureSlotIndex = 0;
 			}
 
-			textureIndex = (float)textureSlotIndex;
-			textureSlots[textureSlotIndex] = _texture;
-			textureSlotIndex++;
+			textureIndex = (float)m_textureSlotIndex;
+			m_textureSlots[m_textureSlotIndex] = _texture;
+			m_textureSlotIndex++;
 		}
 
 		return textureIndex;
