@@ -14,7 +14,6 @@ namespace sph
 		: m_vertexArray(nullptr)
 		, m_shader(nullptr)
 		, m_whiteTexture(nullptr)
-		, m_screenSize(0.0f, 0.0f)
 	{
 	}
 
@@ -86,6 +85,8 @@ namespace sph
 		m_whiteTexture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
@@ -99,6 +100,8 @@ namespace sph
 		_texture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture, const Ref<Shader>& _shader)
@@ -112,6 +115,8 @@ namespace sph
 
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 		m_shader->Bind();
 	}
 
@@ -128,5 +133,7 @@ namespace sph
 		m_whiteTexture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 }

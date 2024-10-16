@@ -1,6 +1,4 @@
-﻿#include "glad/glad.h"
-
-#include "TestLighting.h"
+﻿#include "TestLighting.h"
 
 TestLighting::TestLighting(sph::Application* const _app)
 	: Layer("TestLighting")
@@ -57,12 +55,16 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 {
 	m_cameraController->OnUpdate(_dt);
 
+	m_mousePosition = sph::Input::GetMousePosition();
+	m_mousePosition.x /= m_app->GetWindow().GetWidth();
+	m_mousePosition.y /= m_app->GetWindow().GetHeight();
+
 	m_lightData.GetUniformBuffer()->SetData(&m_mousePosition, sizeof(glm::vec2), 32);
 }
 
 void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 {
-	sph::Renderer2D::s_stats.Reset();
+	sph::Renderer::Stats::Reset();
 	sph::RenderCommand::Clear();
 
 	m_renderer2D->BeginScene(m_cameraController->GetCamera());

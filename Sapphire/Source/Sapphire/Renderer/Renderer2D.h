@@ -32,7 +32,6 @@ namespace sph
 		Ref<VertexArray> m_vertexArray;
 		Ref<Texture2D> m_whiteTexture;
 		Ref<Shader> m_shader;
-		glm::vec2 m_screenSize;
 	};
 }
 #endif

@@ -29,21 +29,20 @@ namespace sph
 
 		struct Stats
 		{
-			uint32_t DrawCalls = 0;
-			uint32_t QuadCount = 0;
+			inline static uint32_t DrawCalls;
+			inline static uint32_t QuadCount;
 
-			void Reset()
+			static void Reset()
 			{
-				memset(this, 0, sizeof(Stats));	
+				DrawCalls = 0;
+				QuadCount = 0;
 			}
 		};
 
-		inline static Stats s_stats;
-
 		inline void SetScreenSize(glm::vec2 _screenSize) { m_screenSize = _screenSize; }
 	protected:
-		glm::vec3&& NormalizePosition(const glm::vec3& _position);
-		glm::vec2&& NormalizeSize(const glm::vec2& _size);
+		glm::vec3 NormalizePosition(const glm::vec3& _position);
+		glm::vec2 NormalizeSize(const glm::vec2& _size);
 	protected:
 		glm::vec2 m_screenSize = { 0.0f, 0.0f };
 	};

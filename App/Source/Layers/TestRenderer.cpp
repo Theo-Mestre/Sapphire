@@ -38,32 +38,34 @@ void TestRenderer::OnUpdate(sph::DeltaTime _dt)
 
 void TestRenderer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 {
-	sph::Renderer2D::s_stats.Reset();
+	sph::Renderer2D::Stats::Reset();
 	sph::RenderCommand::Clear();
+
+	_renderer->BeginScene(m_cameraController->GetCamera());
+	{
+		const float tileSize = 48.0f;
+		for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
+		{
+			for (uint32_t x = 0; x < MAP_SIZE_X; x++)
+			{
+				int tileValue = m_tileMapData[y * MAP_SIZE_X + x];
+				if (tileValue == -1) continue;
+
+				_renderer->DrawQuad({ x * tileSize,(MAP_SIZE_Y - 1 - y) * tileSize, 0.0f }, { tileSize * 2, tileSize * 2 }, m_subTexture[tileValue]);
+			}
+		}
+	}
+	_renderer->EndScene();
+
 
 	m_renderer->BeginScene(m_cameraController->GetCamera());
 	{
-		m_renderer->DrawQuad({ 200.0f, 100.0f, 0.0f }, {m_texture->GetWidth(), m_texture->GetHeight()}, m_texture);
+		m_renderer->DrawQuad({ 700.0f, 500.0f, 0.0f }, m_texture->GetSize(), m_texture);
 
 		m_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		m_renderer->DrawQuad({ 1280.f, 780.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 		m_renderer->DrawQuad({ 0.0f, 780.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
 		m_renderer->DrawQuad({ 1280.f, 0.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
-
-		//const float tileSize = 0.15;
-		//const glm::vec2 mapOffest = { 1280.f * tileSize, 720.f * tileSize };
-		//
-		//for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
-		//{
-		//	for (uint32_t x = 0; x < MAP_SIZE_X; x++)
-		//	{
-		//		int32_t tileIndex = m_tileMapData[y * MAP_SIZE_X + x];
-		//		if (tileIndex == -1) continue;
-		//
-		//		glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f};
-		//		m_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[tileIndex]);
-		//	}
-		//}
 	}
 	m_renderer->EndScene();
 }
