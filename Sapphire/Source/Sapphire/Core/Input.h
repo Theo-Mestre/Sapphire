@@ -16,7 +16,7 @@ namespace sph
 		inline static bool IsKeyPressed(int _key) { INPUT_CALL_IMPL(IsKeyPressedImpl(_key)); }
 		inline static bool IsMouseButtonPressed(int _button) { INPUT_CALL_IMPL(IsMouseButtonPressedImpl(_button)); }
 
-		inline static std::pair<float, float> GetMousePosition() { INPUT_CALL_IMPL(GetMousePositionImpl()); }
+		inline static glm::vec2 GetMousePosition() { INPUT_CALL_IMPL(GetMousePositionImpl()); }
 		inline static float GetMouseX() { INPUT_CALL_IMPL(GetMouseXImpl()); }
 		inline static float GetMouseY() { INPUT_CALL_IMPL(GetMouseYImpl()); }
 
@@ -33,7 +33,7 @@ namespace sph
 	protected:
 		virtual bool IsKeyPressedImpl(int _key) = 0;
 		virtual bool IsMouseButtonPressedImpl(int _button) = 0;
-		virtual std::pair<float, float> GetMousePositionImpl() = 0;
+		virtual glm::vec2 GetMousePositionImpl() = 0;
 		virtual float GetMouseXImpl() = 0;
 		virtual float GetMouseYImpl() = 0;
 

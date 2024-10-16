@@ -9,17 +9,26 @@ TestRenderer::TestRenderer(sph::Application* const _app)
 
 void TestRenderer::OnAttach()
 {
-	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(1280.0f / 720.0f, true);
+	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(1.0f, true);
 
+	m_renderer = sph::CreateScope<sph::Renderer2D>();
+	m_renderer->Init();
+	m_renderer->SetScreenSize({ (float)m_app->GetWindow().GetWidth(), (float)m_app->GetWindow().GetHeight() });
 	m_texture = sph::Texture2D::Create("TileMap.png");
 
 	sph::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+
+	// AppData buffer
+	float data[2] = { (float)m_app->GetWindow().GetWidth(), (float)m_app->GetWindow().GetHeight() };
+	m_appDataUniformBuffer = sph::UniformBuffer::Create({ { sph::ShaderDataType::Float2, "Resolution"} }, 0);
+	m_appDataUniformBuffer->SetData(data, sizeof(data));
 
 	LoadTileMap();
 }
 
 void TestRenderer::OnDetach()
 {
+	m_renderer->Shutdown();
 }
 
 void TestRenderer::OnUpdate(sph::DeltaTime _dt)
@@ -32,28 +41,47 @@ void TestRenderer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	sph::Renderer2D::s_stats.Reset();
 	sph::RenderCommand::Clear();
 
-	_renderer->BeginScene(m_cameraController->GetCamera());
+	m_renderer->BeginScene(m_cameraController->GetCamera());
 	{
-		const float tileSize = 0.15;
-		const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
+		m_renderer->DrawQuad({ 200.0f, 100.0f, 0.0f }, {m_texture->GetWidth(), m_texture->GetHeight()}, m_texture);
 
-		for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
-		{
-			for (uint32_t x = 0; x < MAP_SIZE_X; x++)
-			{
-				int32_t tileIndex = m_tileMapData[y * MAP_SIZE_X + x];
-				if (tileIndex == -1) continue;
+		m_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+		m_renderer->DrawQuad({ 1280.f, 780.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+		m_renderer->DrawQuad({ 0.0f, 780.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(1.0f, 0.0f, 1.0f, 1.0f));
+		m_renderer->DrawQuad({ 1280.f, 0.0f, 0.0f }, { 10, 10 }, 0.0f, glm::vec4(0.0f, 1.0f, 1.0f, 1.0f));
 
-				glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f};
-				_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[tileIndex]);
-			}
-		}
+		//const float tileSize = 0.15;
+		//const glm::vec2 mapOffest = { 1280.f * tileSize, 720.f * tileSize };
+		//
+		//for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
+		//{
+		//	for (uint32_t x = 0; x < MAP_SIZE_X; x++)
+		//	{
+		//		int32_t tileIndex = m_tileMapData[y * MAP_SIZE_X + x];
+		//		if (tileIndex == -1) continue;
+		//
+		//		glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f};
+		//		m_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[tileIndex]);
+		//	}
+		//}
 	}
-	_renderer->EndScene();
+	m_renderer->EndScene();
 }
 
 void TestRenderer::OnImGuiRender()
 {
+
+	auto mousePos = sph::Input::GetMousePosition();
+	auto vp = m_cameraController->GetCamera().GetViewProjectionMatrix();
+
+	mousePos.x = (mousePos.x / m_app->GetWindow().GetWidth()) * 2.0f - 1.0f;
+	mousePos.y = (mousePos.y / m_app->GetWindow().GetHeight()) * 2.0f - 1.0f;
+
+	glm::vec4 worldPos = glm::inverse(vp) * glm::vec4(mousePos, 0.0f, 1.0f);
+
+	ImGui::Begin("Debug");
+	ImGui::Text("Mouse Position: %f, %f", worldPos.x, worldPos.y);
+	ImGui::End();
 }
 
 void TestRenderer::OnEvent(sph::Event& _event)

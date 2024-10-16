@@ -29,8 +29,11 @@ private:
 	glm::vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
 
+	sph::Scope<sph::Renderer2D> m_renderer = nullptr;
 	sph::Ref<sph::Texture2D> m_texture;
 	std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_subTexture;
+
+	sph::Ref<sph::UniformBuffer> m_appDataUniformBuffer;
 
 	float m_rotation = 0.0f;
 

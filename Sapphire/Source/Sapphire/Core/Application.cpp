@@ -109,6 +109,7 @@ namespace sph
 		Input::Init(m_window);
 
 		m_renderer->Init();
+		m_renderer->SetScreenSize({ props.Width, props.Height });
 
 #ifndef DIST | SPH_DISABLE_IMGUI // Disable ImGui in Distribution build
 		m_imGuiLayer = new sph::ImGuiLayer(*m_window);

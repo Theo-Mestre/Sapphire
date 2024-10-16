@@ -12,6 +12,7 @@ namespace sph
 		: m_aspectRatio(_aspectRatio)
 		, m_zoomLevel(1.0f)
 		, m_camera(-_aspectRatio, _aspectRatio, -1.0f, 1.0f)
+		, m_screenSize(0.0f, 0.0f)
 		, m_position({ 0.0f, 0.0f, 0.0f })
 		, m_rotate(_m_rotate)
 		, m_rotation(0.0f)

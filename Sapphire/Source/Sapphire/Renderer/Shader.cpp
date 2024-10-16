@@ -72,6 +72,7 @@ namespace sph
 	{
 		RemoveShader(_shader->GetName());
 	}
+
 	bool ShaderLibrary::Exists(const std::string& _name) const
 	{
 		return m_shaders.find(_name) != m_shaders.end();

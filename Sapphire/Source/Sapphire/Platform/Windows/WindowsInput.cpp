@@ -21,7 +21,7 @@ bool sph::WindowsInput::IsMouseButtonPressedImpl(int _button)
 	return state == GLFW_PRESS;
 }
 
-std::pair<float, float> sph::WindowsInput::GetMousePositionImpl()
+glm::vec2 sph::WindowsInput::GetMousePositionImpl()
 {
 	double x, y;
 	glfwGetCursorPos(GLFW_Window, &x, &y);
@@ -30,12 +30,12 @@ std::pair<float, float> sph::WindowsInput::GetMousePositionImpl()
 
 float sph::WindowsInput::GetMouseXImpl()
 {
-	auto [x, y] = GetMousePositionImpl();
-	return x;
+	auto pos = GetMousePositionImpl();
+	return pos.x;
 }
 
 float sph::WindowsInput::GetMouseYImpl()
 {
-	auto [x, y] = GetMousePositionImpl();
-	return y;
+	auto pos = GetMousePositionImpl();
+	return pos.y;
 }

@@ -57,9 +57,6 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 {
 	m_cameraController->OnUpdate(_dt);
 
-	m_mousePosition = { sph::Input::GetMouseX() / (1280), 1 - sph::Input::GetMouseY() / (720) };
-	m_mousePosition = m_cameraController->PixelToNormalized(m_mousePosition);
-
 	m_lightData.GetUniformBuffer()->SetData(&m_mousePosition, sizeof(glm::vec2), 32);
 }
 
