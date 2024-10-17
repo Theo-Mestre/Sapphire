@@ -136,4 +136,9 @@ namespace sph
 		Renderer::Stats::DrawCalls++;
 		Renderer::Stats::QuadCount++;
 	}
+
+	Ref<Renderer> Renderer2D::Create()
+	{
+		return CreateRef<Renderer2D>();
+	}
 }

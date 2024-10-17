@@ -1,5 +1,7 @@
 ﻿#include "TestLighting.h"
 
+#include <memory>
+
 TestLighting::TestLighting(sph::Application* const _app)
 	: Layer("TestLighting")
 	, m_app(_app)
@@ -17,10 +19,7 @@ TestLighting::~TestLighting()
 
 void TestLighting::OnAttach()
 {
-	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(1280.0f / 720.0f, true);
-
-	m_renderer2D = sph::CreateScope<sph::Renderer2D>();
-	m_renderer2D->Init();
+	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(1.0f, true);
 
 	sph::Texture::Properties props;
 	props.WrapModeS = sph::Texture::WrapMode::Repeat;
@@ -36,10 +35,10 @@ void TestLighting::OnAttach()
 	m_appDataUniformBuffer->SetData(data, sizeof(data));
 
 	// Create Lights
-	constexpr uint32_t lightCount = 1;
 	std::vector<Light> lights =
 	{
 		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 0.0f, 0.0f }, 1.f, 0.3f },
+		{ { 1.0f, 0.7f, 0.5f , 1.0f}, { 1.0f, 0.0f }, 1.f, 0.3f },
 	};
 	m_lightData.UploadLightsData(lights);
 
@@ -48,7 +47,6 @@ void TestLighting::OnAttach()
 
 void TestLighting::OnDetach()
 {
-	m_renderer2D->Shutdown();
 }
 
 void TestLighting::OnUpdate(sph::DeltaTime _dt)
@@ -56,10 +54,10 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 	m_cameraController->OnUpdate(_dt);
 
 	m_mousePosition = sph::Input::GetMousePosition();
-	m_mousePosition.x /= m_app->GetWindow().GetWidth();
-	m_mousePosition.y /= m_app->GetWindow().GetHeight();
+	m_mousePosition.y = m_app->GetWindow().GetSize().y - m_mousePosition.y;
+	auto normalizedPosition =  m_mousePosition / m_app->GetWindow().GetSize() * 2.0f - 1.0f;
 
-	m_lightData.GetUniformBuffer()->SetData(&m_mousePosition, sizeof(glm::vec2), 32);
+	//m_lightData.GetUniformBuffer()->SetData(&normalizedPosition, sizeof(glm::vec2), 32);
 }
 
 void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
@@ -67,14 +65,14 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	sph::Renderer::Stats::Reset();
 	sph::RenderCommand::Clear();
 
-	m_renderer2D->BeginScene(m_cameraController->GetCamera());
+	_renderer->BeginScene(m_cameraController->GetCamera());
 	{
 		auto& lightShader = m_lightData.GetShader();
 		lightShader->Bind();
 		lightShader->SetMat4("u_viewProjection", m_cameraController->GetCamera().GetViewProjectionMatrix());
 		lightShader->SetFloat3("u_ambientLight", m_ambiantLightColor);
 
-		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(2.0f, 1.0f), m_texture, lightShader);
+		std::dynamic_pointer_cast<sph::Renderer2D>(_renderer)->DrawQuad({ 1280 / 2.0f, 720 / 2.0f, 0.0f }, glm::vec2(1280, 720), m_texture);
 	}
 
 	{ // Render to framebuffer
@@ -83,16 +81,16 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 		m_framebuffer->Clear();
 
 
-		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(2.0f, 1.0f), m_tileMap);
+		_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(200.0f, 200.0f), m_tileMap);
 
 		m_framebuffer->Unbind();
 	}
 
 	{ // Render framebuffer
-		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(1.0f, .5f), m_framebuffer->GetTextureAttachment());
+		_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, glm::vec2(1.0f, .5f), m_framebuffer->GetTextureAttachment());
 	}
 
-	m_renderer2D->EndScene();
+	_renderer->EndScene();
 }
 
 void TestLighting::OnImGuiRender()

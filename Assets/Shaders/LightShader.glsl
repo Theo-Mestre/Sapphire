@@ -8,10 +8,11 @@ uniform mat4 u_viewProjection;
 uniform mat4 u_transform;
 
 out vec2 v_texCoords;
-
+out mat4 v_viewProjection;
 void main()
 {
     v_texCoords = a_texCoord;
+    v_viewProjection = u_viewProjection;
 
 	gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
 }
@@ -45,6 +46,7 @@ uniform vec3 u_ambientLight;
 layout(location = 0) out vec4 color;
 
 in vec2 v_texCoords;
+in mat4 v_viewProjection;
 
 void main()
 {
@@ -57,6 +59,7 @@ void main()
     for (int i = 0; i < lightsCount; i++) 
     {
         Light light = lights[i];
+      
         vec2 lightDir = (light.position - v_texCoords) * aspectRatio;
         float distance = length(lightDir);
         

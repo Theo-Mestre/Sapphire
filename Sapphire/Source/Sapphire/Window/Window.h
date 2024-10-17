@@ -42,6 +42,7 @@ namespace sph
 
 		virtual int GetWidth() const = 0;
 		virtual int GetHeight() const = 0;
+		virtual const glm::vec2& GetSize(void) const = 0;
 
 		virtual void SetEventCallback(const EventCallbackFunction& callback) = 0;
 

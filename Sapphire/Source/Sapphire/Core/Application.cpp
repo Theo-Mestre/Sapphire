@@ -1,6 +1,7 @@
 #include "sphpch.h"
 
 #include "Application.h"
+#include "Sapphire/Core/Log.h"
 #include "Sapphire/Core/Time.h"
 #include "Sapphire/Core/Input.h"
 #include "Sapphire/ImGui/ImGuiLayer.h"

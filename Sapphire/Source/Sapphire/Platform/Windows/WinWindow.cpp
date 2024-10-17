@@ -10,14 +10,12 @@
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Events/KeyEvent.h"
 #include "Sapphire/Events/MouseEvent.h"
-#include "WindowsInput.h"
+#include "Sapphire/Core/Input.h"
 
 #include "Sapphire/Platform/OpenGL/OpenGLContext.h"
 
 namespace sph
 {
-	Input* Input::s_instance = new WindowsInput();
-
 	static void GLFWErrorCallback(int _error, const char* _description)
 	{
 		LogError("GLFW Error {}: {}", _error, _description);

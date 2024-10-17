@@ -22,6 +22,7 @@ namespace sph
 
 		inline virtual int GetWidth(void) const override { return m_data.Width; }
 		inline virtual int GetHeight(void) const override { return m_data.Height; }
+		inline virtual const glm::vec2& GetSize(void) const override { return { m_data.Width, m_data.Height }; }
 
 		inline virtual void SetEventCallback(const EventCallbackFunction& _callback) override { m_data.EventCallback = _callback; }
 
