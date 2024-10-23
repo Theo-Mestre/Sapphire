@@ -8,6 +8,14 @@ constexpr auto MAP_SIZE_X = 30;
 constexpr auto MAP_SIZE_Y = 20;
 constexpr auto MAX_SUB_TEXTURE = 4;
 
+struct Sprite
+{
+	glm::vec3 position;
+	glm::vec2 size;
+	glm::vec4 color;
+	sph::Ref<sph::Texture2D> texture;
+};
+
 class TestRenderer
 	: public sph::Layer
 {
@@ -27,13 +35,13 @@ private:
 	sph::Application* const m_app;
 
 	glm::vec4 m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
-
-	sph::Scope<sph::Renderer2D> m_renderer = nullptr;
+	sph::Ref<sph::OrthographicCamera> m_camera;
 	sph::Ref<sph::Texture2D> m_texture;
+	Sprite m_player;
+	sph::Ref<sph::Texture2D> m_playerTexture;
 	std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_subTexture;
 
-	sph::Ref<sph::UniformBuffer> m_appDataUniformBuffer;
+	sph::Ref<sph::Framebuffer> m_framebuffer;
 
 	float m_rotation = 0.0f;
 

@@ -12,11 +12,13 @@ out vec2 v_texCoords;
 void main()
 {
     v_texCoords = a_texCoord;
-	gl_Position = u_viewProjection * u_transform * vec4(a_position, 1);
+
+	gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
 }
 
 #type fragment
 #version 330 core
+
 
 layout(location = 0) out vec4 color;
 

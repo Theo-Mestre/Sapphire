@@ -10,7 +10,6 @@
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Events/KeyEvent.h"
 #include "Sapphire/Events/MouseEvent.h"
-#include "Sapphire/Core/Input.h"
 
 #include "Sapphire/Platform/OpenGL/OpenGLContext.h"
 

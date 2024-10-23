@@ -33,8 +33,8 @@ namespace sph
 		ImGui::Begin("Metrics");
 		ImGui::Text(" Frame Time: %f", Time::DeltaTime);
 		ImGui::Text(" FPS: %f", 1.f / Time::DeltaTime);
-		ImGui::Text(" Quad number : %d", Renderer2D::Stats::QuadCount);
-		ImGui::Text(" Draw call : %d", Renderer2D::Stats::DrawCalls);
+		ImGui::Text(" Quad number : %d", Renderer2D::s_stats.QuadCount);
+		ImGui::Text(" Draw call : %d", Renderer2D::s_stats.DrawCalls);
 		ImGui::SetWindowSize(ImVec2(430, 290));
 		if (ImPlot::BeginPlot("Frame Time"))
 		{
@@ -46,7 +46,7 @@ namespace sph
 			ImPlot::SetupAxisLimits(ImAxis_Y1, 0.f, 0.125f);
 
 			ImPlot::SetupAxes("Game time", "Frame time");
-			ImPlot::PlotLine("Frame Time", m_frameTimeData->GetGameTimeData(), m_frameTimeData->GetFrameTimeData(), (int32_t)m_frameTimeData->GetFrameTimeDataSize(), ImPlotLineFlags_::ImPlotLineFlags_Shaded);
+			ImPlot::PlotLine("Frame Time", m_frameTimeData->GetGameTimeData(), m_frameTimeData->GetFrameTimeData(), m_frameTimeData->GetFrameTimeDataSize(), ImPlotLineFlags_::ImPlotLineFlags_Shaded);
 			ImPlot::EndPlot();
 		}
 		ImGui::End();

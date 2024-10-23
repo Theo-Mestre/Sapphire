@@ -19,7 +19,7 @@ public:
 	virtual void OnEvent(sph::Event& _event) override;
 private:
 	sph::Application* const m_app;
-	sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
+	sph::Ref<sph::OrthographicCamera> m_camera;
 
 	sph::Ref<sph::Framebuffer> m_framebuffer;
 
@@ -27,7 +27,7 @@ private:
 	sph::Ref<sph::UniformBuffer> m_appDataUniformBuffer;
 	glm::vec3 m_ambiantLightColor;
 	sph::Ref<sph::Texture2D> m_texture;
-	sph::Ref<sph::Texture2D> m_tileMap;
+	sph::Ref<sph::Texture2D> m_playerTexture;
 
 	LightData m_lightData;
 

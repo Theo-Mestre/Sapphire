@@ -5,7 +5,7 @@ Sapphire is a game engine project developed in C++ using OpenGL, inspired by The
 
 ## Installation
 
-Clone the repository: git clone https://github.com/Theo-gamedev/sapphire.git
+Clone the repository: `git clone https://github.com/Theo-gamedev/sapphire.git`
 
 Build the project using the `SetupWindows.bat` inside the `Scripts` folder
     

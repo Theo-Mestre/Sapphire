@@ -115,12 +115,12 @@ namespace sph
 		for (uint32_t i = 0; i < m_textureSlotIndex; i++) { m_textureSlots[i]->Bind(i); }
 
 		// Send the data of the current batch to the GPU
-		uint32_t dataSize = (int32_t)((uint8_t*)m_quadVertexBufferPointer - (uint8_t*)m_quadVertexBufferBase);
+		uint32_t dataSize = (uint8_t*)m_quadVertexBufferPointer - (uint8_t*)m_quadVertexBufferBase;
 		m_vertexBuffer->SetData(m_quadVertexBufferBase, dataSize);
 
 		// Draw the vertices
 		RenderCommand::DrawIndexed(m_vertexArray, m_quadIndexCount);
-		Renderer2D::Stats::DrawCalls++;
+		Renderer2D::s_stats.DrawCalls++;
 
 		ResetBatchStates();
 	}
@@ -135,7 +135,7 @@ namespace sph
 		float textureIndex = 0.0f;
 		UpdateCurrentQuadVertex(_position, _size, _rotation, _color, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer2D::s_stats.QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
@@ -149,7 +149,7 @@ namespace sph
 
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer2D::s_stats.QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
@@ -163,7 +163,7 @@ namespace sph
 		
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f, _subTexture->GetTexCoords());
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer2D::s_stats.QuadCount++;
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()
@@ -195,9 +195,9 @@ namespace sph
 	{
 		constexpr uint32_t vertexCount = 4;
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), NormalizePosition(_position))
-			* glm::rotate(glm::mat4(1.0f), _rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { NormalizeSize(_size), 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position) *
+			glm::rotate(glm::mat4(1.0f), glm::radians(_rotation), { 0.0f, 0.0f, 1.0f }) *
+			glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
 		for (uint32_t i = 0; i < vertexCount; i++)
 		{

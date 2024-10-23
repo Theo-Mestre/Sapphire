@@ -4,7 +4,7 @@
 #include "Layers/TestRenderer.h"
 #include "Layers/TestLighting.h"
 
-#define TESTING_LIGHTING 1
+#define TESTING_LIGHTING true
 
 class Sandbox2D
 	: public sph::Application
@@ -12,21 +12,15 @@ class Sandbox2D
 public:
 	virtual void Init() override
 	{
-#if TESTING_LIGHTING
-		SetRenderer(sph::Renderer2D::Create());
-#else
 		SetRenderer(sph::BatchRenderer2D::Create());
-#endif
-
 		Application::Init();
-		m_window->SetVSync(false);
 
+		m_window->SetVSync(false);
 #if TESTING_LIGHTING
 		PushLayer(new TestLighting(this));
 #else
 		PushLayer(new TestRenderer(this));
 #endif
-
 	}
 };
 

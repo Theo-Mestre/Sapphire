@@ -1,46 +1,45 @@
 #include "sphpch.h"
 #include <GLFW/glfw3.h>
 
-#include "Input.h"
-#include "Sapphire/Window/Window.h"
+#include "Sapphire/Core/Input.h"
+#include "Sapphire/Core/Log.h"
+#include "Sapphire/Platform/Windows/WinWindow.h"
 
-static GLFWwindow* m_window;
 
-namespace sph
+static GLFWwindow* s_window;
+
+bool sph::Input::IsKeyPressed(int keycode)
 {
-	void Input::Init(Window* _window)
-	{
-		m_window = static_cast<GLFWwindow*>(_window->GetNativeWindow());
-	}
+	auto state = glfwGetKey(s_window, keycode);
 
-	bool Input::IsKeyPressed(int keycode)
-	{
-		auto state = glfwGetKey(m_window, keycode);
+	return state == GLFW_PRESS || state == GLFW_REPEAT;
+}
 
-		return state == GLFW_PRESS || state == GLFW_REPEAT;
-	}
+bool sph::Input::IsMouseButtonPressed(int _button)
+{
+	auto state = glfwGetMouseButton(s_window, _button);
 
-	bool Input::IsMouseButtonPressed(int _button)
-	{
-		auto state = glfwGetMouseButton(m_window, _button);
+	return state == GLFW_PRESS;
+}
 
-		return state == GLFW_PRESS;
-	}
+glm::vec2 sph::Input::GetMousePosition()
+{
+	double x, y;
+	glfwGetCursorPos(s_window, &x, &y);
+	return glm::vec2(x, y);
+}
 
-	glm::vec2 Input::GetMousePosition()
-	{
-		double x, y;
-		glfwGetCursorPos(m_window, &x, &y);
-		return { (float)x, (float)y };
-	}
+float sph::Input::GetMouseX()
+{
+	return GetMousePosition().x;
+}
 
-	float Input::GetMouseX()
-	{
-		return GetMousePosition().x;
-	}
+float sph::Input::GetMouseY()
+{
+	return GetMousePosition().y;
+}
 
-	float Input::GetMouseY()
-	{
-		return GetMousePosition().y;
-	}
+void sph::Input::Init(Window* _window)
+{
+	s_window = static_cast<GLFWwindow*>(_window->GetNativeWindow());
 }

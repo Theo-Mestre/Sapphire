@@ -20,16 +20,16 @@ namespace sph
 	void Renderer2D::Init()
 	{
 		float vertices[4 * 5] = {
-		   -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-		   1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		   1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-		   -1.0f,  1.0f, 0.0f, 0.0f, 1.0f
+		   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+		   0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+		   0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+		   -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		uint32_t indices[6] =
-		{
-			0, 1, 2,
-			0, 2, 3
+		{ 
+			0, 1, 2, 
+			0, 2, 3 
 		};
 
 		BufferLayout layout =
@@ -41,16 +41,16 @@ namespace sph
 		Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
 
 		Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
-
+		
 		m_vertexArray = VertexArray::Create();
 		vertexBuffer->SetLayout(layout);
 		m_vertexArray->AddVertexBuffer(vertexBuffer);
 		m_vertexArray->SetIndexBuffer(indexBuffer);
-
+		
 		m_shader = Shader::Create("Shaders/SingleQuad.glsl");
 		m_shader->Bind();
 		m_shader->SetInt("u_texture", 0);
-
+		
 		m_whiteTexture = Texture2D::Create(1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		m_whiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
@@ -75,9 +75,9 @@ namespace sph
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)
 	{
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), NormalizePosition(_position))
-			* glm::rotate(glm::mat4(1.0f), _rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { NormalizeSize(_size), 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(_rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
 		m_shader->SetMat4("u_transform", transform);
 		m_shader->SetFloat4("u_color", _color);
@@ -85,60 +85,60 @@ namespace sph
 		m_whiteTexture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
-		Renderer::Stats::DrawCalls++;
-		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
 	{
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), NormalizePosition(_position))
-			* glm::scale(glm::mat4(1.0f), { NormalizeSize(_size), 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position)
+			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
+		m_shader->Bind();
 		m_shader->SetMat4("u_transform", transform);
 		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
 
 		_texture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
-		Renderer::Stats::DrawCalls++;
-		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture, const Ref<Shader>& _shader)
 	{
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), NormalizePosition(_position))
-			* glm::scale(glm::mat4(1.0f), { NormalizeSize(_size), 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position)
+			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
+		_texture->Bind();
 		_shader->Bind();
 		_shader->SetMat4("u_transform", transform);
-		_texture->Bind();
-
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
-		Renderer::Stats::DrawCalls++;
-		Renderer::Stats::QuadCount++;
+
+		_shader->Unbind();
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const uint32_t _textureID)
+	{
 		m_shader->Bind();
+		m_shader->SetMat4("u_transform", glm::translate(glm::mat4(1.0f), _position)
+			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f }));
+
+		
+		m_vertexArray->Bind();
+		RenderCommand::DrawIndexed(m_vertexArray);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _texture)
 	{
 		LogWarn("Renderer2D doesn't support SubTexture!");
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), NormalizePosition(_position))
-			* glm::scale(glm::mat4(1.0f), { NormalizeSize(_size), 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position)
+			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f });
 
+		m_shader->Bind();
 		m_shader->SetMat4("u_transform", transform);
 		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
 
 		m_whiteTexture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
-		Renderer::Stats::DrawCalls++;
-		Renderer::Stats::QuadCount++;
-	}
-
-	Ref<Renderer> Renderer2D::Create()
-	{
-		return CreateRef<Renderer2D>();
 	}
 }

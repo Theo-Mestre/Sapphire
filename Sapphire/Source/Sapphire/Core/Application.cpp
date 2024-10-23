@@ -50,8 +50,7 @@ namespace sph
 					layer->OnUpdate(Time::DeltaTime);
 				}
 			}
-
-#if !defined(DIST) // Disable ImGui in Distribution build
+#ifndef DIST // Disable ImGui in Distribution build
 			m_imGuiLayer->Begin();
 			OnImGuiRender();
 			for (sph::Layer* layer : m_layerStack)
@@ -111,7 +110,6 @@ namespace sph
 		Input::Init(m_window);
 
 		m_renderer->Init();
-		m_renderer->SetScreenSize({ props.Width, props.Height });
 
 #ifndef DIST // Disable ImGui in Distribution build
 		m_imGuiLayer = new sph::ImGuiLayer(*m_window);

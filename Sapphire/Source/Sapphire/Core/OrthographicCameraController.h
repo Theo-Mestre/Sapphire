@@ -43,9 +43,6 @@ namespace sph
 
 		void SetCameraProjection(float _left, float _right, float _bottom, float _top);
 
-		inline void SetScreenSize(glm::vec2 _screenSize) { m_screenSize = _screenSize; }
-		inline void SetScreenSize(float _width, float _height) { m_screenSize = { _width, _height }; }
-		inline glm::vec2 GetScreenSize() const { return m_screenSize; }
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& _e);
 		bool OnWindowResized(WindowResizeEvent& _e);
@@ -54,7 +51,6 @@ namespace sph
 		float m_zoomLevel;
 		OrthographicCamera m_camera;
 
-		glm::vec2 m_screenSize;
 		glm::vec3 m_position;
 		bool m_rotate;
 		float m_rotation;

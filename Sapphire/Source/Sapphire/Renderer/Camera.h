@@ -13,6 +13,7 @@ namespace sph
 		OrthographicCamera(float _left, float _right, float _bottom, float _top);
 		~OrthographicCamera() = default;
 
+
 		inline const glm::mat4& GetViewMatrix() const { return m_projectionMatrix; }
 		inline const glm::mat4& GetProjectionMatrix() const { return m_viewMatrix; }
 		inline const glm::mat4& GetViewProjectionMatrix() const { return m_viewProjectionMatrix; }

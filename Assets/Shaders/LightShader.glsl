@@ -8,11 +8,10 @@ uniform mat4 u_viewProjection;
 uniform mat4 u_transform;
 
 out vec2 v_texCoords;
-out mat4 v_viewProjection;
+
 void main()
 {
     v_texCoords = a_texCoord;
-    v_viewProjection = u_viewProjection;
 
 	gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);
 }
@@ -42,27 +41,40 @@ layout (std140, binding = 1) uniform LightBlock
 
 uniform sampler2D u_texture;
 uniform vec3 u_ambientLight;
+uniform mat4 u_sceneVP;
 
 layout(location = 0) out vec4 color;
 
 in vec2 v_texCoords;
-in mat4 v_viewProjection;
+
 
 void main()
 {
-    float screenRatio = u_resolution.x / u_resolution.y;
-    vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
-    vec4 texColor = texture(u_texture, v_texCoords * screenRatio);
+    vec4 texColor = texture(u_texture, v_texCoords);
 
     vec3 finalColor = u_ambientLight * texColor.rgb;
 
     for (int i = 0; i < lightsCount; i++) 
     {
         Light light = lights[i];
-      
-        vec2 lightDir = (light.position - v_texCoords) * aspectRatio;
+        vec4 position = u_sceneVP * vec4(light.position, 0, 1);
+        position /= position.w;
+        position.xy = position.xy * 0.5 + 0.5;
+
+        vec2 lightDir = position.xy - v_texCoords;
+        lightDir.x *= u_resolution.x / u_resolution.y;
+
         float distance = length(lightDir);
         
+        if (distance > light.radius)
+            continue;
+
+        if (distance < 0.01)
+        {
+            color = vec4(1, 0, 1, 1);
+            return;
+        }
+
         float attenuation = clamp(1.0 - (distance / light.radius), 0.0, 1.0);
 
         float intensity = attenuation * light.intensity;
