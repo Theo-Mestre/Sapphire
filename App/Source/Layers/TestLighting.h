@@ -44,6 +44,8 @@ private:
 
 	glm::mat4 m_postFXProjection;
 
+	sph::Ref<sph::Sprite> m_sprite = nullptr;
+
 	// TileMap
 	sph::Ref<sph::Texture2D> m_tilemapTexture;
 	std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_subTexture;

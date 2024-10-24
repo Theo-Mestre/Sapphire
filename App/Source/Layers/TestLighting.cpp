@@ -44,13 +44,19 @@ void TestLighting::OnAttach()
 	m_lightData.UploadLightsData(
 	{
 		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
-		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
+		//{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
 	});
 
 	// tilemap
 	m_tilemapTexture = sph::Texture2D::Create("TileMap.png");
 
 	LoadTileMap();
+
+	// Sprite
+	auto texture = sph::Texture2D::Create("Sprite.png");
+	m_sprite = sph::Sprite::Create(texture, true);
+	m_sprite->SetSize({ 500.0f, 500.0f });
+	m_sprite->SetOffset(glm::vec2(0.5f));
 }
 
 void TestLighting::OnDetach()
@@ -63,7 +69,8 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 	m_cameraController->OnUpdate(_dt);
 
 	glm::vec2 mousePosition = m_camera->ScreenToWorld(sph::Input::GetMousePosition());
-	m_lightData.GetUniformBuffer()->SetData(&mousePosition, sizeof(glm::vec2), 32);
+	m_sprite->SetPosition(mousePosition);
+	//m_lightData.GetUniformBuffer()->SetData(&mousePosition, sizeof(glm::vec2), 32);
 }
 
 void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
@@ -92,6 +99,7 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 
 		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_texture);
 		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
+		_renderer->DrawSprite(*m_sprite);
 	}
 	_renderer->EndScene();
 	m_framebuffer->Unbind(); 

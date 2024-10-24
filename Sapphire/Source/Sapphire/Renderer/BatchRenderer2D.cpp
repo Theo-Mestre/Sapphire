@@ -8,6 +8,7 @@
 #include "Sapphire/Renderer/Camera.h"
 #include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Renderer/SubTexture2D.h"
+#include "Sapphire/Renderer/Sprite.h"
 #include "Sapphire/Profiling/Profiler.h"
 #include "Sapphire/Core/Log.h"
 
@@ -136,10 +137,7 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)
 	{
-		if (m_quadIndexCount >= s_maxIndices)
-		{
-			Flush();
-		}
+		CheckBatchState();
 
 		float textureIndex = 0.0f;
 		UpdateCurrentQuadVertex(_position, _size, _rotation, _color, textureIndex, 1.0f);
@@ -149,10 +147,7 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
 	{
-		if (m_quadIndexCount >= s_maxIndices)
-		{
-			Flush();
-		}
+		CheckBatchState();
 
 		float textureIndex = SubmitTexture(_texture);
 
@@ -163,16 +158,22 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
 	{
-		if (m_quadIndexCount >= s_maxIndices)
-		{
-			Flush();
-		}
+		CheckBatchState();
 
 		float textureIndex = SubmitTexture(_subTexture->GetTexture());
 		
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f, _subTexture->GetTexCoords());
 
 		Renderer2D::Stats::QuadCount++;
+	}
+
+	void BatchRenderer2D::DrawSprite(const Sprite& _sprite)
+	{
+		CheckBatchState();
+
+		float textureIndex = SubmitTexture(_sprite.GetTexture());
+
+		UpdateCurrentQuadVertex(_sprite.GetTransform(), _sprite.GetColor(), textureIndex, 1.0f);
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()
@@ -193,6 +194,14 @@ namespace sph
 		m_shader->SetIntArray("u_textures", samplers, s_maxTextureSlots);
 	}
 
+	void BatchRenderer2D::CheckBatchState()
+	{
+		if (m_quadIndexCount >= s_maxIndices)
+		{
+			Flush();
+		}
+	}
+
 	void BatchRenderer2D::ResetBatchStates()
 	{
 		m_quadIndexCount = 0;
@@ -211,6 +220,23 @@ namespace sph
 		for (uint32_t i = 0; i < vertexCount; i++)
 		{
 			m_quadVertexBufferPointer->position = transform * m_quadTransform[i];
+			m_quadVertexBufferPointer->color = _color;
+			m_quadVertexBufferPointer->texIndex = _texID;
+			m_quadVertexBufferPointer->texCoord = _texCoords[i];
+			m_quadVertexBufferPointer->tilingFactor = _tilingFactor;
+			m_quadVertexBufferPointer++;
+		}
+
+		m_quadIndexCount += 6;
+	}
+
+	void BatchRenderer2D::UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords)
+	{
+		constexpr uint32_t vertexCount = 4;
+
+		for (uint32_t i = 0; i < vertexCount; i++)
+		{
+			m_quadVertexBufferPointer->position = _transform * m_quadTransform[i];
 			m_quadVertexBufferPointer->color = _color;
 			m_quadVertexBufferPointer->texIndex = _texID;
 			m_quadVertexBufferPointer->texCoord = _texCoords[i];

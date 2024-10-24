@@ -8,15 +8,16 @@
 
 namespace sph
 {
-	OrthographicCameraController::OrthographicCameraController(const Ref<OrthographicCamera>& _camera, bool _canRotate)
+	OrthographicCameraController::OrthographicCameraController(const Ref<OrthographicCamera>& _camera, bool _canZoom, bool _canRotate)
 		: m_zoomLevel(1.0f)
 		, m_camera(_camera)
 		, m_position({ 0.0f, 0.0f, 0.0f })
+		, m_canZoom(_canZoom)
+		, m_zoomSpeed(0.25f)
 		, m_canRotate(_canRotate)
 		, m_rotation(0.0f)
 		, m_translationSpeed(500.0f)
 		, m_rotationSpeed(180.0f)
-		, m_zoomSpeed(0.25f)
 		, m_minZoomLevel(0.25f)
 		, m_maxZoomLevel(10.0f)
 	{
@@ -69,8 +70,12 @@ namespace sph
 	void OrthographicCameraController::OnEvent(Event& _e)
 	{
 		EventDispatcher dispatcher(_e);
-		dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_METHOD(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_METHOD(OrthographicCameraController::OnWindowResized));
+
+		if (m_canZoom)
+		{
+			dispatcher.Dispatch<MouseScrolledEvent>(BIND_EVENT_METHOD(OrthographicCameraController::OnMouseScrolled));
+		}
 	}
 
 	void OrthographicCameraController::SetCameraProjection(float _left, float _right, float _bottom, float _top)

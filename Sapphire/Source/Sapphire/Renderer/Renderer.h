@@ -8,6 +8,7 @@ namespace sph
 	class OrthographicCamera;
 	class Texture2D;
 	class SubTexture2D;
+	class Sprite;
 
 	class Renderer
 	{
@@ -25,6 +26,8 @@ namespace sph
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color) = 0;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) = 0;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) = 0;
+
+		virtual void DrawSprite(const Sprite& _sprite) = 0;
 
 		void OnWindowResize(uint32_t _width, uint32_t _height);
 

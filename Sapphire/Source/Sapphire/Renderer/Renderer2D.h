@@ -30,6 +30,8 @@ namespace sph
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) override;
 		void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture, const Ref<Shader>& _shader);
 		void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const uint32_t _textureID);
+
+		virtual void DrawSprite(const Sprite& _sprite) override;
 	private:
 		Ref<VertexArray> m_vertexArray;
 		Ref<Texture2D> m_whiteTexture;

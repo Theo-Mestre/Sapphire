@@ -6,6 +6,7 @@
 #include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Renderer/SubTexture2D.h"
 #include "Sapphire/Renderer/Camera.h"
+#include "Sapphire/Renderer/Sprite.h"
 #include "Sapphire/Core/Log.h"
 
 namespace sph
@@ -131,6 +132,11 @@ namespace sph
 		
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+	}
+
+	void Renderer2D::DrawSprite(const Sprite& _sprite)
+	{
+		DrawQuad(_sprite.GetPosition(), _sprite.GetSize(), _sprite.GetRotation(), _sprite.GetColor());
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _texture)

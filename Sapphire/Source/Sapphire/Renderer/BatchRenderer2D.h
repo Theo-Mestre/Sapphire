@@ -31,13 +31,17 @@ namespace sph
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) override;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) override;
 
+		virtual void DrawSprite(const Sprite& _sprite) override;
+
 		static Ref<Renderer> Create();
 
 	private:
 		void InitShader();
 
+		void CheckBatchState();
 		void ResetBatchStates();
 		void UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = s_defaultTexCoords);
+		void UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = s_defaultTexCoords);
 
 		float SubmitTexture(const Ref<Texture2D>& _texture);
 	private:

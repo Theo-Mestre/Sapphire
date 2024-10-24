@@ -13,7 +13,7 @@ namespace sph
 	class OrthographicCameraController
 	{
 	public:
-		OrthographicCameraController(const Ref<OrthographicCamera>& _camera, bool _canRotate = false);
+		OrthographicCameraController(const Ref<OrthographicCamera>& _camera, bool _canZoom = false, bool _canRotate = false);
 
 		void OnUpdate(DeltaTime _dt);
 		void OnEvent(Event& _e);
@@ -46,8 +46,9 @@ namespace sph
 	private:
 		Ref<OrthographicCamera> m_camera;
 
-		float m_zoomLevel;
 		glm::vec3 m_position;
+		bool m_canZoom;
+		float m_zoomLevel;
 		bool m_canRotate;
 		float m_rotation;
 		float m_translationSpeed;
