@@ -22,6 +22,7 @@ namespace sph
 		virtual void Shutdown() override;
 
 		virtual void BeginScene(const OrthographicCamera& _camera) override;
+		virtual void BeginScene(const glm::mat4& _viewProjection) override;
 		virtual void EndScene() override;
 		void Flush();
 

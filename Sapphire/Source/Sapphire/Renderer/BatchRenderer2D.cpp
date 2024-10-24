@@ -102,6 +102,15 @@ namespace sph
 		ResetBatchStates();
 	}
 
+	void BatchRenderer2D::BeginScene(const glm::mat4& _viewProjection)
+	{
+		m_vertexArray->Bind();
+		m_shader->Bind();
+		m_shader->SetMat4("u_viewProjection", _viewProjection);
+
+		ResetBatchStates();
+	}
+
 	void BatchRenderer2D::EndScene()
 	{
 		Flush();
@@ -120,7 +129,7 @@ namespace sph
 
 		// Draw the vertices
 		RenderCommand::DrawIndexed(m_vertexArray, m_quadIndexCount);
-		Renderer2D::s_stats.DrawCalls++;
+		Renderer2D::Stats::DrawCalls++;
 
 		ResetBatchStates();
 	}
@@ -135,7 +144,7 @@ namespace sph
 		float textureIndex = 0.0f;
 		UpdateCurrentQuadVertex(_position, _size, _rotation, _color, textureIndex, 1.0f);
 
-		Renderer2D::s_stats.QuadCount++;
+		Renderer2D::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
@@ -149,7 +158,7 @@ namespace sph
 
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f);
 
-		Renderer2D::s_stats.QuadCount++;
+		Renderer2D::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
@@ -163,7 +172,7 @@ namespace sph
 		
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f, _subTexture->GetTexCoords());
 
-		Renderer2D::s_stats.QuadCount++;
+		Renderer2D::Stats::QuadCount++;
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()

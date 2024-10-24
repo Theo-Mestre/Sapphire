@@ -19,6 +19,7 @@ namespace sph
 		virtual void Shutdown() = 0;
 
 		virtual void BeginScene(const OrthographicCamera& _camera) = 0;
+		virtual void BeginScene(const glm::mat4& _viewProjection) = 0;
 		virtual void EndScene() = 0;
 
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color) = 0;
@@ -27,18 +28,17 @@ namespace sph
 
 		void OnWindowResize(uint32_t _width, uint32_t _height);
 
-		struct Stats
+		inline static struct Stats
 		{
-			uint32_t DrawCalls = 0;
-			uint32_t QuadCount = 0;
+			inline static uint32_t DrawCalls = 0;
+			inline static uint32_t QuadCount = 0;
 
-			void Reset()
+			inline static void Reset()
 			{
-				memset(this, 0, sizeof(Stats));	
+				DrawCalls = 0;
+				QuadCount = 0;
 			}
 		};
-
-		inline static Stats s_stats;
 	};
 }
 #endif

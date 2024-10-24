@@ -24,6 +24,7 @@ namespace sph
 
 		inline unsigned int GetWidth() const { return m_Width; }
 		inline unsigned int GetHeight() const { return m_Height; }
+		inline glm::vec2 GetSize() const { return { m_Width, m_Height }; }
 
 		std::string ToString() const override
 		{

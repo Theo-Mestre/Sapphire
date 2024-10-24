@@ -1,10 +1,8 @@
 #include "Sapphire.h"
 #include "Sapphire/Core/EntryPoint.h"
 
-#include "Layers/TestRenderer.h"
 #include "Layers/TestLighting.h"
 
-#define TESTING_LIGHTING true
 
 class Sandbox2D
 	: public sph::Application
@@ -16,11 +14,8 @@ public:
 		Application::Init();
 
 		m_window->SetVSync(false);
-#if TESTING_LIGHTING
+
 		PushLayer(new TestLighting(this));
-#else
-		PushLayer(new TestRenderer(this));
-#endif
 	}
 };
 
