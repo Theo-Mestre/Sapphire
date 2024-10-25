@@ -4,7 +4,7 @@ TestLighting::TestLighting(sph::Application* const _app)
 	: Layer("TestLighting")
 	, m_app(_app)
 	, m_lightData()
-	, m_ambiantLightColor(0.1f, 0.1f, 0.1f)
+	, m_ambiantLightColor(1.0f)
 	, m_tileMapData()
 	, m_postFXProjection(0.0f)
 {
@@ -43,20 +43,33 @@ void TestLighting::OnAttach()
 	// Create Lights
 	m_lightData.UploadLightsData(
 	{
-		{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
+		//{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
 		//{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
 	});
 
 	// tilemap
 	m_tilemapTexture = sph::Texture2D::Create("TileMap.png");
+	m_waterTilemapTexture = sph::Texture2D::Create("WaterToGrass.png");
 
-	LoadTileMap();
 
 	// Sprite
 	auto texture = sph::Texture2D::Create("Sprite.png");
 	m_sprite = sph::Sprite::Create(texture, true);
 	m_sprite->SetSize({ 500.0f, 500.0f });
 	m_sprite->SetOffset(glm::vec2(0.5f));
+
+	m_tileLayers.reserve(4);
+
+	// TileLayer
+	m_tileLayers.emplace_back(m_tilemapTexture); // grass
+
+	m_tileLayers.emplace_back(m_waterTilemapTexture); // water
+	
+	m_tileLayers.emplace_back(m_tilemapTexture); // detail
+
+	m_tileLayers.emplace_back(sph::Texture2D::Create("Details2.png")); // detail2	
+	
+	LoadTileMap();
 }
 
 void TestLighting::OnDetach()
@@ -68,8 +81,8 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 {
 	m_cameraController->OnUpdate(_dt);
 
-	glm::vec2 mousePosition = m_camera->ScreenToWorld(sph::Input::GetMousePosition());
-	m_sprite->SetPosition(mousePosition);
+	//glm::vec2 mousePosition = m_camera->ScreenToWorld(sph::Input::GetMousePosition());
+	//m_sprite->SetPosition(mousePosition);
 	//m_lightData.GetUniformBuffer()->SetData(&mousePosition, sizeof(glm::vec2), 32);
 }
 
@@ -82,24 +95,27 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	m_framebuffer->Clear();
 	_renderer->BeginScene(*m_camera);
 	{
-		const float tileSize = 48;
-		const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
-
-		for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
+		for (auto& layer : m_tileLayers)
 		{
-			for (uint32_t x = 0; x < MAP_SIZE_X; x++)
-			{
-				int32_t tileIndex = m_tileMapData[y * MAP_SIZE_X + x];
-				if (tileIndex == -1) continue;
+			const float tileSize = 32;
+			const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
 
-				glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f };
-				_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, m_subTexture[tileIndex]);
+			for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
+			{
+				for (uint32_t x = 0; x < MAP_SIZE_X; x++)
+				{
+					int32_t tileIndex = layer.tiles[y * MAP_SIZE_X + x];
+					if (tileIndex == -1) continue;
+
+					glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f };
+					_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, layer.subTextures[tileIndex]);
+				}
 			}
 		}
 
 		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_texture);
 		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
-		_renderer->DrawSprite(*m_sprite);
+		//_renderer->DrawSprite(*m_sprite);
 	}
 	_renderer->EndScene();
 	m_framebuffer->Unbind(); 
@@ -128,37 +144,57 @@ void TestLighting::OnEvent(sph::Event& _event)
 
 void TestLighting::LoadTileMap()
 {
-	std::ifstream file("Demo.csv");
-	if (!file.is_open())
+	glm::vec2 cellSize = { 32, 32 };
+	glm::vec2 cellNumber[4] =
 	{
-		ASSERT(false, "Failed to open file");
-		return;
-	}
+		{55, 72},
+		{30, 29},
+		{55, 72},
+		{55, 72}
+	};
 
-	std::string line;
-	uint32_t row = 0;
-	while (std::getline(file, line))
+	const char* tilemap[4] =
+	{ 
+		"MultpileLayerMap_Grass.csv", 
+		"MultpileLayerMap_Water.csv", 
+		"MultpileLayerMap_Details.csv",
+		"MultpileLayerMap_Detail2.csv" 
+	};
+
+	uint32_t cellNumberIndex = 0;
+	for (auto& layer : m_tileLayers)
 	{
-		std::stringstream ss(line);
-		std::string cell;
-		uint32_t col = 0;
-		while (std::getline(ss, cell, ','))
+		std::ifstream file(tilemap[cellNumberIndex]);
+		if (!file.is_open())
 		{
-			m_tileMapData[row * MAP_SIZE_X + col] = std::stoi(cell);
-			col++;
+			ASSERT(false, "Failed to open file");
+			return;
 		}
-		row++;
-	}
-	file.close();
 
-	glm::vec2 cellSize = { 16, 16 };
-	glm::vec2 cellNumber = { 22, 6 };
+		std::string line;
+		uint32_t row = 0;
+		while (std::getline(file, line))
+		{
+			std::stringstream ss(line);
+			std::string cell;
+			uint32_t col = 0;
+			while (std::getline(ss, cell, ','))
+			{
+				layer.tiles[row * MAP_SIZE_X + col] = std::stoi(cell);
+				col++;
+			}
+			row++;
+		}
+		file.close();
 
-	for (auto value : m_tileMapData)
-	{
-		if (value == -1) continue;
+		for (auto value : layer.tiles)
+		{
+			if (value == -1) continue;
 
-		glm::vec2 index = { value % (int)cellNumber.x, cellNumber.y - (value / (int)cellNumber.x) };
-		m_subTexture[value] = sph::SubTexture2D::Create(m_tilemapTexture, index, cellSize);
+			glm::vec2 index = { value % (int)cellNumber[cellNumberIndex].x, cellNumber[cellNumberIndex].y - (value / (int)cellNumber[cellNumberIndex].x) - 1 };
+			layer.subTextures[value] = sph::SubTexture2D::Create(layer.tilemapTexture, index, cellSize);
+		}
+
+		cellNumberIndex++;
 	}
 }

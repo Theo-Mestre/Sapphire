@@ -4,8 +4,21 @@
 
 #include "Light.h"
 
-constexpr auto MAP_SIZE_X = 30;
-constexpr auto MAP_SIZE_Y = 20;
+constexpr auto MAP_SIZE_X = 40;
+constexpr auto MAP_SIZE_Y = 25;
+
+struct TileLayer
+{
+	TileLayer() = default;
+	TileLayer(const sph::Ref<sph::Texture2D>& _tilemapTexture)
+		: tilemapTexture(_tilemapTexture)
+	{
+	}
+
+	std::array<int32_t, MAP_SIZE_X* MAP_SIZE_Y> tiles = std::array<int32_t, MAP_SIZE_X* MAP_SIZE_Y>();
+	sph::Ref<sph::Texture2D> tilemapTexture = nullptr;
+	std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> subTextures = std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>>();
+};
 
 class TestLighting
 	: public sph::Layer
@@ -48,6 +61,9 @@ private:
 
 	// TileMap
 	sph::Ref<sph::Texture2D> m_tilemapTexture;
+	sph::Ref<sph::Texture2D> m_waterTilemapTexture;
 	std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_subTexture;
 	std::array<int32_t, MAP_SIZE_X * MAP_SIZE_Y> m_tileMapData;
+
+	std::vector<TileLayer> m_tileLayers;
 };
