@@ -66,4 +66,9 @@ private:
 	std::array<int32_t, MAP_SIZE_X * MAP_SIZE_Y> m_tileMapData;
 
 	std::vector<TileLayer> m_tileLayers;
+
+	sph::Ref<sph::TileMap> m_tileMap;
+	sph::Scope<sph::TilemapRenderer> m_tilemapRenderer = nullptr;
+
+	bool m_enableLight = false;
 };

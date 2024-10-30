@@ -30,6 +30,7 @@
 #include "Sapphire/Renderer/Texture.h"
 #include "Sapphire/Renderer/SubTexture2D.h"
 #include "Sapphire/Renderer/Sprite.h"
+#include "Sapphire/Renderer/TileMap.h"
 
 #include "Sapphire/Renderer/Camera.h"
 

@@ -25,7 +25,7 @@ namespace sph
 
 	BatchRenderer2D::~BatchRenderer2D()
 	{
-		ASSERT(m_quadVertexBufferBase != nullptr, "BatchRenderer: Shutdown must be called before destroy the renderer!");
+		ASSERT(m_quadVertexBufferBase == nullptr, "BatchRenderer: Shutdown must be called before destroy the renderer!");
 	}
 
 	void BatchRenderer2D::Init()
@@ -77,7 +77,6 @@ namespace sph
 		m_textureSlots[0] = m_whiteTexture;
 
 		InitShader();
-
 
 		// Quad Vertex Buffer
 		m_quadVertexBufferBase = new QuadVertex[s_maxVertices];

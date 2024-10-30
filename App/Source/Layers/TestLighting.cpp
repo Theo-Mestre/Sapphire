@@ -31,7 +31,7 @@ void TestLighting::OnAttach()
 	// Texture
 	m_texture = sph::Texture2D::Create("Background.png");
 	m_playerTexture = sph::Texture2D::Create("Player.png");
-	
+
 	// Framebuffer
 	m_framebuffer = sph::Framebuffer::Create({ (uint32_t)m_app->GetWindow().GetWidth(), (uint32_t)m_app->GetWindow().GetHeight() });
 
@@ -42,10 +42,12 @@ void TestLighting::OnAttach()
 
 	// Create Lights
 	m_lightData.UploadLightsData(
-	{
-		//{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
-		//{ { 1.0f, 1.0f, 1.0f , 1.0f}, { 100.0f, 100.0f }, 1.f, 0.3f },
-	});
+		{
+			{ { 0.96078431, 0.8156862745098039, 0.12156862745098039 , 1.0f}, { 100.0f, 100.0f }, 1.0f, 0.3f },
+			{ { 1.0f, 0.8f, .8f , 1.0f}, { -500.0f, -200.0f }, 1.f, 0.3f },
+		});
+
+	m_ambiantLightColor = { 0.1f, 0.1f, 0.2f };
 
 	// tilemap
 	m_tilemapTexture = sph::Texture2D::Create("TileMap.png");
@@ -64,26 +66,31 @@ void TestLighting::OnAttach()
 	m_tileLayers.emplace_back(m_tilemapTexture); // grass
 
 	m_tileLayers.emplace_back(m_waterTilemapTexture); // water
-	
+
 	m_tileLayers.emplace_back(m_tilemapTexture); // detail
 
 	m_tileLayers.emplace_back(sph::Texture2D::Create("Details2.png")); // detail2	
-	
+
 	LoadTileMap();
+
+	m_tileMap = sph::TileMap::Create("TileSheet/TileMapConfig.txt");
+	m_tilemapRenderer = sph::CreateScope<sph::TilemapRenderer>();
+	m_tilemapRenderer->Init();
 }
 
 void TestLighting::OnDetach()
 {
 	m_renderer2D->Shutdown();
+	m_tilemapRenderer->Shutdown();
 }
 
 void TestLighting::OnUpdate(sph::DeltaTime _dt)
 {
 	m_cameraController->OnUpdate(_dt);
 
-	//glm::vec2 mousePosition = m_camera->ScreenToWorld(sph::Input::GetMousePosition());
-	//m_sprite->SetPosition(mousePosition);
-	//m_lightData.GetUniformBuffer()->SetData(&mousePosition, sizeof(glm::vec2), 32);
+	glm::vec2 mousePosition = m_camera->ScreenToWorld(sph::Input::GetMousePosition());
+	m_sprite->SetPosition(mousePosition);
+	m_lightData.GetUniformBuffer()->SetData(&mousePosition, sizeof(glm::vec2), 32);
 }
 
 void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
@@ -93,35 +100,49 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 
 	m_framebuffer->Bind();
 	m_framebuffer->Clear();
+
+	m_tilemapRenderer->BeginScene(*m_camera);
+	{
+		m_tilemapRenderer->DrawTileMap(m_tileMap);
+	}
+	m_tilemapRenderer->EndScene();
+
 	_renderer->BeginScene(*m_camera);
 	{
-		for (auto& layer : m_tileLayers)
-		{
-			const float tileSize = 32;
-			const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
-
-			for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
-			{
-				for (uint32_t x = 0; x < MAP_SIZE_X; x++)
-				{
-					int32_t tileIndex = layer.tiles[y * MAP_SIZE_X + x];
-					if (tileIndex == -1) continue;
-
-					glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f };
-					_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, layer.subTextures[tileIndex]);
-				}
-			}
-		}
+		//for (auto& layer : m_tileLayers)
+		//{
+		//	const float tileSize = 32;
+		//	const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
+		//
+		//	for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
+		//	{
+		//		for (uint32_t x = 0; x < MAP_SIZE_X; x++)
+		//		{
+		//			int32_t tileIndex = layer.tiles[y * MAP_SIZE_X + x];
+		//			if (tileIndex == -1) continue;
+		//
+		//			glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f };
+		//			_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, layer.subTextures[tileIndex]);
+		//		}
+		//	}
+		//}
 
 		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_texture);
 		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
-		//_renderer->DrawSprite(*m_sprite);
+		_renderer->DrawSprite(*m_sprite);
 	}
 	_renderer->EndScene();
-	m_framebuffer->Unbind(); 
+	m_framebuffer->Unbind();
 
 	m_renderer2D->BeginScene(m_postFXProjection);
 	{
+		if (m_enableLight == false)
+		{
+			m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_framebuffer->GetTextureAttachment());
+			m_renderer2D->EndScene();
+			return;
+		}
+
 		auto& lightShader = m_lightData.GetShader();
 		lightShader->Bind();
 		lightShader->SetMat4("u_viewProjection", m_postFXProjection);
@@ -135,6 +156,14 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 
 void TestLighting::OnImGuiRender()
 {
+	ImGui::Begin("Lighting");
+	{
+		ImGui::ColorEdit3("Ambiant Light Color", glm::value_ptr(m_ambiantLightColor));
+
+		ImGui::Checkbox("Toggle Lights", &m_enableLight);
+
+	}
+	ImGui::End();
 }
 
 void TestLighting::OnEvent(sph::Event& _event)
@@ -154,11 +183,11 @@ void TestLighting::LoadTileMap()
 	};
 
 	const char* tilemap[4] =
-	{ 
-		"MultpileLayerMap_Grass.csv", 
-		"MultpileLayerMap_Water.csv", 
-		"MultpileLayerMap_Details.csv",
-		"MultpileLayerMap_Detail2.csv" 
+	{
+		"TileSheet/Map_Grass.csv",
+		"TileSheet/Map_Water.csv",
+		"TileSheet/Map_Details.csv",
+		"TileSheet/Map_Detail2.csv"
 	};
 
 	uint32_t cellNumberIndex = 0;

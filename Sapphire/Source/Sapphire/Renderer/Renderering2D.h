@@ -3,5 +3,6 @@
 
 #include <Sapphire/Renderer/Renderer2D.h>
 #include <Sapphire/Renderer/BatchRenderer2D.h>
+#include <Sapphire/Renderer/TilemapRenderer.h>
 
 #endif
