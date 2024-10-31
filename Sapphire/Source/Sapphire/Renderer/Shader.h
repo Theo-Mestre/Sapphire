@@ -24,6 +24,7 @@ namespace sph
 		void SetName(const std::string& _name) { m_name = _name; }
 
 		virtual void SetInt(const std::string& _name, int _value) = 0;
+		virtual void SetInt2(const std::string& _name, const glm::ivec2& _value) = 0;
 		virtual void SetIntArray(const std::string& _name, int* _values, uint32_t _count) = 0;
 		virtual void SetFloat(const std::string& _name, float _value) = 0;
 		virtual void SetFloat2(const std::string& _name, const glm::vec2& _value) = 0;

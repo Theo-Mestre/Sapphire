@@ -19,8 +19,6 @@ namespace sph
 	private:
 		Ref<Texture2D> m_texture;
 		glm::vec2 m_texCoords[4];
-		glm::vec2 m_size;
-
 	};
 }
 #endif

@@ -189,6 +189,11 @@ namespace sph
 		glUniform1i(GetUniformLocation(_name), _value);
 	}
 
+	void OpenGLShader::UploadUniformInt2(const std::string& _name, const glm::ivec2& _value)
+	{
+		glUniform2i(GetUniformLocation(_name), _value.x, _value.y);
+	}
+
 	void OpenGLShader::UploadUniformIntArray(const std::string& _name, int* _values, uint32_t _count)
 	{
 		glUniform1iv(GetUniformLocation(_name), _count, _values);
@@ -227,6 +232,11 @@ namespace sph
 	void OpenGLShader::SetInt(const std::string& _name, int _value)
 	{
 		UploadUniformInt(_name, _value);
+	}
+
+	void OpenGLShader::SetInt2(const std::string& _name, const glm::ivec2& _value)
+	{
+		UploadUniformInt2(_name, _value);
 	}
 
 	void OpenGLShader::SetIntArray(const std::string& _name, int* _values, uint32_t _count)

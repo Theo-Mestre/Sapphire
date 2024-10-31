@@ -19,6 +19,7 @@ namespace sph
 		virtual void Unbind() const override;
 
 		virtual void UploadUniformInt(const std::string& _name, int _value);
+		virtual void UploadUniformInt2(const std::string& _name, const glm::ivec2& _value);
 		virtual void UploadUniformIntArray(const std::string& _name, int* _values, uint32_t _count);
 		virtual void UploadUniformFloat(const std::string& _name, float _value);
 		virtual void UploadUniformFloat2(const std::string& _name, const glm::vec2& _value);
@@ -28,6 +29,7 @@ namespace sph
 		virtual void UploadUniformMat4f(const std::string& _name, const glm::mat4& _matrix);
 
 		virtual void SetInt(const std::string& _name, int _value) override;
+		virtual void SetInt2(const std::string& _name, const glm::ivec2& _value) override;
 		virtual void SetIntArray(const std::string& _name, int* _values, uint32_t _count) override;
 		virtual void SetFloat(const std::string& _name, float _value) override;
 		virtual void SetFloat2(const std::string& _name, const glm::vec2& _value) override;

@@ -41,7 +41,7 @@ namespace sph
 				DrawCalls = 0;
 				QuadCount = 0;
 			}
-		};
+		} Stats;
 	};
 }
 #endif

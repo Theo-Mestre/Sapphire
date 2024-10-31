@@ -27,6 +27,8 @@ namespace sph
 	{
 		m_layerStack.Clear();
 
+		m_renderer->Shutdown();
+
 		delete m_window;
 	}
 
