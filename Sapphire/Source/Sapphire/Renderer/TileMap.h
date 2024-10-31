@@ -35,7 +35,7 @@ namespace sph
 	private:
 		std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_tileTextures;
 		std::vector<sph::Ref<sph::Texture2D>> m_textureAtlases;
-		std::vector<uint32_t> m_tileMap;
+		std::vector<std::vector<uint32_t>> m_tileMap;
 
 		glm::ivec2 m_cellSize;
 		glm::ivec2 m_cellCount;

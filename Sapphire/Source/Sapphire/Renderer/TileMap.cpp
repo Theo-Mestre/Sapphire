@@ -53,6 +53,9 @@ namespace sph
 		std::string line;
 		uint32_t row = 0;
 
+		m_tileMap.reserve(m_tileMap.size() + 1);
+		std::vector<uint32_t> tilemap;
+		
 		while (std::getline(file, line))
 		{
 			std::stringstream ss(line);
@@ -60,19 +63,20 @@ namespace sph
 			int32_t col = 0;
 			while (std::getline(ss, cell, ','))
 			{
-				m_tileMap.push_back(std::stoi(cell));
+				tilemap.push_back(std::stoi(cell));
 				col++;
 			}
 			row++;
 			m_cellCount.x = std::max(m_cellCount.x, col);
 		}
 		m_cellCount.y = row;
+		m_tileMap.emplace_back(tilemap);
 
 		file.close();
 
 		glm::ivec2 cellPerSpritesheet = { m_textureAtlases[_textureIndex]->GetWidth() / m_cellSize.x, m_textureAtlases[_textureIndex]->GetHeight() / m_cellSize.y };
 
-		for (auto value : m_tileMap)
+		for (auto value : tilemap)
 		{
 			if (value == -1) continue;
 
@@ -105,11 +109,11 @@ namespace sph
 			return nullptr;
 		}
 
-		// Just handle the first layer for now
-		tileMap->AddTextureAtlas(0, sph::Texture2D::Create("TileMap.png"));
-
-		tileMap->LoadTileMap(0, mapPaths[0]);
-
+		for (uint32_t i = 0; i < mapPaths.size() / 2; i++)
+		{
+			tileMap->AddTextureAtlas(i, sph::Texture2D::Create(mapPaths[mapPaths.size() / 2 + i]));
+			tileMap->LoadTileMap(i, mapPaths[i]);
+		}
 		return tileMap;
 	}
 
@@ -131,8 +135,8 @@ namespace sph
 
 		// Read map paths
 		std::vector<std::string> mapPaths;
-		mapPaths.reserve(mapNumber);
-		for (uint32_t i = 0; i < mapNumber; i++)
+		mapPaths.reserve(mapNumber * 2);
+		for (uint32_t i = 0; i < mapNumber * 2; i++)
 		{
 			std::getline(file, line);
 			mapPaths.emplace(mapPaths.begin() + i, line);
