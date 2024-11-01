@@ -81,6 +81,7 @@ namespace sph
 
 	void Application::PushLayer(Layer* _layer)
 	{
+		_layer->SetApplication(this);
 		m_layerStack.PushLayer(_layer);
 	}
 
@@ -133,10 +134,10 @@ namespace sph
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 		{
 			(*--it)->OnEvent(_event);
-			//if (_event.Handled)
-			//{
-			//	break;
-			//}
+			if (_event.Handled)
+			{
+				break;
+			}
 		}
 	}
 

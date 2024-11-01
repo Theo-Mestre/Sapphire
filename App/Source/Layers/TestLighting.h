@@ -24,7 +24,7 @@ class TestLighting
 	: public sph::Layer
 {
 public:
-	TestLighting(sph::Application* const _app);
+	TestLighting();
 	~TestLighting();
 
 	virtual void OnAttach() override;
@@ -35,11 +35,6 @@ public:
 	virtual void OnEvent(sph::Event& _event) override;
 
 private:
-	void LoadTileMap();
-
-private:
-	sph::Application* const m_app;
-
 	sph::Ref<sph::OrthographicCamera> m_camera = nullptr;
 	sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
 

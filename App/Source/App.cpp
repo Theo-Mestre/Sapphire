@@ -15,7 +15,7 @@ public:
 
 		m_window->SetVSync(false);
 
-		PushLayer(new TestLighting(this));
+		PushLayer(new TestLighting());
 	}
 };
 

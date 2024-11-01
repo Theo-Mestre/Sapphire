@@ -1,8 +1,7 @@
 ﻿#include "TestLighting.h"
 
-TestLighting::TestLighting(sph::Application* const _app)
+TestLighting::TestLighting()
 	: Layer("TestLighting")
-	, m_app(_app)
 	, m_lightData()
 	, m_ambiantLightColor(1.0f)
 	, m_tileMapData()
@@ -17,7 +16,7 @@ TestLighting::~TestLighting()
 void TestLighting::OnAttach()
 {
 	// Camera
-	glm::vec2 halfSize = m_app->GetWindow().GetSize() / 2.0f;
+	glm::vec2 halfSize = m_application->GetWindow().GetSize() / 2.0f;
 	m_camera = sph::OrthographicCamera::Create(-halfSize.x, halfSize.x, -halfSize.y, halfSize.y);
 	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(m_camera);
 
@@ -33,10 +32,10 @@ void TestLighting::OnAttach()
 	m_playerTexture = sph::Texture2D::Create("Player.png");
 
 	// Framebuffer
-	m_framebuffer = sph::Framebuffer::Create({ (uint32_t)m_app->GetWindow().GetWidth(), (uint32_t)m_app->GetWindow().GetHeight() });
+	m_framebuffer = sph::Framebuffer::Create({ (uint32_t)m_application->GetWindow().GetWidth(), (uint32_t)m_application->GetWindow().GetHeight() });
 
 	// AppData buffer
-	glm::vec2 data = m_app->GetWindow().GetSize();
+	glm::vec2 data = m_application->GetWindow().GetSize();
 	m_appDataUniformBuffer = sph::UniformBuffer::Create({ { sph::ShaderDataType::Float2, "Resolution"} }, 0);
 	m_appDataUniformBuffer->SetData(&data, sizeof(glm::vec2));
 
@@ -94,7 +93,7 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 
 	_renderer->BeginScene(*m_camera);
 	{
-		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_texture);
+		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_application->GetWindow().GetSize(), m_texture);
 		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
 		_renderer->DrawSprite(*m_sprite);
 	}
@@ -105,7 +104,7 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	{
 		if (m_enableLight == false)
 		{
-			m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_framebuffer->GetTextureAttachment());
+			m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, m_application->GetWindow().GetSize(), m_framebuffer->GetTextureAttachment());
 			m_renderer2D->EndScene();
 			return;
 		}
@@ -116,7 +115,7 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 		lightShader->SetMat4("u_sceneVP", m_camera->GetViewProjectionMatrix());
 		lightShader->SetFloat3("u_ambientLight", m_ambiantLightColor);
 
-		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, m_app->GetWindow().GetSize(), m_framebuffer->GetTextureAttachment(), lightShader);
+		m_renderer2D->DrawQuad({ 0.0f, 0.0f, 0.0f }, m_application->GetWindow().GetSize(), m_framebuffer->GetTextureAttachment(), lightShader);
 	}
 	m_renderer2D->EndScene();
 }

@@ -52,9 +52,8 @@ namespace sph
 			return _os << _e.ToString();
 		}
 
+		bool Handled = false;
 		friend class EventDispatcher;
-	private:
-		bool m_handled = false;
 	};
 	using EventCallbackFunction = std::function<void(Event&)>;
 
