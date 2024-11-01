@@ -18,7 +18,7 @@ void TestLighting::OnAttach()
 	// Camera
 	glm::vec2 halfSize = m_application->GetWindow().GetSize() / 2.0f;
 	m_camera = sph::OrthographicCamera::Create(-halfSize.x, halfSize.x, -halfSize.y, halfSize.y);
-	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(m_camera);
+	m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(m_camera, true);
 
 	m_postFXProjection = glm::ortho(-halfSize.x, halfSize.x, -halfSize.y, halfSize.y, -1.0f, 1.0f);
 
@@ -73,7 +73,7 @@ void TestLighting::OnUpdate(sph::DeltaTime _dt)
 	m_cameraController->OnUpdate(_dt);
 
 	glm::vec2 mousePosition = m_camera->ScreenToWorld(sph::Input::GetMousePosition());
-	m_sprite->SetPosition(mousePosition);
+	//m_sprite->SetPosition(mousePosition);
 	m_lightData.GetUniformBuffer()->SetData(&mousePosition, sizeof(glm::vec2), 32);
 }
 
@@ -95,7 +95,7 @@ void TestLighting::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	{
 		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_application->GetWindow().GetSize(), m_texture);
 		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
-		_renderer->DrawSprite(*m_sprite);
+		//_renderer->DrawSprite(*m_sprite);
 	}
 	_renderer->EndScene();
 	m_framebuffer->Unbind();

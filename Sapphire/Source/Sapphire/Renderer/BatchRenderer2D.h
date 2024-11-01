@@ -35,7 +35,7 @@ namespace sph
 
 		static Ref<Renderer> Create();
 
-	private:
+	protected:
 		void InitShader();
 
 		void CheckBatchState();

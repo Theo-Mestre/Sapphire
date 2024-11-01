@@ -33,7 +33,7 @@ namespace sph
 	private:
 		std::vector<std::string> LoadConfig(const std::string& _configPath);
 	private:
-		std::unordered_map<uint32_t, sph::Ref<sph::SubTexture2D>> m_tileTextures;
+		std::unordered_map<uint32_t, glm::vec2> m_tileTextures;
 		std::vector<sph::Ref<sph::Texture2D>> m_textureAtlases;
 		std::vector<std::vector<uint32_t>> m_tileMap;
 

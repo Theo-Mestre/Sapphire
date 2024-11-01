@@ -82,8 +82,15 @@ namespace sph
 
 			if (m_tileTextures.find(value) != m_tileTextures.end()) continue;
 
-			glm::vec2 index = { value % cellPerSpritesheet.x, cellPerSpritesheet.y - (value / cellPerSpritesheet.x) - 1 };
-			m_tileTextures[value] = sph::SubTexture2D::Create(m_textureAtlases[_textureIndex], index, m_cellSize);
+			glm::vec2 index =
+			{
+				(value % cellPerSpritesheet.x) * m_cellSize.x,
+				(cellPerSpritesheet.y - (value / cellPerSpritesheet.x) - 1) * m_cellSize.y
+			};
+
+			index /= m_textureAtlases[_textureIndex]->GetSize();
+			
+			m_tileTextures[value] = index;
 		}
 	}
 

@@ -6,6 +6,7 @@
 #include "Sapphire/Renderer/Shader.h"
 #include "Sapphire/Renderer/UniformBuffer.h"
 #include "Sapphire/Renderer/TileMap.h"
+#include "Sapphire/Renderer/Texture.h"
 
 namespace sph
 {
@@ -13,10 +14,16 @@ namespace sph
 	{
 		const glm::vec2 mapSize = _tilemap->GetCellCount();
 		const glm::vec2 tileSize = _tilemap->GetCellSize();
+		const glm::vec2 mapOffest = tileSize * (mapSize / 2.0f);
 
+		uint32_t i = 0;
 		for (auto& layer : _tilemap->GetTileMap())
 		{
-			const glm::vec2 mapOffest = tileSize * (mapSize / 2.0f);
+			float textureIndex = SubmitTexture(_tilemap->GetTextureAtlases()[i]);
+			glm::vec2 textureSize = _tilemap->GetTextureAtlases()[i]->GetSize();
+
+			glm::vec2 size = tileSize / textureSize;
+			glm::vec2 texCoords[4];
 
 			for (int32_t y = 0; y < mapSize.y; y++)
 			{
@@ -26,23 +33,21 @@ namespace sph
 					if (tileIndex < 0) continue;
 
 					glm::vec3 position(x * tileSize.x - mapOffest.x, 1 - y * tileSize.y + mapOffest.y, 0.0f);
-					DrawQuad(position, tileSize, _tilemap->GetTilesTextures().at(tileIndex));
+
+					glm::vec2 coords = _tilemap->GetTilesTextures().at(tileIndex);
+
+					texCoords[0] = { coords.x, coords.y };
+					texCoords[1] = { coords.x + size.x, coords.y };
+					texCoords[2] = { coords.x + size.x, coords.y + size.y };
+					texCoords[3] = { coords.x, coords.y + size.y };
+
+					// Rendering
+					CheckBatchState();
+					UpdateCurrentQuadVertex(position, tileSize, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f, texCoords);
+					Renderer::Stats::QuadCount++;
 				}
 			}
+			i++;
 		}
-
-		//const glm::vec2 mapOffest = { tileSize * (MAP_SIZE_X / 2.0f), tileSize * (MAP_SIZE_Y / 2.0f) };
-		//
-		//for (uint32_t y = 0; y < MAP_SIZE_Y; y++)
-		//{
-		//	for (uint32_t x = 0; x < MAP_SIZE_X; x++)
-		//	{
-		//		int32_t tileIndex = layer.tiles[y * MAP_SIZE_X + x];
-		//		if (tileIndex == -1) continue;
-		//
-		//		glm::vec3 position = { x * tileSize - mapOffest.x ,1 - y * tileSize + mapOffest.y, 0.0f };
-		//		_renderer->DrawQuad(position, glm::vec2{ tileSize, tileSize }, layer.subTextures[tileIndex]);
-		//	}
-		//}
 	}
 }
