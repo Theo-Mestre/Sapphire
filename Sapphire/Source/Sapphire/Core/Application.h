@@ -27,22 +27,28 @@ namespace sph
 
 		virtual void Run();
 
+		virtual void Close();
+
+		// Layer management
 		virtual void PushLayer(Layer* _layer);
 		virtual void PushOverlay(Layer* _overlay);
 
 		virtual void PopLayer(Layer* _layer);
 		virtual void PopOverlay(Layer* _overlay);
 
-		inline Window& GetWindow() { return *m_window; }
-
+		// Window and rendering
+		inline Window& GetWindow() const { return *m_window; }
 		void SetRenderer(Ref<Renderer> _renderer) { m_renderer = _renderer; }
+		Ref<Renderer> GetRenderer() const { return m_renderer; }
 	protected:
+		// Application lifecycle
 		virtual void Init();
 		virtual void OnEvent(Event& _event);
 		virtual void OnUpdate() {}
 		virtual void OnRender(const Ref<Renderer>& _renderer) {}
 		virtual void OnImGuiRender() {};
 
+		// Events
 		bool OnWindowClosed(sph::WindowCloseEvent& _event);
 		bool OnWindowResize(sph::WindowResizeEvent& _event);
 

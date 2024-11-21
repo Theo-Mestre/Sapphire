@@ -8,9 +8,12 @@
 #include "Sapphire/Renderer/Renderering2D.h"
 #include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Events/ApplicationEvent.h"
+#include "Sapphire/Events/KeyEvent.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
 #include "Sapphire/Layers/ProfilingLayer.h"
 #include "Sapphire/Profiling/Profiler.h"
+
+#include "KeyCode.h"
 
 namespace sph
 {
@@ -83,6 +86,11 @@ namespace sph
 		}
 	}
 
+	void Application::Close()
+	{
+		m_isRunning = false;
+	}
+
 	void Application::PushLayer(Layer* _layer)
 	{
 		_layer->SetApplication(this);
@@ -91,6 +99,7 @@ namespace sph
 
 	void Application::PushOverlay(Layer* _overlay)
 	{
+		_overlay->SetApplication(this);
 		m_layerStack.PushOverlay(_overlay);
 	}
 
@@ -125,11 +134,11 @@ namespace sph
 
 #ifndef DIST // Disable ImGui in Distribution build
 		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
-		m_layerStack.PushOverlay(m_imGuiLayer);
+		PushOverlay(m_imGuiLayer);
 #endif
 
 #ifdef SPH_VISUAL_PROFILING_ENABLED
-		m_layerStack.PushOverlay(new ProfilingLayer());
+		PushOverlay(new ProfilingLayer());
 #endif
 	}
 
@@ -139,6 +148,16 @@ namespace sph
 		sph::EventDispatcher dispatcher(_event);
 		dispatcher.Dispatch<sph::WindowCloseEvent>(BIND_EVENT_METHOD(Application::OnWindowClosed));
 		dispatcher.Dispatch<sph::WindowResizeEvent>(BIND_EVENT_METHOD(Application::OnWindowResize));
+
+		// Debug switch to enable/disable docking
+		dispatcher.Dispatch<KeyPressedEvent>([&](KeyPressedEvent& _event)->bool
+			{
+				if (_event.GetKeyCode() == KeyCode::U)
+				{
+					m_imGuiLayer->EnableDocking(!m_imGuiLayer->IsDockingEnabled());
+				}
+				return false;
+			});
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 		{

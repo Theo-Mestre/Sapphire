@@ -17,13 +17,13 @@ public:
 		glm::vec2 halfWindowSize = m_window->GetSize() / 2.0f;
 		m_camera = sph::CreateRef<sph::OrthographicCamera>(-halfWindowSize.x, halfWindowSize.x, -halfWindowSize.y, halfWindowSize.y);
 
-		auto tilemapLayer = new TilemapLayer();
-		tilemapLayer->SetCamera(m_camera);
+		//auto tilemapLayer = new TilemapLayer();
+		//tilemapLayer->SetCamera(m_camera);
 
 		auto testLayer = new TestLayer();
 		testLayer->SetCamera(m_camera);
 		
-		PushLayer(tilemapLayer);
+		//PushLayer(tilemapLayer);
 		PushLayer(testLayer);
 	}
 
