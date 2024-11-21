@@ -1,23 +1,26 @@
--- premake5.lua
-workspace "New Project"
+OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+SolutionName = "SapphireEngine"
+ProjectName = "Sapphire"
+EditorName = "Editor"
+AppName = "App"
+
+workspace (SolutionName)
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject "App"
+   startproject (AppName)
 
-   -- Workspace-wide build options for MSVC
    filter "system:windows"
       buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
 
-OutputDir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
+group (ProjectName)
+	include (ProjectName .. "/Build-" .. ProjectName .. ".lua")
+	include (EditorName .. "/Build-" .. EditorName .. ".lua")
 
-group "Sapphire"
-	include "Sapphire/Build-Sapphire.lua"
-	--include "Sapphire/Editor/Build-Editor.lua"
-group "Sapphire/Dependencies"
+group (ProjectName .. "/Dependencies")
 	include "Vendor/ThirdParty/Glad/Build-Glad.lua"
 	include "Vendor/ThirdParty/GLFW/Build-GLFW.lua"
 	include "Vendor/ThirdParty/ImGui/Build-ImGui.lua"
 	include "Vendor/ThirdParty/ImPlot/Build-ImPlot.lua"
 	include "Vendor/ThirdParty/spdlog/Build-spdlog.lua"
 group ""
-include "App/Build-App.lua"
+include (AppName .. "/Build-" .. AppName .. ".lua")

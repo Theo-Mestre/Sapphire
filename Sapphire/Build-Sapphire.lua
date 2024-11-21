@@ -1,15 +1,13 @@
-local projectName = "Sapphire"
-
-project (projectName)
+project (ProjectName)
    kind "StaticLib"
    language "C++"
    cppdialect "C++20"
    staticruntime "on"
    
    targetdir "Binaries/%{cfg.buildcfg}"
-   targetdir ("../Binaries/" .. OutputDir .. "/" .. projectName)
+   targetdir ("../Binaries/" .. OutputDir .. "/" .. ProjectName)
 
-   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/" .. projectName)
+   objdir ("../Binaries/Intermediates/" .. OutputDir .. "/" .. ProjectName)
    libdirs { "../Vendor/lib" }
 
    pchheader "sphpch.h"
@@ -18,7 +16,7 @@ project (projectName)
    defines
    { 
        "SPH_BUILD", 
-       string.upper(projectName) .. "_ENABLE_ASSERTS",
+       string.upper(ProjectName) .. "_ENABLE_ASSERTS",
        "SPH_VISUAL_PROFILING_ENABLED",
 	   "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING", 
 	   "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
@@ -59,13 +57,16 @@ project (projectName)
        defines { "DEBUG" }
        runtime "Debug"
        symbols "on"
+       optimize "off"
 
    filter "configurations:Release"
        defines { "RELEASE" }
        runtime "Release"
+       symbols "off" 
        optimize "on"
 
    filter "configurations:Dist"
        defines { "DIST" }
        runtime "Release"
+       symbols "off"
        optimize "On"

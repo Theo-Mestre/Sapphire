@@ -19,7 +19,7 @@ namespace sph
 		class FrameTimeData;
 	}
 
-	class  Application
+	class Application
 	{
 	public:
 		Application();
@@ -49,8 +49,8 @@ namespace sph
 		virtual void OnImGuiRender() {};
 
 		// Events
-		bool OnWindowClosed(sph::WindowCloseEvent& _event);
-		bool OnWindowResize(sph::WindowResizeEvent& _event);
+		bool OnWindowClosed(WindowCloseEvent& _event);
+		bool OnWindowResize(WindowResizeEvent& _event);
 
 	protected:
 		LayerStack m_layerStack;

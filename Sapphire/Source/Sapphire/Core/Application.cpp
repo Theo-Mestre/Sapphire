@@ -30,7 +30,6 @@ namespace sph
 	Application::~Application()
 	{
 		m_layerStack.Clear();
-
 		m_renderer->Shutdown();
 
 		delete m_window;
@@ -51,7 +50,7 @@ namespace sph
 				OnUpdate();
 
 				// Update layers
-				for (sph::Layer* layer : m_layerStack)
+				for (Layer* layer : m_layerStack)
 				{
 					layer->OnUpdate(Time::DeltaTime);
 				}
@@ -59,7 +58,7 @@ namespace sph
 #ifndef DIST // Disable ImGui in Distribution build
 			m_imGuiLayer->Begin();
 			OnImGuiRender();
-			for (sph::Layer* layer : m_layerStack)
+			for (Layer* layer : m_layerStack)
 			{
 				layer->OnImGuiRender();
 			}
@@ -71,12 +70,12 @@ namespace sph
 
 			if (m_minimized == false)
 			{
-				sph::Renderer::Stats::Reset();
-				sph::RenderCommand::Clear();
+				Renderer::Stats::Reset();
+				RenderCommand::Clear();
 
 				OnRender(m_renderer);
 
-				for (sph::Layer* layer : m_layerStack)
+				for (Layer* layer : m_layerStack)
 				{
 					layer->OnRender(m_renderer);
 				}
@@ -133,7 +132,7 @@ namespace sph
 		m_renderer->Init();
 
 #ifndef DIST // Disable ImGui in Distribution build
-		m_imGuiLayer = new sph::ImGuiLayer(*m_window);
+		m_imGuiLayer = new ImGuiLayer(*m_window);
 		PushOverlay(m_imGuiLayer);
 #endif
 
@@ -145,9 +144,9 @@ namespace sph
 	void Application::OnEvent(Event& _event)
 	{
 		PROFILE_FUNCTION();
-		sph::EventDispatcher dispatcher(_event);
-		dispatcher.Dispatch<sph::WindowCloseEvent>(BIND_EVENT_METHOD(Application::OnWindowClosed));
-		dispatcher.Dispatch<sph::WindowResizeEvent>(BIND_EVENT_METHOD(Application::OnWindowResize));
+		EventDispatcher dispatcher(_event);
+		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_METHOD(Application::OnWindowClosed));
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_METHOD(Application::OnWindowResize));
 
 		// Debug switch to enable/disable docking
 		dispatcher.Dispatch<KeyPressedEvent>([&](KeyPressedEvent& _event)->bool

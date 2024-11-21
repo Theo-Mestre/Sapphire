@@ -1,4 +1,4 @@
-project "App"
+project (AppName)
    kind "ConsoleApp"
    language "C++"
    cppdialect "C++20"
@@ -11,7 +11,7 @@ project "App"
       "Source",
       
 	  -- Include Sapphire
-	  "../Sapphire/Source",
+	  "../" .. ProjectName .. "/Source",
 
       -- Include Third party libs 
       "../Vendor/ThirdParty/ImGui",
@@ -26,7 +26,7 @@ project "App"
 
    links
    {
-	  "Sapphire"
+	  (ProjectName)
    }
 
    flags
