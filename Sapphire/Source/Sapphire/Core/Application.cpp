@@ -5,7 +5,8 @@
 #include "Sapphire/Core/Time.h"
 #include "Sapphire/Core/Input.h"
 #include "Sapphire/ImGui/ImGuiLayer.h"
-#include "Sapphire/Renderer/BatchRenderer2D.h"
+#include "Sapphire/Renderer/Renderering2D.h"
+#include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Events/ApplicationEvent.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
 #include "Sapphire/Layers/ProfilingLayer.h"
@@ -67,6 +68,9 @@ namespace sph
 
 			if (m_minimized == false)
 			{
+				sph::Renderer::Stats::Reset();
+				sph::RenderCommand::Clear();
+
 				OnRender(m_renderer);
 
 				for (sph::Layer* layer : m_layerStack)
@@ -103,15 +107,20 @@ namespace sph
 	void Application::Init()
 	{
 		PROFILE_FUNCTION();
+
+		// Initialize window
 		WindowProperties props;
 		props.Title = "Sapphire Engine";
 		props.Width = 1280;
 		props.Height = 720;
-
 		m_window = Window::Create(props);
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
+
+		// Initialize Input
 		Input::Init(m_window);
 
+		// Create a default renderer if none is set by user
+		if (!m_renderer) m_renderer = CreateRef<Renderer2D>();
 		m_renderer->Init();
 
 #ifndef DIST // Disable ImGui in Distribution build
