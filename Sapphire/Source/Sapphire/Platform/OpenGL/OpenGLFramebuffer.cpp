@@ -46,7 +46,10 @@ namespace sph
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);
 
 		// Texture Attachment
-		m_textureAttachment = Texture2D::Create(m_specification.Width, m_specification.Height);
+		if (m_textureAttachment == nullptr)
+		{
+			m_textureAttachment = Texture2D::Create(m_specification.Width, m_specification.Height);
+		}
 		m_textureAttachment->Bind();
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textureAttachment->GetRendererID(), 0);

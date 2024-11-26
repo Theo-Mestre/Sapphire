@@ -29,13 +29,9 @@ namespace sph
 
 		void Begin();
 		void End();
-
-		void EnableDocking(bool _enable) { m_enableDocking = _enable; }
-		bool IsDockingEnabled() const { return m_enableDocking; }
 	private:
 		Window& m_window;
 		float m_time = 0.0f;
-		bool m_enableDocking = true;
 	};
 }
 #endif

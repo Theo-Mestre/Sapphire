@@ -11,7 +11,6 @@ class Sandbox2D
 public:
 	virtual void Init() override
 	{
-		SetRenderer(sph::BatchRenderer2D::Create());
 		Application::Init();
 
 		glm::vec2 halfWindowSize = m_window->GetSize() / 2.0f;

@@ -74,7 +74,6 @@ namespace sph
 	{
 		m_shader->Bind();
 		m_shader->SetMat4("u_viewProjection", _viewProjection);
-
 	}
 
 	void Renderer2D::EndScene()
@@ -93,6 +92,8 @@ namespace sph
 		m_whiteTexture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
@@ -107,6 +108,8 @@ namespace sph
 		_texture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture, const Ref<Shader>& _shader)
@@ -117,8 +120,11 @@ namespace sph
 		_texture->Bind();
 		_shader->Bind();
 		_shader->SetMat4("u_transform", transform);
+		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 
 		_shader->Unbind();
 	}
@@ -128,15 +134,25 @@ namespace sph
 		m_shader->Bind();
 		m_shader->SetMat4("u_transform", glm::translate(glm::mat4(1.0f), _position)
 			* glm::scale(glm::mat4(1.0f), { _size.x, _size.y, 1.0f }));
+		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
 
-		
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawSprite(const Sprite& _sprite)
 	{
-		DrawQuad(_sprite.GetPosition(), _sprite.GetSize(), _sprite.GetRotation(), _sprite.GetColor());
+		m_shader->Bind();
+		m_shader->SetMat4("u_transform", _sprite.GetTransform());
+		m_shader->SetFloat4("u_color", _sprite.GetColor());
+
+		_sprite.GetTexture()->Bind();
+		m_vertexArray->Bind();
+		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _texture)
@@ -148,10 +164,12 @@ namespace sph
 
 		m_shader->Bind();
 		m_shader->SetMat4("u_transform", transform);
-		m_shader->SetFloat4("u_color", glm::vec4(1.0f));
+		m_shader->SetFloat4("u_color", glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 
 		m_whiteTexture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
 	}
 }

@@ -51,8 +51,8 @@ void TestLayer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
 	_renderer->BeginScene(*m_camera);
 	{
 		_renderer->DrawQuad({ 1280.0f, 0.0f, 0.0f }, m_application->GetWindow().GetSize(), m_texture);
-		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
 		_renderer->DrawSprite(*m_sprite);
+		_renderer->DrawQuad({ 100.0f, 100.0f, 0.0f }, { 100.0f, 100.0f }, m_playerTexture);
 	}
 	_renderer->EndScene();
 }

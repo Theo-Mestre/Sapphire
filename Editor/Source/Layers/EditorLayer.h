@@ -21,6 +21,12 @@ namespace sph
 
 		void SetCamera(const sph::Ref<sph::OrthographicCamera>& _camera) { m_camera = _camera; }
 
+		void EnableDocking(bool _enable) { m_enableDocking = _enable; }
+		bool IsDockingEnabled() const { return m_enableDocking; }
+
+	private:
+		void OnRenderViewport();
+
 	private:
 		sph::Ref<sph::OrthographicCamera> m_camera = nullptr;
 		sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
@@ -29,9 +35,11 @@ namespace sph
 		sph::Ref<sph::Framebuffer> m_framebuffer = nullptr;
 
 		sph::Ref<sph::Texture2D> m_texture = nullptr;
-		sph::Ref<sph::Texture2D> m_playerTexture = nullptr;
 
 		sph::Ref<sph::Sprite> m_sprite = nullptr;
+
+		bool m_enableDocking = true;
+		glm::ivec2 m_viewportSize = { 0, 0 };
 	};
 }
 #endif

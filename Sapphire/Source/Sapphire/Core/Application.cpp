@@ -148,16 +148,6 @@ namespace sph
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_METHOD(Application::OnWindowClosed));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_METHOD(Application::OnWindowResize));
 
-		// Debug switch to enable/disable docking
-		dispatcher.Dispatch<KeyPressedEvent>([&](KeyPressedEvent& _event)->bool
-			{
-				if (_event.GetKeyCode() == KeyCode::U)
-				{
-					m_imGuiLayer->EnableDocking(!m_imGuiLayer->IsDockingEnabled());
-				}
-				return false;
-			});
-
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin();)
 		{
 			(*--it)->OnEvent(_event);
