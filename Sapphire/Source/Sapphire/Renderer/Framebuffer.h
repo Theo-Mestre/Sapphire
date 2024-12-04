@@ -30,10 +30,10 @@ namespace sph
 		virtual const Ref<Texture2D>& GetTextureAttachment() const = 0;
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 
-		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
+		static Ref<Framebuffer> Create(const FramebufferSpecification& _spec);
 
 	protected:
-		uint32_t m_rendererID;
+		uint32_t m_rendererID = -1;
 	};
 }
 #endif

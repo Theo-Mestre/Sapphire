@@ -71,6 +71,13 @@ namespace sph
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	void OpenGLTexture2D::SetSize(uint32_t _width, uint32_t _height)
+	{
+		m_width = _width;
+		m_height = _height;
+		glTextureStorage2D(m_rendererID, 1, m_internalFormat, m_width, m_height);
+	}
+
 	void OpenGLTexture2D::SetData(void* _data, uint32_t _size)
 	{
 		uint32_t bpp = m_dataFormat == GL_RGBA ? 4 : 3;

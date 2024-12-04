@@ -20,6 +20,8 @@ namespace sph
 		virtual uint32_t GetHeight() const override { return m_height; }
 		virtual glm::vec2 GetSize() const override { return { (float)m_width, (float)m_height }; }
 
+		virtual void SetSize(uint32_t _width, uint32_t _height) override;
+
 		virtual uint32_t GetRendererID() const override { return m_rendererID; }
 
 		virtual void SetData(void* _data, uint32_t _size) override;

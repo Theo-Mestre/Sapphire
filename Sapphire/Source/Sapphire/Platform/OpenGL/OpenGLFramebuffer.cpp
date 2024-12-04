@@ -7,6 +7,8 @@
 
 namespace sph
 {
+	static constexpr uint32_t MAX_FRAMEBUFFER_SIZE = 8192;
+
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& _specification)
 		: m_specification(_specification)
 		, m_textureAttachment(nullptr)
@@ -62,6 +64,13 @@ namespace sph
 
 	void OpenGLFramebuffer::Resize(uint32_t _width, uint32_t _height)
 	{
+		if (m_specification.Width == _width && m_specification.Height == _height) return;
+
+		if (_width <= 0 || _height <= 0 || _width > MAX_FRAMEBUFFER_SIZE || _height > MAX_FRAMEBUFFER_SIZE)
+		{
+			LogError("Attempted to resize framebuffer to an invalid value: {} - {}!", _width, _height);
+			return;
+		}
 		m_specification.Width = _width;
 		m_specification.Height = _height;
 

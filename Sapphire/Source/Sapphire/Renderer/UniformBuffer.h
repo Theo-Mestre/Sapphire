@@ -54,5 +54,4 @@ namespace sph
 		uint32_t m_binding;
 	};
 }
-
 #endif

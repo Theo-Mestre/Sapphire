@@ -5,6 +5,8 @@
 
 namespace sph
 {
+	class ImGuiLayer;
+
 	class EditorLayer
 		: public sph::Layer
 	{
@@ -24,6 +26,8 @@ namespace sph
 		void EnableDocking(bool _enable) { m_enableDocking = _enable; }
 		bool IsDockingEnabled() const { return m_enableDocking; }
 
+		void SetImGUILayer(ImGuiLayer* _imguiLayer) { m_imguiLayer = _imguiLayer; }
+
 	private:
 		void OnRenderViewport();
 
@@ -40,6 +44,8 @@ namespace sph
 
 		bool m_enableDocking = true;
 		glm::ivec2 m_viewportSize = { 0, 0 };
+
+		ImGuiLayer* m_imguiLayer = nullptr;
 	};
 }
 #endif

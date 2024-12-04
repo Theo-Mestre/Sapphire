@@ -75,6 +75,16 @@ namespace sph
 	{
 	}
 
+	void ImGuiLayer::OnEvent(Event& _event)
+	{
+		if (!m_isViewportFocused || !m_isViewportHovered)
+		{
+			auto io = ImGui::GetIO();
+			_event.Handled |= _event.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			_event.Handled |= _event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
+	}
+
 	void ImGuiLayer::OnImGuiRender()
 	{
 		ImGui::Begin("Settings");

@@ -16,6 +16,7 @@ namespace sph
 		virtual uint32_t GetWidth() const = 0;
 		virtual uint32_t GetHeight() const = 0;
 		virtual glm::vec2 GetSize() const = 0;
+		virtual void SetSize(uint32_t _width, uint32_t _height) = 0;
 
 		virtual uint32_t GetRendererID() const = 0;
 

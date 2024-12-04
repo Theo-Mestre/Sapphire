@@ -19,6 +19,7 @@ namespace sph
 
 			auto testLayer = new EditorLayer();
 			testLayer->SetCamera(m_camera);
+			testLayer->SetImGUILayer(m_imGuiLayer);
 			PushLayer(testLayer);
 		}
 

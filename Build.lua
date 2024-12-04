@@ -7,7 +7,7 @@ AppName = "App"
 workspace (SolutionName)
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject (AppName)
+   startproject (EditorName)
 
    filter "system:windows"
       buildoptions { "/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus" }
