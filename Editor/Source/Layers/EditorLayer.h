@@ -8,7 +8,7 @@ namespace sph
 	class ImGuiLayer;
 
 	class EditorLayer
-		: public sph::Layer
+		: public Layer
 	{
 	public:
 		EditorLayer();
@@ -16,12 +16,12 @@ namespace sph
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnUpdate(sph::DeltaTime _dt) override;
-		virtual void OnRender(const sph::Ref<sph::Renderer>& _renderer) override;
+		virtual void OnUpdate(DeltaTime _dt) override;
+		virtual void OnRender(const Ref<Renderer>& _renderer) override;
 		virtual void OnImGuiRender() override;
-		virtual void OnEvent(sph::Event& _event) override;
+		virtual void OnEvent(Event& _event) override;
 
-		void SetCamera(const sph::Ref<sph::OrthographicCamera>& _camera) { m_camera = _camera; }
+		void SetCamera(const Ref<OrthographicCamera>& _camera) { m_camera = _camera; }
 
 		void EnableDocking(bool _enable) { m_enableDocking = _enable; }
 		bool IsDockingEnabled() const { return m_enableDocking; }
@@ -32,15 +32,17 @@ namespace sph
 		void OnRenderViewport();
 
 	private:
-		sph::Ref<sph::OrthographicCamera> m_camera = nullptr;
-		sph::Scope<sph::OrthographicCameraController> m_cameraController = nullptr;
+		Ref<OrthographicCamera> m_camera = nullptr;
+		Scope<OrthographicCameraController> m_cameraController = nullptr;
 
-		sph::Ref<sph::UniformBuffer> m_appDataUniformBuffer = nullptr;
-		sph::Ref<sph::Framebuffer> m_framebuffer = nullptr;
+		Ref<Scene> m_currentScene = nullptr;
 
-		sph::Ref<sph::Texture2D> m_texture = nullptr;
+		Ref<UniformBuffer> m_appDataUniformBuffer = nullptr;
+		Ref<Framebuffer> m_framebuffer = nullptr;
 
-		sph::Ref<sph::Sprite> m_sprite = nullptr;
+		Ref<Texture2D> m_texture = nullptr;
+
+		Ref<Sprite> m_sprite = nullptr;
 
 		bool m_enableDocking = true;
 		glm::ivec2 m_viewportSize = { 0, 0 };

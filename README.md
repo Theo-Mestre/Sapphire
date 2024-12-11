@@ -21,7 +21,8 @@ Build the project using the `SetupWindows.bat` inside the `Scripts` folder
 **[Spdlog](https://github.com/gabime/spdlog)**  
 **[ImGui](https://github.com/ocornut/imgui)**  
 **[ImPlot](https://github.com/epezent/implot)**  
-**[GLM](https://github.com/g-truc/glm)**  
+**[GLM](https://github.com/g-truc/glm)** 
+**[EnTT](https://github.com/skypjack/entt)** 
 
 
 ## License

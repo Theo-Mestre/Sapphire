@@ -1,5 +1,6 @@
 ﻿#include "EditorLayer.h"
 #include "Sapphire/ImGui/ImGuiLayer.h"
+#include "Sapphire/Scene/Entity.h"
 
 namespace sph
 {
@@ -16,42 +17,52 @@ namespace sph
 	{
 		// Camera
 		ASSERT(m_camera != nullptr, "Camera is not set!");
-		m_cameraController = sph::CreateScope<sph::OrthographicCameraController>(m_camera, true);
+		m_cameraController = CreateScope<OrthographicCameraController>(m_camera, true);
 
 		// Renderer
-		sph::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 
-		auto windowSize = m_application->GetWindow().GetSize();	
-		m_framebuffer = sph::Framebuffer::Create({ (uint32_t)windowSize.x, (uint32_t)windowSize.y });
+		auto windowSize = m_application->GetWindow().GetSize();
+		m_framebuffer = Framebuffer::Create({ (uint32_t)windowSize.x, (uint32_t)windowSize.y });
 
-		m_texture = sph::Texture2D::Create("Player.png");
+		m_texture = Texture2D::Create("Player.png");
+
+		m_currentScene = CreateRef<Scene>();
+
+		Entity entity = Entity::Create(m_currentScene, "Square");
+		entity.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+		auto& transform = entity.GetComponent<TransformComponent>();
+		transform.Position = { 300.0f, 0.0f, 0.0f };
+		transform.Scale = { 100.0f, 100.0f , 0.0f};
 	}
 
 	void EditorLayer::OnDetach()
 	{
 	}
 
-	void EditorLayer::OnUpdate(sph::DeltaTime _dt)
+	void EditorLayer::OnUpdate(DeltaTime _dt)
 	{
 		m_cameraController->OnUpdate(_dt);
+
+		ASSERT(m_currentScene != nullptr, "Scene is not set!");
+		m_currentScene->OnUpdate(_dt);
 	}
 
-	void EditorLayer::OnRender(const sph::Ref<sph::Renderer>& _renderer)
+	void EditorLayer::OnRender(const Ref<Renderer>& _renderer)
 	{
 		m_framebuffer->Bind();
 		m_framebuffer->Clear();
 		_renderer->BeginScene(*m_camera);
 		{
 			_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f }, m_texture);
+
+			ASSERT(m_currentScene != nullptr, "Scene is not set!");
+			m_currentScene->OnRender(_renderer);
 		}
 		_renderer->EndScene();
-		m_framebuffer->Unbind();
 
-		//_renderer->BeginScene(*m_camera);
-		//{
-		//	_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f }, m_texture);
-		//}
-		//_renderer->EndScene();
+		m_framebuffer->Unbind();
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -68,11 +79,11 @@ namespace sph
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-			windowFlags |= ImGuiWindowFlags_NoTitleBar 
-				| ImGuiWindowFlags_NoCollapse 
-				| ImGuiWindowFlags_NoResize 
+			windowFlags |= ImGuiWindowFlags_NoTitleBar
+				| ImGuiWindowFlags_NoCollapse
+				| ImGuiWindowFlags_NoResize
 				| ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoBringToFrontOnFocus 
+				| ImGuiWindowFlags_NoBringToFrontOnFocus
 				| ImGuiWindowFlags_NoNavFocus;
 
 			if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
@@ -105,6 +116,22 @@ namespace sph
 				ImGui::EndMenuBar();
 			}
 
+			// Debug // Entity Editing
+			ImGui::Begin("Debug");
+			{
+				auto view = m_currentScene->Registry().view<TransformComponent, SpriteRendererComponent, TagComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, sprite, tag] = view.get<TransformComponent, SpriteRendererComponent, TagComponent>(entity);
+					ImGui::Text("Entity ID: %d", (uint32_t)entity);
+					ImGui::Text("Entity Tag: %s", tag.Tag.c_str());
+					ImGui::DragFloat3("Position", &transform.Position.x, 0.1f);
+					ImGui::DragFloat3("Scale", &transform.Scale.x, 0.1f);
+					ImGui::ColorEdit4("Color", &sprite.Color.r);
+				}
+			}
+			ImGui::End();
+
 			// Viewport
 			OnRenderViewport();
 
@@ -112,7 +139,7 @@ namespace sph
 		}
 	}
 
-	void EditorLayer::OnEvent(sph::Event& _event)
+	void EditorLayer::OnEvent(Event& _event)
 	{
 		m_cameraController->OnEvent(_event);
 
@@ -129,7 +156,7 @@ namespace sph
 
 	void EditorLayer::OnRenderViewport()
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));	
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
 		ImGui::Begin("Viewport");
 		{

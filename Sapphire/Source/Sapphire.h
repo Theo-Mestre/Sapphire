@@ -32,6 +32,9 @@
 #include "Sapphire/Renderer/Sprite.h"
 #include "Sapphire/Renderer/TileMap.h"
 
+#include "Sapphire/Scene/Scene.h"
+#include "Sapphire/Scene/Components.h"
+
 #include "Sapphire/Renderer/Camera.h"
 
 #include "Sapphire/Core/OrthographicCameraController.h"
