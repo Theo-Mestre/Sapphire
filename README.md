@@ -16,15 +16,14 @@ Build the project using the `SetupWindows.bat` inside the `Scripts` folder
 **OpenGL** - version 4.5
 ## Acknowledgements
 
-**[GLFW](https://github.com/glfw/glfw)**  
-**[Glad](https://github.com/Dav1dde/glad)**   
-**[Spdlog](https://github.com/gabime/spdlog)**  
-**[ImGui](https://github.com/ocornut/imgui)**  
-**[ImPlot](https://github.com/epezent/implot)**  
-**[GLM](https://github.com/g-truc/glm)** 
-**[EnTT](https://github.com/skypjack/entt)** 
-
+**[GLFW](https://github.com/glfw/glfw)** <br>
+**[Glad](https://github.com/Dav1dde/glad)** <br>
+**[Spdlog](https://github.com/gabime/spdlog)** <br>
+**[ImGui](https://github.com/ocornut/imgui)** <br>
+**[ImPlot](https://github.com/epezent/implot)** <br>
+**[GLM](https://github.com/g-truc/glm)** <br>
+**[EnTT](https://github.com/skypjack/entt)** <br>
 
 ## License
 
-This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/) - see the LICENSE file for details.
+This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
