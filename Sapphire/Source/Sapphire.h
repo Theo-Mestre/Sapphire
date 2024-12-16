@@ -33,6 +33,7 @@
 #include "Sapphire/Renderer/TileMap.h"
 
 #include "Sapphire/Scene/Scene.h"
+#include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/Components.h"
 
 #include "Sapphire/Renderer/Camera.h"

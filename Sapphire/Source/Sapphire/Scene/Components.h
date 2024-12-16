@@ -6,6 +6,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Sapphire/Core/Core.h"
+#include "Sapphire/Renderer/Camera.h"
+
 namespace sph
 {
 	struct TagComponent
@@ -21,33 +24,17 @@ namespace sph
 
 	struct TransformComponent
 	{
-		glm::vec3 Position;
-		glm::vec3 Rotation;
-		glm::vec3 Scale;
+		glm::mat4 Transform;
 
 		TransformComponent() = default;
 		TransformComponent(const TransformComponent&) = default;
-
-		TransformComponent(const glm::vec3& _position)
-			: Position(_position)
-			, Rotation(0.0f)
-			, Scale(1.0f)
+		TransformComponent(const glm::mat4& _transform)
+			: Transform(_transform)
 		{
 		}
 
-		TransformComponent(const glm::vec3& _position, const glm::vec3& _rotation, const glm::vec3& _scale)
-			: Position(_position)
-			, Rotation(_rotation)
-			, Scale(_scale)
-		{
-		}
-
-		glm::mat4 GetTransform() const
-		{
-			return glm::translate(glm::mat4(1.0f), Position)
-				* glm::rotate(glm::mat4(1.0f), Rotation.x, { 1, 0, 0 })
-				* glm::scale(glm::mat4(1.0f), Scale);
-		}
+		operator glm::mat4& () { return Transform; }
+		operator const glm::mat4& () const { return Transform; }
 	};
 
 	struct SpriteRendererComponent
@@ -58,8 +45,26 @@ namespace sph
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 		SpriteRendererComponent(const glm::vec4& _color)
 			: Color(_color)
-		{ 
+		{
 		}
+
+		operator glm::vec4& () { return Color; }
+		operator const glm::vec4& () const { return Color; }
+	};
+
+	struct CameraComponent
+	{
+		sph::Camera Camera;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const sph::Camera& _camera)
+			: Camera(_camera)
+		{
+		}
+
+		operator sph::Camera& () { return Camera; }
+		operator const sph::Camera& () const { return Camera; }
 	};
 }
 #endif

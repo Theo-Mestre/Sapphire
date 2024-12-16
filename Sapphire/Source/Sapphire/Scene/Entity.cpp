@@ -12,7 +12,8 @@ namespace sph
 	}
 
 	Entity::Entity(entt::entity _handle, Scene* const _scene)
-		: m_handle(_handle), m_scene(_scene)
+		: m_handle(_handle)
+		, m_scene(_scene)
 	{
 	}
 

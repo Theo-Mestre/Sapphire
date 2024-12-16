@@ -22,11 +22,37 @@ namespace sph
 
 	void Scene::OnRender(const Ref<Renderer>& _renderer)
 	{
-		for (auto entity : m_registry.view<TransformComponent, SpriteRendererComponent, TagComponent>())
+		Camera* camera = nullptr;
+		glm::mat4* cameraTransform;
+
 		{
-			auto [transform, sprite] = m_registry.get<TransformComponent, SpriteRendererComponent>(entity);
-			_renderer->DrawQuad(transform.Position, glm::vec2(transform.Scale), transform.Rotation.y, sprite.Color);
+			auto view = m_registry.view<CameraComponent, TransformComponent>();
+			
+			for (auto entity : view)
+			{
+				auto [cameraComponent, transform] = view.get<CameraComponent, TransformComponent>(entity);
+				camera = &cameraComponent.Camera;
+				cameraTransform = &transform.Transform;
+				break;
+			}
 		}
+
+		if (!camera)
+		{
+			LogError("No camera entity found!");
+			return;
+		}
+
+		_renderer->BeginScene(*camera, *cameraTransform);
+
+		auto view = m_registry.view<TransformComponent, SpriteRendererComponent>();
+		for (auto entity : view)
+		{
+			auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
+			_renderer->DrawQuad({0.0f, 0.0f ,0.0f }, glm::vec2(100.0f, 100.0f), 0.0f, sprite.Color);
+		}
+
+		_renderer->EndScene();
 	}
 
 	Entity Scene::CreateEntity(const std::string& _name)

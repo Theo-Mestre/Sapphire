@@ -53,7 +53,7 @@ namespace sph
 
 	glm::vec3 OrthographicCamera::ScreenToWorld(const glm::vec2& _point) const
 	{
-		glm::vec4 ndcPoint = 
+		glm::vec4 ndcPoint =
 		{
 			(2.0f * _point.x) / m_viewportSize.x - 1.0f,
 			1.0f - (2.0f * _point.y) / m_viewportSize.y,

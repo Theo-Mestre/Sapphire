@@ -5,9 +5,10 @@
 
 namespace sph
 {
+	class OrthographicCamera;
+	class Camera;
 	class Texture2D;
 	class SubTexture2D;
-	class OrthographicCamera;
 	class VertexArray;
 	class Shader;
 
@@ -23,6 +24,7 @@ namespace sph
 
 		virtual void BeginScene(const OrthographicCamera& _camera) override;
 		virtual void BeginScene(const glm::mat4& _viewProjection) override;
+		virtual void BeginScene(const Camera& _camera, const glm::mat4& _transform) override;
 		virtual void EndScene() override;
 
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color) override;

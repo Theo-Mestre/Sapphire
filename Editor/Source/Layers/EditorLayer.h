@@ -40,6 +40,8 @@ namespace sph
 		Ref<UniformBuffer> m_appDataUniformBuffer = nullptr;
 		Ref<Framebuffer> m_framebuffer = nullptr;
 
+		Entity m_cameraEntity;
+
 		Ref<Texture2D> m_texture = nullptr;
 
 		Ref<Sprite> m_sprite = nullptr;

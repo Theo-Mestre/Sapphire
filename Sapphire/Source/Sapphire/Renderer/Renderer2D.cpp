@@ -76,6 +76,12 @@ namespace sph
 		m_shader->SetMat4("u_viewProjection", _viewProjection);
 	}
 
+	void Renderer2D::BeginScene(const Camera& _camera, const glm::mat4& _transform)
+	{
+		m_shader->Bind();
+		m_shader->SetMat4("u_viewProjection", _camera.GetProjection() * glm::inverse(_transform));
+	}
+
 	void Renderer2D::EndScene()
 	{
 	}

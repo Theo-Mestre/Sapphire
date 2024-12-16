@@ -2,18 +2,35 @@
 #define SPH_CAMERA_H
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 #include "Sapphire/Core/Core.h"
 
 namespace sph
 {
+	class Camera
+	{
+	public:
+		Camera() = default;
+		Camera(const glm::mat4& _projection)
+			: m_projection(_projection) {
+		}
+		virtual ~Camera() = default;
+
+		inline const glm::mat4& GetProjection() const { return m_projection; }
+		inline void SetProjection(const glm::mat4& _projection) { m_projection = _projection; };
+
+	private:
+		glm::mat4 m_projection = glm::mat4(1.0f);
+	};
+
 	class OrthographicCamera
 	{
 	public:
 		OrthographicCamera();
 		OrthographicCamera(float _left, float _right, float _bottom, float _top);
 		~OrthographicCamera() = default;
+
+		void RecalculateViewMatrix();
 
 		inline const glm::mat4& GetViewMatrix() const { return m_projectionMatrix; }
 		inline const glm::mat4& GetProjectionMatrix() const { return m_viewMatrix; }
@@ -35,8 +52,6 @@ namespace sph
 
 		inline void SetProjectionMatrix(float left, float right, float bottom, float top) { m_projectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f); RecalculateViewMatrix(); }
 		inline void SetViewMatrix(const glm::vec3& position, const glm::vec3& target, const glm::vec3& up) { m_viewMatrix = glm::lookAt(position, target, up); RecalculateViewMatrix(); }
-
-		void RecalculateViewMatrix();
 
 		glm::vec2 WorldToScreen(const glm::vec3& _point) const;
 		glm::vec3 ScreenToWorld(const glm::vec2& _point) const;

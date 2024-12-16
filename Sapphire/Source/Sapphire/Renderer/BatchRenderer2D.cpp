@@ -111,6 +111,15 @@ namespace sph
 		ResetBatchStates();
 	}
 
+	void BatchRenderer2D::BeginScene(const Camera& _camera, const glm::mat4& _transform)
+	{
+		m_vertexArray->Bind();
+		m_shader->Bind();
+		m_shader->SetMat4("u_viewProjection", _camera.GetProjection() * glm::inverse(_transform));
+
+		ResetBatchStates();
+	}
+
 	void BatchRenderer2D::EndScene()
 	{
 		Flush();
