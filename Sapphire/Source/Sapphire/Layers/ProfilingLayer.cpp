@@ -7,29 +7,39 @@ namespace sph
 	ProfilingLayer::ProfilingLayer()
 		: Layer("ProfilingLayer")
 	{
+		SPH_PROFILE_FUNCTION();
 	}
 
 	ProfilingLayer::~ProfilingLayer()
 	{
+		SPH_PROFILE_FUNCTION();
 	}
 
 	void ProfilingLayer::OnAttach()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_frameTimeData = CreateScope<Profiling::FrameTimeData>();
 	}
 
 	void ProfilingLayer::OnDetach()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_frameTimeData.reset();
 	}
 
 	void ProfilingLayer::OnUpdate(DeltaTime _dt)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_frameTimeData->Update(Time::DeltaTime, Time::GameTime);
 	}
 
 	void ProfilingLayer::OnImGuiRender()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ImGui::Begin("Metrics");
 		ImGui::Text(" Frame Time: %f", Time::DeltaTime);
 		ImGui::Text(" FPS: %f", 1.f / Time::DeltaTime);

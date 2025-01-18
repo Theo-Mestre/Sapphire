@@ -21,11 +21,15 @@ namespace sph
 		, m_minZoomLevel(0.25f)
 		, m_maxZoomLevel(10.0f)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_camera->SetPosition(m_position);
 	}
 
 	void OrthographicCameraController::OnUpdate(DeltaTime _dt)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (Input::IsKeyPressed(KeyCode::A))
 		{
 			m_position.x -= cos(glm::radians(m_rotation)) * m_translationSpeed * _dt;
@@ -69,6 +73,8 @@ namespace sph
 
 	void OrthographicCameraController::OnEvent(Event& _e)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(_e);
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_METHOD(OrthographicCameraController::OnWindowResized));
 
@@ -80,11 +86,15 @@ namespace sph
 
 	void OrthographicCameraController::SetCameraProjection(float _left, float _right, float _bottom, float _top)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_camera->SetProjectionMatrix(_left, _right, _bottom, _top);
 	}
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& _e)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		// Calculate the new zoom level
 		m_zoomLevel -= _e.GetYOffset() * m_zoomSpeed;
 		m_zoomLevel = std::clamp(m_zoomLevel, m_minZoomLevel, m_maxZoomLevel);
@@ -96,6 +106,8 @@ namespace sph
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& _e)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glm::vec2 halfSizeZoomed = _e.GetSize() / 2.0f / m_zoomLevel;
 		m_camera->SetProjectionMatrix(-halfSizeZoomed.x, halfSizeZoomed.x, -halfSizeZoomed.y, halfSizeZoomed.y);
 		return false;

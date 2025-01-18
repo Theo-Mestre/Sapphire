@@ -9,6 +9,8 @@ namespace sph
 {
 	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType _type)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (_type)
 		{
 		case ShaderDataType::Float:		return GL_FLOAT;
@@ -35,16 +37,22 @@ namespace sph
 	OpenGLVertexArray::OpenGLVertexArray()
 		: m_rendererID(0)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glCreateVertexArrays(1, &m_rendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glDeleteVertexArrays(1, &m_rendererID);
 	}
 
 	void OpenGLVertexArray::Bind() const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 
 		for (const auto& vertexBuffer : m_vertexBuffers)
@@ -57,11 +65,15 @@ namespace sph
 
 	void OpenGLVertexArray::Unbind() const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glBindVertexArray(0);
 	}
 
 	void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& _vertexBuffer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ASSERT(_vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
 		glBindVertexArray(m_rendererID);
@@ -85,6 +97,8 @@ namespace sph
 
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& _indexBuffer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glBindVertexArray(m_rendererID);
 		_indexBuffer->Bind();
 

@@ -3,7 +3,6 @@
 
 #include "Sapphire/Core/Core.h"
 #include "Sapphire/Layers/LayerStack.h"
-#include "Sapphire/Profiling/FrameTimeData.h"
 
 namespace sph
 {
@@ -13,11 +12,6 @@ namespace sph
 	class VertexArray;
 	class WindowCloseEvent;
 	class WindowResizeEvent;
-
-	namespace Profiling
-	{
-		class FrameTimeData;
-	}
 
 	class Application
 	{

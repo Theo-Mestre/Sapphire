@@ -1,23 +1,29 @@
 #ifndef SPH_ENTRYPOINT_H
 #define SPH_ENTRYPOINT_H
 
+#include "Sapphire/Profiling/FrameTimeData.h"
+
 #include "Application.h"
 
 extern sph::Application* sph::CreateApplication();
 
 int main(int argc, char** argv)
 {
-	//PROFILE_BEGIN_SESSION("Startup");
+	SPH_INIT_PROFILING();
+
+	SPH_PROFILE_BEGIN_SESSION("Startup", "Startup.json");
 	auto app = sph::CreateApplication();
-	//PROFILE_END_SESSION();
+	SPH_PROFILE_END_SESSION();
 
-	//PROFILE_BEGIN_SESSION("Runtime");
+	SPH_PROFILE_BEGIN_SESSION("Runtime", "Runtime.json");
 	app->Run();
-	//PROFILE_END_SESSION();
+	SPH_PROFILE_END_SESSION();
 
-	//PROFILE_BEGIN_SESSION("Shutdown");
+	SPH_PROFILE_BEGIN_SESSION("Shutdown", "Shutdown.json");
 	delete app;
-	//PROFILE_END_SESSION();
+	SPH_PROFILE_END_SESSION();
+
+	SPH_SHUTDOWN_PROFILING();
 	return 0;
 }
 

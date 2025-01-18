@@ -8,6 +8,8 @@ namespace sph
 {
 	Ref<Texture2D> sph::Texture2D::Create(const std::string& _path, const Properties& _properties)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
@@ -23,6 +25,8 @@ namespace sph
 
 	Ref<Texture2D> sph::Texture2D::Create(uint32_t _width, uint32_t _height, const Properties& _properties)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:

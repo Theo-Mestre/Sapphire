@@ -10,23 +10,31 @@ namespace sph
 	UniformBufferLayout::UniformBufferLayout(const std::initializer_list<BufferElement>& _elements)
 		: m_elements(_elements)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		CalculateOffsetsAndStride();
 	}
 
 	void UniformBufferLayout::AddElement(ShaderDataType _type, const std::string& _name, bool _normalized)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_elements.push_back({ _type, _name, _normalized });
 		CalculateOffsetsAndStride();
 	}
 
 	void UniformBufferLayout::AddCustomElement(const BufferElement& _element)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_elements.push_back(_element);
 		CalculateOffsetsAndStride();
 	}
 
 	void UniformBufferLayout::CalculateOffsetsAndStride()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_stride = 0;
 		for (auto& element : m_elements)
 		{
@@ -37,6 +45,8 @@ namespace sph
 
 	Ref<UniformBuffer> UniformBuffer::Create(const UniformBufferLayout& _layout, uint32_t _binding)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:

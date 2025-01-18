@@ -8,6 +8,8 @@ namespace sph
 
 	void Logger::Init()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (s_initialized) return;
 
 		spdlog::set_pattern("%^[%T] %n: %v%$");
@@ -25,12 +27,16 @@ namespace sph
 
 	Logger::Logger()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		s_coreLogger = nullptr;
 		s_clientLogger = nullptr;
 	}
 
 	Logger::~Logger()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		s_clientLogger = nullptr;
 		s_coreLogger = nullptr;
 

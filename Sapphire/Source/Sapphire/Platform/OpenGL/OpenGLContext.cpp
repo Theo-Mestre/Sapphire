@@ -10,14 +10,18 @@
 sph::OpenGLContext::OpenGLContext(GLFWwindow* _window)
 	: GraphicsContext(_window)
 {
+	SPH_PROFILE_FUNCTION();
 }
 
 sph::OpenGLContext::~OpenGLContext()
 {
+	SPH_PROFILE_FUNCTION();
 }
 
 void sph::OpenGLContext::Init()
 {
+	SPH_PROFILE_FUNCTION();
+
 	glfwMakeContextCurrent(m_windowHandle);
 	int gladLoadResult = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 	ASSERT(gladLoadResult, "Failed to initialize Glad!");
@@ -39,5 +43,7 @@ void sph::OpenGLContext::Init()
 
 void sph::OpenGLContext::SwapBuffers()
 {
+	SPH_PROFILE_FUNCTION();
+
 	glfwSwapBuffers(m_windowHandle);
 }

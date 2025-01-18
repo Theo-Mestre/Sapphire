@@ -8,6 +8,8 @@ namespace sph
 {
 	OpenGLShader::OpenGLShader(const std::string& _filePath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		std::string source = ParseShaderFile(_filePath);
 		auto [vertexSource, fragmentSource] = PreProcessShaderSource(source);
 
@@ -21,6 +23,8 @@ namespace sph
 
 	OpenGLShader::OpenGLShader(const std::string& _name, const std::string& _vertexSource, const std::string& _fragmentSource)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		GLuint vertexShader = CompileShader(GL_VERTEX_SHADER, _vertexSource);
 		GLuint fragmentShader = CompileShader(GL_FRAGMENT_SHADER, _fragmentSource);
 
@@ -31,21 +35,29 @@ namespace sph
 
 	OpenGLShader::~OpenGLShader()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_rendererID);
 	}
 
 	void OpenGLShader::Bind() const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glUseProgram(m_rendererID);
 	}
 
 	void OpenGLShader::Unbind() const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	int32_t OpenGLShader::GetUniformLocation(const std::string& _name) const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		// Check if the uniform location is already cached
 		if (m_uniformLocationCache.find(_name) != m_uniformLocationCache.end())
 		{
@@ -65,6 +77,8 @@ namespace sph
 
 	std::string OpenGLShader::ParseShaderFile(const std::string& _filePath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		std::ifstream file(_filePath, std::ios::binary);
 		if (!file.is_open())
 		{
@@ -88,6 +102,8 @@ namespace sph
 
 	std::string OpenGLShader::ComputeShaderName(const std::string& _filePath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		size_t lastSlash = _filePath.find_last_of("/\\");
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
 
@@ -99,6 +115,8 @@ namespace sph
 
 	std::pair<std::string, std::string> OpenGLShader::PreProcessShaderSource(const std::string& _shaderSource)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		static constexpr const char* typeTokenVertex = "#type vertex";
 		static constexpr const char* typeTokenFragment = "#type fragment";
 
@@ -117,6 +135,8 @@ namespace sph
 
 	uint32_t OpenGLShader::CompileShader(uint32_t _type, const std::string& _source)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		GLuint colorShader = glCreateShader(_type);
 
 		const GLchar* source = _source.c_str();
@@ -149,6 +169,8 @@ namespace sph
 
 	uint32_t OpenGLShader::LinkProgram(uint32_t _vertexShader, uint32_t _fragmentShader)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		GLuint program = glCreateProgram();
 
 		// Attach the shaders to the program
@@ -186,6 +208,8 @@ namespace sph
 #	pragma region SetUniforms
 	void OpenGLShader::UploadUniformInt(const std::string& _name, int _value)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glUniform1i(GetUniformLocation(_name), _value);
 	}
 

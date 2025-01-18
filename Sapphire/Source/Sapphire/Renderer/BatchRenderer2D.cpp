@@ -25,12 +25,14 @@ namespace sph
 
 	BatchRenderer2D::~BatchRenderer2D()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ASSERT(m_quadVertexBufferBase == nullptr, "BatchRenderer: Shutdown must be called before destroy the renderer!");
 	}
 
 	void BatchRenderer2D::Init()
 	{
-		PROFILE_FUNCTION();
+		SPH_PROFILE_FUNCTION();
 		RenderCommand::Init();
 
 		// Vertex Array Creattion
@@ -89,12 +91,16 @@ namespace sph
 
 	void BatchRenderer2D::Shutdown()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		delete[] m_quadVertexBufferBase;
 		m_quadVertexBufferBase = nullptr;
 	}
 
 	void BatchRenderer2D::BeginScene(const OrthographicCamera& _camera)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_vertexArray->Bind();
 		m_shader->Bind();
 		m_shader->SetMat4("u_viewProjection", _camera.GetViewProjectionMatrix());
@@ -104,6 +110,8 @@ namespace sph
 
 	void BatchRenderer2D::BeginScene(const glm::mat4& _viewProjection)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_vertexArray->Bind();
 		m_shader->Bind();
 		m_shader->SetMat4("u_viewProjection", _viewProjection);
@@ -113,6 +121,8 @@ namespace sph
 
 	void BatchRenderer2D::BeginScene(const Camera& _camera, const glm::mat4& _transform)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_vertexArray->Bind();
 		m_shader->Bind();
 		m_shader->SetMat4("u_viewProjection", _camera.GetProjection() * glm::inverse(_transform));
@@ -122,11 +132,15 @@ namespace sph
 
 	void BatchRenderer2D::EndScene()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		Flush();
 	}
 
 	void BatchRenderer2D::Flush()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (m_quadIndexCount == 0) { return; }
 
 		//// Bind all the textures
@@ -145,6 +159,8 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		CheckBatchState();
 
 		float textureIndex = 0.0f;
@@ -155,6 +171,8 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		CheckBatchState();
 
 		float textureIndex = SubmitTexture(_texture);
@@ -166,6 +184,8 @@ namespace sph
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		CheckBatchState();
 
 		float textureIndex = SubmitTexture(_subTexture->GetTexture());
@@ -177,6 +197,8 @@ namespace sph
 
 	void BatchRenderer2D::DrawSprite(const Sprite& _sprite)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		CheckBatchState();
 
 		float textureIndex = SubmitTexture(_sprite.GetTexture());
@@ -186,11 +208,15 @@ namespace sph
 
 	Ref<Renderer> BatchRenderer2D::Create()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		return CreateRef<BatchRenderer2D>();
 	}
 
 	void BatchRenderer2D::InitShader()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		int32_t samplers[s_maxTextureSlots] = { 0 };
 		for (int32_t i = 0; i < s_maxTextureSlots; i++)
 		{
@@ -204,6 +230,8 @@ namespace sph
 
 	void BatchRenderer2D::CheckBatchState()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (m_quadIndexCount >= s_maxIndices)
 		{
 			Flush();
@@ -212,6 +240,8 @@ namespace sph
 
 	void BatchRenderer2D::ResetBatchStates()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_quadIndexCount = 0;
 		m_quadVertexBufferPointer = m_quadVertexBufferBase;
 		m_textureSlotIndex = 1;
@@ -219,6 +249,8 @@ namespace sph
 
 	void BatchRenderer2D::UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		constexpr uint32_t vertexCount = 4;
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), _position) *
@@ -240,6 +272,8 @@ namespace sph
 
 	void BatchRenderer2D::UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		constexpr uint32_t vertexCount = 4;
 
 		for (uint32_t i = 0; i < vertexCount; i++)
@@ -257,6 +291,8 @@ namespace sph
 
 	float BatchRenderer2D::SubmitTexture(const Ref<Texture2D>& _texture)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		float textureIndex = 0.0f;
 		for (uint32_t i = 1; i < m_textureSlotIndex; i++)
 		{

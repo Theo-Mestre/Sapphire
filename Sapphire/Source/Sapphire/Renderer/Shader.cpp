@@ -11,6 +11,8 @@ namespace sph
 {
 	Ref<Shader> Shader::Create(const std::string& _filePath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
@@ -25,6 +27,8 @@ namespace sph
 	}
 	Ref<Shader> Shader::Create(const std::string&  _name, const std::string& _vertexSource, const std::string& _fragmentSource)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
@@ -41,17 +45,25 @@ namespace sph
 
 	void ShaderLibrary::AddShader(const sph::Ref<Shader>& _shader)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ASSERT(_shader->GetName() != "", "Shader have no name!")
 
 		m_shaders[_shader->GetName()] = _shader;
 	}
+
 	void ShaderLibrary::LoadShader(const std::string& _filePath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		sph::Ref<Shader> colorShader(Shader::Create(_filePath));
 		AddShader(colorShader);
 	}
+
 	sph::Ref<Shader> ShaderLibrary::GetShader(const std::string& _name)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (Exists(_name))
 		{
 			return m_shaders[_name];
@@ -60,8 +72,11 @@ namespace sph
 		ASSERT(false, "Shader " + _name + " not found!");
 		return nullptr;
 	}
+
 	void ShaderLibrary::RemoveShader(const std::string& _name)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (Exists(_name))
 		{
 			m_shaders.erase(_name);
@@ -70,10 +85,15 @@ namespace sph
 
 	void ShaderLibrary::RemoveShader(const sph::Ref<Shader>& _shader)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		RemoveShader(_shader->GetName());
 	}
+
 	bool ShaderLibrary::Exists(const std::string& _name) const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		return m_shaders.find(_name) != m_shaders.end();
 	}
 }

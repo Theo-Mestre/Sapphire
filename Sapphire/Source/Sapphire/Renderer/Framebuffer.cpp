@@ -9,6 +9,8 @@ namespace sph
 {
 	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& _spec)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:

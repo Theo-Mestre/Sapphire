@@ -27,4 +27,6 @@
 #include <imgui.h>
 #include <implot.h>
 #pragma warning(pop)
+
+#include "Sapphire/Profiling/Profiler.h"
 #endif

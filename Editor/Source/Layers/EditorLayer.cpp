@@ -15,6 +15,8 @@ namespace sph
 
 	void EditorLayer::OnAttach()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		// Camera
 		ASSERT(m_camera != nullptr, "Camera is not set!");
 		m_cameraController = CreateScope<OrthographicCameraController>(m_camera, true);
@@ -45,10 +47,13 @@ namespace sph
 
 	void EditorLayer::OnDetach()
 	{
+		SPH_PROFILE_FUNCTION();
 	}
 
 	void EditorLayer::OnUpdate(DeltaTime _dt)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_cameraController->OnUpdate(_dt);
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
@@ -57,6 +62,8 @@ namespace sph
 
 	void EditorLayer::OnRender(const Ref<Renderer>& _renderer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_framebuffer->Bind();
 		m_framebuffer->Clear();
 		_renderer->BeginScene(*m_camera);
@@ -74,6 +81,8 @@ namespace sph
 
 	void EditorLayer::OnImGuiRender()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (m_enableDocking)
 		{
 			static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
@@ -161,6 +170,8 @@ namespace sph
 
 	void EditorLayer::OnEvent(Event& _event)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_cameraController->OnEvent(_event);
 
 		EventDispatcher dispatcher(_event);
@@ -176,6 +187,8 @@ namespace sph
 
 	void EditorLayer::OnRenderViewport()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
 		ImGui::Begin("Viewport");

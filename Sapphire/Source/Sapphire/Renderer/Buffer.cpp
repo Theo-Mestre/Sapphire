@@ -10,6 +10,8 @@ namespace sph
 {
 	uint32_t ShaderDataTypeSize(ShaderDataType _type)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (_type)
 		{
 		case ShaderDataType::Float:		return 4;
@@ -42,6 +44,7 @@ namespace sph
 		, offset(0)
 		, normalized(false)
 	{
+		SPH_PROFILE_FUNCTION();
 	}
 
 	BufferElement::BufferElement(ShaderDataType _type, const std::string& _name, bool _normalized)
@@ -51,10 +54,13 @@ namespace sph
 		, offset(0)
 		, normalized(_normalized)
 	{
+		SPH_PROFILE_FUNCTION();
 	}
 
 	uint32_t BufferElement::GetComponentCount() const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (type)
 		{
 		case ShaderDataType::Float:		return 1;
@@ -82,17 +88,23 @@ namespace sph
 		: m_elements()
 		, m_stride(0)
 	{
+		SPH_PROFILE_FUNCTION();
+
 	}
 
 	BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& _elements)
 		: m_elements(_elements)
 		, m_stride(0)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		CalculateOffsetsAndStride();
 	}
 
 	void BufferLayout::CalculateOffsetsAndStride()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_stride = 0;
 		for (auto& element : m_elements)
 		{
@@ -103,6 +115,8 @@ namespace sph
 
 	Ref<VertexBuffer> VertexBuffer::Create(uint32_t _size)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
@@ -116,6 +130,8 @@ namespace sph
 
 	Ref<VertexBuffer> VertexBuffer::Create(const void* _data, uint32_t _size)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:
@@ -129,6 +145,8 @@ namespace sph
 
 	Ref<IndexBuffer> IndexBuffer::Create(const uint32_t* _data, uint16_t _count)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:

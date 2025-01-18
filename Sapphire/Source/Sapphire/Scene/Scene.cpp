@@ -9,19 +9,27 @@ namespace sph
 {
 	Scene::Scene()
 	{
+		SPH_PROFILE_FUNCTION();
+
 	}
 
 	Scene::~Scene()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_registry.clear();
 	}
 
 	void Scene::OnUpdate(DeltaTime _dt)
 	{
+		SPH_PROFILE_FUNCTION();
+
 	}
 
 	void Scene::OnRender(const Ref<Renderer>& _renderer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		Camera* camera = nullptr;
 		glm::mat4* cameraTransform;
 
@@ -57,6 +65,8 @@ namespace sph
 
 	Entity Scene::CreateEntity(const std::string& _name)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		Entity entity(m_registry.create(), this);
 		entity.AddComponent<TransformComponent>();
 		entity.AddComponent<TagComponent>(_name.empty() ? "Entity" : _name);

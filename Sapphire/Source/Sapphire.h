@@ -41,7 +41,6 @@
 #include "Sapphire/Core/OrthographicCameraController.h"
 
 #include "Sapphire/Profiling/Profiler.h"
-#include "Sapphire/Profiling/Timer.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

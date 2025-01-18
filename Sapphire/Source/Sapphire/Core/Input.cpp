@@ -10,6 +10,8 @@ static GLFWwindow* s_window;
 
 bool sph::Input::IsKeyPressed(int keycode)
 {
+	SPH_PROFILE_FUNCTION();
+
 	auto state = glfwGetKey(s_window, keycode);
 
 	return state == GLFW_PRESS || state == GLFW_REPEAT;
@@ -17,6 +19,8 @@ bool sph::Input::IsKeyPressed(int keycode)
 
 bool sph::Input::IsMouseButtonPressed(int _button)
 {
+	SPH_PROFILE_FUNCTION();
+
 	auto state = glfwGetMouseButton(s_window, _button);
 
 	return state == GLFW_PRESS;
@@ -24,6 +28,8 @@ bool sph::Input::IsMouseButtonPressed(int _button)
 
 glm::vec2 sph::Input::GetMousePosition()
 {
+	SPH_PROFILE_FUNCTION();
+
 	double x, y;
 	glfwGetCursorPos(s_window, &x, &y);
 	return glm::vec2(x, y);
@@ -31,15 +37,21 @@ glm::vec2 sph::Input::GetMousePosition()
 
 float sph::Input::GetMouseX()
 {
+	SPH_PROFILE_FUNCTION();
+
 	return GetMousePosition().x;
 }
 
 float sph::Input::GetMouseY()
 {
+	SPH_PROFILE_FUNCTION();
+
 	return GetMousePosition().y;
 }
 
 void sph::Input::Init(Window* _window)
 {
+	SPH_PROFILE_FUNCTION();
+
 	s_window = static_cast<GLFWwindow*>(_window->GetNativeWindow());
 }

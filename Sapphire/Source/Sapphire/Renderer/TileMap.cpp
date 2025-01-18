@@ -8,7 +8,6 @@
 
 namespace sph
 {
-
 	TileMap::TileMap()
 		: m_tileTextures()
 		, m_textureAtlases()
@@ -16,16 +15,18 @@ namespace sph
 		, m_cellSize(0)
 		, m_cellCount(0)
 	{
-
+		SPH_PROFILE_FUNCTION();
 	}
 
 	TileMap::~TileMap()
 	{
-
+		SPH_PROFILE_FUNCTION();
 	}
 
 	void TileMap::LoadTileMap(uint32_t _textureIndex, const std::string& _path)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		// Check if cell size and texture are set
 		if (m_cellSize.x == 0 || m_cellSize.y == 0)
 		{
@@ -96,6 +97,8 @@ namespace sph
 
 	void TileMap::AddTextureAtlas(uint32_t _textureIndex, const sph::Ref<sph::Texture2D>& _textureAtlas)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (m_textureAtlases.size() <= _textureIndex)
 		{
 			m_textureAtlases.resize(_textureIndex + 1);
@@ -106,6 +109,8 @@ namespace sph
 
 	sph::Ref<TileMap> TileMap::Create(const std::string& _configPath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		sph::Ref<TileMap> tileMap = sph::CreateRef<TileMap>();
 
 		auto mapPaths = tileMap->LoadConfig(_configPath);
@@ -126,6 +131,8 @@ namespace sph
 
 	std::vector<std::string> TileMap::LoadConfig(const std::string& _configPath)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		std::ifstream file(_configPath);
 
 		if (!file.is_open())

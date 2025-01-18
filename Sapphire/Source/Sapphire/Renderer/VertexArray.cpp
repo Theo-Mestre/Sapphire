@@ -10,6 +10,8 @@ namespace sph
 {
 	sph::Ref<VertexArray> VertexArray::Create()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		switch (RendererAPI::GetAPI())
 		{
 		case RendererAPI::API::None:

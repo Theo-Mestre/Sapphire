@@ -12,6 +12,8 @@ namespace sph
 		, m_viewMatrix(1.0f)
 		, m_viewProjectionMatrix(1.0f)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		RecalculateViewMatrix();
 	}
 
@@ -25,11 +27,15 @@ namespace sph
 		, m_rotation(0.0f)
 		, m_scale(1.0f)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		RecalculateViewMatrix();
 	}
 
 	void OrthographicCamera::RecalculateViewMatrix()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_position) *
 			glm::rotate(glm::mat4(1.0f), glm::radians(m_rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)) *
 			glm::scale(glm::mat4(1.0f), glm::vec3(m_scale));
@@ -40,6 +46,8 @@ namespace sph
 
 	glm::vec2 OrthographicCamera::WorldToScreen(const glm::vec3& _point) const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glm::vec4 viewPoint = m_viewMatrix * glm::vec4(_point, 1.0f);
 
 		glm::vec4 projectedPoint = m_projectionMatrix * viewPoint;
@@ -53,6 +61,8 @@ namespace sph
 
 	glm::vec3 OrthographicCamera::ScreenToWorld(const glm::vec2& _point) const
 	{
+		SPH_PROFILE_FUNCTION();
+
 		glm::vec4 ndcPoint =
 		{
 			(2.0f * _point.x) / m_viewportSize.x - 1.0f,
@@ -69,6 +79,8 @@ namespace sph
 
 	Ref<OrthographicCamera> OrthographicCamera::Create(float _left, float _right, float _bottom, float _top)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		return CreateRef<OrthographicCamera>(_left, _right, _bottom, _top);
 	}
 }

@@ -21,14 +21,20 @@ namespace sph
 		: Layer("ImGuiLayer")
 		, m_window(_window)
 	{
+		SPH_PROFILE_FUNCTION();
+
 	}
 
 	ImGuiLayer::~ImGuiLayer()
 	{
+		SPH_PROFILE_FUNCTION();
+
 	}
 
 	void ImGuiLayer::OnAttach()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -65,6 +71,8 @@ namespace sph
 
 	void ImGuiLayer::OnDetach()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImPlot::DestroyContext();
@@ -73,10 +81,14 @@ namespace sph
 
 	void ImGuiLayer::OnUpdate(DeltaTime _dt)
 	{
+		SPH_PROFILE_FUNCTION();
+
 	}
 
 	void ImGuiLayer::OnEvent(Event& _event)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (!m_isViewportFocused || !m_isViewportHovered)
 		{
 			auto io = ImGui::GetIO();
@@ -87,6 +99,8 @@ namespace sph
 
 	void ImGuiLayer::OnImGuiRender()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ImGui::Begin("Settings");
 
 		ImGui::Text("Renderer2D Stats:");
@@ -99,12 +113,17 @@ namespace sph
 
 	void ImGuiLayer::Begin()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
+
 	void ImGuiLayer::End()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		io.DisplaySize = ImVec2((float)m_window.GetWidth(), (float)m_window.GetHeight());
 

@@ -5,10 +5,13 @@ namespace sph
 {
 	LayerStack::LayerStack()
 	{
+		SPH_PROFILE_FUNCTION();
 	}
 
 	LayerStack::~LayerStack()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		for (Layer* layer : m_layers)
 		{
 			layer->OnDetach();
@@ -25,12 +28,16 @@ namespace sph
 
 	void LayerStack::PushOverlay(Layer* _overlay)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_layers.emplace_back(_overlay);
 		_overlay->OnAttach();
 	}
 
 	void LayerStack::PopLayer(Layer* _layer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		auto it = std::find(m_layers.begin(), m_layers.begin() + m_layerInsertIndex, _layer);
 		if (it != m_layers.begin() + m_layerInsertIndex)
 		{
@@ -42,6 +49,8 @@ namespace sph
 
 	void LayerStack::PopOverlay(Layer* _overlay)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		auto it = std::find(m_layers.begin() + m_layerInsertIndex, m_layers.end(), _overlay);
 		if (it != m_layers.end())
 		{
@@ -52,6 +61,8 @@ namespace sph
 
 	void LayerStack::Clear()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		for (Layer* layer : m_layers)
 		{
 			layer->OnDetach();

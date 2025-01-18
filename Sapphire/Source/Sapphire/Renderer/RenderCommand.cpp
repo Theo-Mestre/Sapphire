@@ -9,6 +9,8 @@ namespace sph
 
 	RenderCommand::~RenderCommand()
 	{
+		SPH_PROFILE_FUNCTION();
+
 		delete s_rendererAPI;
 	}
 }

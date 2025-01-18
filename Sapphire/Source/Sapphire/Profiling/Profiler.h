@@ -1,59 +1,62 @@
-#ifndef SPH_PROFILING_PROFILER_H
-#define SPH_PROFILING_PROFILER_H
-
-#include "Sapphire/Profiling/Timer.h"
+#pragma once
+#include <string>
 
 namespace sph
 {
-	namespace Profiling
+	struct ProfileResult
 	{
-		class Profiler
-		{
-		public:
-			Profiler();
-			~Profiler();
+		std::string Name;
+		int64_t Start;
+		int64_t End;
+		uint32_t ThreadID;
+	};
 
-			void AddResult(FrameData&& _result);
+	struct InstrumentationSession
+	{
+		std::string Name;
+	};
 
-			void StartFrame();
-			void EndFrame();
+	class Instrumentor
+	{
+	public:
+		static void Init();
+		static void Shutdown();
 
-			void SaveData();
+		static void BeginSession(const std::string& _name, const std::string& _filepath = "Results.json");
+		static void EndSession();
 
-			static Profiler& Instance()
-			{
-				static Profiler instance;
-				return instance;
-			}
-		private:
-			std::vector<FrameData> m_frameResults;
-			std::ofstream m_file;
+		static void WriteProfile(const ProfileResult& _result);
+		static void WriteHeader();
+		static void WriteFooter();
+	};
 
-			uint32_t m_frameNumber = 0;
-		};
-	}
+	class InstrumentationTimer
+	{
+	public:
+		InstrumentationTimer(const char* name);
+		~InstrumentationTimer();
+
+		void Stop();
+	private:
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimepoint;
+		const char* m_name;
+		bool m_stopped;
+	};
 }
+#define SPH_PROFILE_ENABLED true
 
-#ifdef SPH_PROFILING_ENABLED
-#define PROFILE_SCOPE(name) ::sph::Profiling::ScopedTimer timer##__LINE__(name, [&](::sph::Profiling::FrameData&& result) { ::sph::Profiling::Profiler::Instance().AddResult(std::move(result)); })
-#define PROFILE_FUNCTION() PROFILE_SCOPE(__FUNCSIG__)
-
-#define PROFILE_BEGIN_FRAME() ::sph::Profiling::Profiler::Instance().StartFrame()
-#define PROFILE_END_FRAME() ::sph::Profiling::Profiler::Instance().EndFrame()
-
-#define PROFILE_SAVE_DATA() ::sph::Profiling::Profiler::Instance().SaveData()
-
+#if SPH_PROFILE_ENABLED
+#define SPH_INIT_PROFILING() ::sph::Instrumentor::Init()
+#define SPH_SHUTDOWN_PROFILING() ::sph::Instrumentor::Shutdown()
+#define SPH_PROFILE_BEGIN_SESSION(name, filepath) ::sph::Instrumentor::BeginSession(name, "Profiling/" filepath)
+#define SPH_PROFILE_END_SESSION() ::sph::Instrumentor::EndSession()
+#define SPH_PROFILE_SCOPE(name) ::sph::InstrumentationTimer timer##__LINE__(name);
+#define SPH_PROFILE_FUNCTION() SPH_PROFILE_SCOPE(__FUNCSIG__)
 #else
-#define PROFILE_SCOPE(name)
-#define PROFILE_FUNCTION() 
-#define PROFILE_BEGIN_SESSION(name)
-#define PROFILE_END_SESSION() 
-#define PROFILE_START_RECORDING() 
-#define PROFILE_STOP_RECORDING() 
-#define PROFILE_BEGIN_FRAME() 
-#define PROFILE_END_FRAME() 
-#define PROFILE_GET_FRAME_NUMBER() 
-#define PROFILE_GET_SESSION_NAME() 
-#define PROFILE_SAVE_DATA() 
-#endif
+#define SPH_INIT_PROFILING()
+#define SPH_SHUTDOWN_PROFILING()
+#define SPH_PROFILE_BEGIN_SESSION(name, filepath)
+#define SPH_PROFILE_END_SESSION()
+#define SPH_PROFILE_SCOPE(name)
+#define SPH_PROFILE_FUNCTION()
 #endif

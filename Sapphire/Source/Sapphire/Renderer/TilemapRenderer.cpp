@@ -12,6 +12,8 @@ namespace sph
 {
 	void TilemapRenderer::DrawTileMap(const Ref<TileMap>& _tilemap)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		const glm::vec2 mapSize = _tilemap->GetCellCount();
 		const glm::vec2 tileSize = _tilemap->GetCellSize();
 		const glm::vec2 mapOffest = tileSize * (mapSize / 2.0f);

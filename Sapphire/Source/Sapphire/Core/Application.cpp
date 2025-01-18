@@ -41,8 +41,6 @@ namespace sph
 
 		while (m_isRunning)
 		{
-			PROFILE_BEGIN_FRAME();
-
 			Time::Update();
 
 			if (m_minimized == false)
@@ -80,8 +78,6 @@ namespace sph
 					layer->OnRender(m_renderer);
 				}
 			}
-
-			PROFILE_END_FRAME();
 		}
 	}
 
@@ -92,29 +88,37 @@ namespace sph
 
 	void Application::PushLayer(Layer* _layer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		_layer->SetApplication(this);
 		m_layerStack.PushLayer(_layer);
 	}
 
 	void Application::PushOverlay(Layer* _overlay)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		_overlay->SetApplication(this);
 		m_layerStack.PushOverlay(_overlay);
 	}
 
 	void Application::PopLayer(Layer* _layer)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_layerStack.PopLayer(_layer);
 	}
 
 	void Application::PopOverlay(Layer* _overlay)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_layerStack.PopOverlay(_overlay);
 	}
 
 	void Application::Init()
 	{
-		PROFILE_FUNCTION();
+		SPH_PROFILE_FUNCTION();
 
 		// Initialize window
 		WindowProperties props;
@@ -143,7 +147,8 @@ namespace sph
 
 	void Application::OnEvent(Event& _event)
 	{
-		PROFILE_FUNCTION();
+		SPH_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(_event);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_METHOD(Application::OnWindowClosed));
 		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_METHOD(Application::OnWindowResize));
@@ -160,12 +165,16 @@ namespace sph
 
 	bool Application::OnWindowClosed(sph::WindowCloseEvent& _event)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		m_isRunning = false;
 		return true;
 	}
 
 	bool Application::OnWindowResize(sph::WindowResizeEvent& _event)
 	{
+		SPH_PROFILE_FUNCTION();
+
 		if (_event.GetWidth() == 0 || _event.GetHeight() == 0)
 		{
 			m_minimized = true;

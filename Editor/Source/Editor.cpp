@@ -11,6 +11,8 @@ namespace sph
 	public:
 		virtual void Init() override
 		{
+			SPH_PROFILE_FUNCTION();
+
 			SetRenderer(sph::BatchRenderer2D::Create());
 			Application::Init();
 
