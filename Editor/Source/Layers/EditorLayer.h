@@ -30,7 +30,6 @@ namespace sph
 
 	private:
 		void OnRenderViewport();
-
 	private:
 		Ref<OrthographicCamera> m_camera = nullptr;
 		Scope<OrthographicCameraController> m_cameraController = nullptr;
@@ -40,7 +39,9 @@ namespace sph
 		Ref<UniformBuffer> m_appDataUniformBuffer = nullptr;
 		Ref<Framebuffer> m_framebuffer = nullptr;
 
-		Entity m_cameraEntity;
+		Entity m_mainCamera;
+		Entity m_secondCamera;
+		bool m_primaryCamera = true;
 
 		Ref<Texture2D> m_texture = nullptr;
 

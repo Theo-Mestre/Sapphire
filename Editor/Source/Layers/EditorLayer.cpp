@@ -17,10 +17,6 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		// Camera
-		ASSERT(m_camera != nullptr, "Camera is not set!");
-		m_cameraController = CreateScope<OrthographicCameraController>(m_camera, true);
-
 		// Renderer
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 
@@ -35,14 +31,15 @@ namespace sph
 		entity.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 		auto& transform = entity.GetComponent<TransformComponent>();
-		transform.Transform = glm::translate(glm::mat4(1.0f), { -300.0f, -300.0f, 0.0f }) *
-			glm::scale(glm::mat4(1.0f), { 100.0f, 100.0f, 0.0f });
+		transform.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
 
-
-		m_cameraEntity = Entity::Create(m_currentScene, "Camera");
-		m_cameraEntity.AddComponent<CameraComponent>(glm::ortho(-640.0f, 640.0f, -360.f, 360.f));
-		auto& cameraTransform = m_cameraEntity.GetComponent<TransformComponent>();
-		cameraTransform.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
+		m_mainCamera = Entity::Create(m_currentScene, "Main Camera");
+		m_mainCamera.AddComponent<CameraComponent>();
+		m_mainCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
+		
+		m_secondCamera = Entity::Create(m_currentScene, "Second Camera");
+		m_secondCamera.AddComponent<CameraComponent>().IsPrimary = false;
+		m_secondCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 10.0f, 10.0f, 0.0f });
 	}
 
 	void EditorLayer::OnDetach()
@@ -54,7 +51,14 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		m_cameraController->OnUpdate(_dt);
+		FramebufferSpecification spec = m_framebuffer->GetSpecification();
+		if (m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&
+			(spec.Width != m_viewportSize.x || spec.Height != m_viewportSize.y))
+		{
+			m_framebuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+
+			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		}
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
 		m_currentScene->OnUpdate(_dt);
@@ -66,14 +70,8 @@ namespace sph
 
 		m_framebuffer->Bind();
 		m_framebuffer->Clear();
-		_renderer->BeginScene(*m_camera);
-		{
-			_renderer->DrawQuad({ 0.0f, 0.0f, 0.0f }, { 100.0f, 100.0f }, m_texture);
 
-			ASSERT(m_currentScene != nullptr, "Scene is not set!");
-		}
-		_renderer->EndScene();
-
+		ASSERT(m_currentScene != nullptr, "Scene is not set!");
 		m_currentScene->OnRender(_renderer);
 
 		m_framebuffer->Unbind();
@@ -135,27 +133,53 @@ namespace sph
 			// Debug // Entity Editing
 			ImGui::Begin("Debug");
 			{
-				{
-					auto cameraView = m_currentScene->Registry().view<TransformComponent, CameraComponent>();
-					for (auto entity : cameraView)
+				{ // Camera transform
 					{
-						auto [transform, camera] = cameraView.get<TransformComponent, CameraComponent>(entity);
-						ImGui::Text("Camera Entity");
-						ImGui::Text("Entity ID: %d", (uint32_t)entity);
-						ImGui::DragFloat3("Position", glm::value_ptr(transform.Transform[3]), 0.1f);
-						ImGui::DragFloat3("Scale", glm::value_ptr(transform.Transform[2]), 0.1f);
+						auto& camera = m_mainCamera.GetComponent<CameraComponent>().Camera;
+						float orthoSize = camera.GetOrthographicSize();
+
+						ImGui::Text("Entity ID: %d", (uint32_t)m_mainCamera);
+						ImGui::Text("Entity Tag: %s", m_mainCamera.GetComponent<TagComponent>().Tag.c_str());
+						ImGui::DragFloat3("Transform", glm::value_ptr(m_mainCamera.GetComponent<TransformComponent>().Transform[3]), 0.1f);
+
+						if (ImGui::DragFloat("Ortho Size", &orthoSize))
+							camera.SetOrthographicSize(orthoSize);
+
+						ImGui::Separator();
+					}
+
+					{
+						auto& camera = m_secondCamera.GetComponent<CameraComponent>().Camera;
+						float orthoSize = camera.GetOrthographicSize();
+
+						ImGui::Text("Entity ID: %d", (uint32_t)m_secondCamera);
+						ImGui::Text("Entity Tag: %s", m_secondCamera.GetComponent<TagComponent>().Tag.c_str());
+						ImGui::DragFloat3("Transform", glm::value_ptr(m_secondCamera.GetComponent<TransformComponent>().Transform[3]), 0.1f);
+
+						if (ImGui::DragFloat("Ortho Size", &orthoSize))
+							camera.SetOrthographicSize(orthoSize);
+
+						ImGui::Separator();
+					}
+
+					if (ImGui::Checkbox("Camera A", &m_primaryCamera))
+					{
+						m_mainCamera.GetComponent<CameraComponent>().IsPrimary = m_primaryCamera;
+						m_secondCamera.GetComponent<CameraComponent>().IsPrimary = !m_primaryCamera;
 					}
 				}
+
 				{
+					ImGui::Separator();
 					auto view = m_currentScene->Registry().view<TransformComponent, SpriteRendererComponent, TagComponent>();
 					for (auto entity : view)
 					{
 						auto [transform, sprite, tag] = view.get<TransformComponent, SpriteRendererComponent, TagComponent>(entity);
-						ImGui::Text("Entity ID: %d", (uint32_t)entity);
-						ImGui::Text("Entity Tag: %s", tag.Tag.c_str());
+
+						ImGui::Text("ID: %d - Tag: %s", (uint32_t)entity, tag.Tag.c_str());
 						ImGui::DragFloat3("Position", glm::value_ptr(transform.Transform[3]), 0.1f);
-						ImGui::DragFloat3("Scale", glm::value_ptr(transform.Transform[2]), 0.1f);
 						ImGui::ColorEdit4("Color", &sprite.Color.r);
+						ImGui::Separator();
 					}
 				}
 			}
@@ -171,18 +195,6 @@ namespace sph
 	void EditorLayer::OnEvent(Event& _event)
 	{
 		SPH_PROFILE_FUNCTION();
-
-		m_cameraController->OnEvent(_event);
-
-		EventDispatcher dispatcher(_event);
-		dispatcher.Dispatch<KeyPressedEvent>([&](KeyPressedEvent& _event)->bool
-			{
-				if (_event.GetKeyCode() == KeyCode::U)
-				{
-					EnableDocking(!m_enableDocking);
-				}
-				return false;
-			});
 	}
 
 	void EditorLayer::OnRenderViewport()
@@ -197,17 +209,8 @@ namespace sph
 			m_imguiLayer->SetViewportHovered(ImGui::IsWindowHovered());
 
 			auto viewportSize = ImGui::GetContentRegionAvail();
-			if (m_viewportSize != *((glm::ivec2*)&viewportSize)
-				&& viewportSize.x > 0 && viewportSize.y > 0)
-			{
-				m_viewportSize.x = (float)viewportSize.x;
-				m_viewportSize.y = (float)viewportSize.y;
-
-
-				m_cameraController->SetCameraProjection(-m_viewportSize.x / 2.0f, m_viewportSize.x / 2.0f, -m_viewportSize.y / 2.0f, m_viewportSize.y / 2.0f);
-				m_cameraEntity.GetComponent<CameraComponent>().Camera.SetProjection(glm::ortho(-m_viewportSize.x / 2.0f, m_viewportSize.x / 2.0f, -m_viewportSize.y / 2.0f, m_viewportSize.y / 2.0f));
-				m_framebuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			}
+			m_viewportSize.x = viewportSize.x;
+			m_viewportSize.y = viewportSize.y;
 
 			uint32_t textureID = m_framebuffer->GetTextureAttachment()->GetRendererID();
 			ImGui::Image((void*)textureID, viewportSize, ImVec2(0, 1), ImVec2(1, 0));

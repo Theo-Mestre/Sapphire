@@ -24,8 +24,13 @@ namespace sph
 		Entity CreateEntity(const std::string& _name = "");
 
 		entt::registry& Registry() { return m_registry; }
+
+		void OnViewportResize(uint32_t _width, uint32_t _height);
 	private:
 		entt::registry m_registry;
+
+		uint32_t m_viewportWidth = 0;
+		uint32_t m_viewportHeight = 0;
 
 		friend class Entity;
 	};

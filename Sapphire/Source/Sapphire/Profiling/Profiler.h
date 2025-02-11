@@ -19,6 +19,9 @@ namespace sph
 	class Instrumentor
 	{
 	public:
+		Instrumentor(const Instrumentor&) = delete;
+		Instrumentor(Instrumentor&&) = delete;
+
 		static void Init();
 		static void Shutdown();
 
@@ -50,7 +53,7 @@ namespace sph
 #define SPH_SHUTDOWN_PROFILING() ::sph::Instrumentor::Shutdown()
 #define SPH_PROFILE_BEGIN_SESSION(name, filepath) ::sph::Instrumentor::BeginSession(name, "Profiling/" filepath)
 #define SPH_PROFILE_END_SESSION() ::sph::Instrumentor::EndSession()
-#define SPH_PROFILE_SCOPE(name) ::sph::InstrumentationTimer timer##__LINE__(name);
+#define SPH_PROFILE_SCOPE(name) ::sph::InstrumentationTimer timer##__LINE__(name)
 #define SPH_PROFILE_FUNCTION() SPH_PROFILE_SCOPE(__FUNCSIG__)
 #else
 #define SPH_INIT_PROFILING()

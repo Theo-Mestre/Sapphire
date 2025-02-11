@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Sapphire/Core/Core.h"
-#include "Sapphire/Renderer/Camera.h"
+#include "Sapphire/Scene/SceneCamera.h"
 
 namespace sph
 {
@@ -54,14 +54,12 @@ namespace sph
 
 	struct CameraComponent
 	{
-		sph::Camera Camera;
+		SceneCamera Camera;
+		bool IsPrimary = true;
+		bool IsFixedAspectRatio = false;
 
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
-		CameraComponent(const sph::Camera& _camera)
-			: Camera(_camera)
-		{
-		}
 
 		operator sph::Camera& () { return Camera; }
 		operator const sph::Camera& () const { return Camera; }

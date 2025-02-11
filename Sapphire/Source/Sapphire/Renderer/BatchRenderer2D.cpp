@@ -152,9 +152,21 @@ namespace sph
 
 		// Draw the vertices
 		RenderCommand::DrawIndexed(m_vertexArray, m_quadIndexCount);
-		Renderer2D::Stats::DrawCalls++;
+		Renderer::Stats::DrawCalls++;
 
 		ResetBatchStates();
+	}
+
+	void BatchRenderer2D::DrawQuad(const glm::mat4& _transform, const glm::vec4& _color)
+	{
+		SPH_PROFILE_FUNCTION();
+
+		CheckBatchState();
+
+		float textureIndex = 0.0f;
+		UpdateCurrentQuadVertex(_transform, _color, textureIndex, 1.0f);
+
+		Renderer2D::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)

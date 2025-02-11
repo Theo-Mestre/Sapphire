@@ -25,6 +25,7 @@ namespace sph
 		virtual void BeginScene(const Camera& _camera, const glm::mat4& _transform) = 0;
 		virtual void EndScene() = 0;
 
+		virtual void DrawQuad(const glm::mat4& _transform, const glm::vec4& _color) = 0;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color) = 0;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) = 0;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) = 0;

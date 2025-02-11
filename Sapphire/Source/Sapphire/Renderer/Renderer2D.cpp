@@ -100,6 +100,20 @@ namespace sph
 
 	}
 
+	void Renderer2D::DrawQuad(const glm::mat4& _transform, const glm::vec4& _color)
+	{
+		SPH_PROFILE_FUNCTION();
+
+		m_shader->SetMat4("u_transform", _transform);
+		m_shader->SetFloat4("u_color", _color);
+
+		m_whiteTexture->Bind();
+		m_vertexArray->Bind();
+		RenderCommand::DrawIndexed(m_vertexArray);
+		Renderer::Stats::DrawCalls++;
+		Renderer::Stats::QuadCount++;
+	}
+
 	void Renderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)
 	{
 		SPH_PROFILE_FUNCTION();
@@ -203,5 +217,10 @@ namespace sph
 		RenderCommand::DrawIndexed(m_vertexArray);
 		Renderer::Stats::DrawCalls++;
 		Renderer::Stats::QuadCount++;
+	}
+
+	Ref<Renderer> Renderer2D::Create()
+	{
+		return CreateRef<Renderer2D>();
 	}
 }

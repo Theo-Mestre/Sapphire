@@ -19,7 +19,7 @@ namespace sph
 		inline const glm::mat4& GetProjection() const { return m_projection; }
 		inline void SetProjection(const glm::mat4& _projection) { m_projection = _projection; };
 
-	private:
+	protected:
 		glm::mat4 m_projection = glm::mat4(1.0f);
 	};
 
