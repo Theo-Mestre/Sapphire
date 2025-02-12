@@ -17,6 +17,36 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				transform[3][0] = rand() % 10 - 5.0f;
+			}
+
+			void OnDestroy()
+			{
+			}
+
+			void OnUpdate(DeltaTime ts)
+			{
+				auto& transform = GetComponent<TransformComponent>().Transform;
+
+				float speed = 5.0f;
+
+				if (Input::IsKeyPressed(KeyCode::A))
+					transform[3][0] -= speed * ts;
+				if (Input::IsKeyPressed(KeyCode::D))
+					transform[3][0] += speed * ts;
+				if (Input::IsKeyPressed(KeyCode::W))
+					transform[3][1] += speed * ts;
+				if (Input::IsKeyPressed(KeyCode::S))
+					transform[3][1] -= speed * ts;
+			}
+		};
+
 		// Renderer
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 
@@ -40,6 +70,7 @@ namespace sph
 		m_secondCamera = Entity::Create(m_currentScene, "Second Camera");
 		m_secondCamera.AddComponent<CameraComponent>().IsPrimary = false;
 		m_secondCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 10.0f, 10.0f, 0.0f });
+		m_secondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()

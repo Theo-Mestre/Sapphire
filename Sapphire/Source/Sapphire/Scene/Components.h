@@ -8,6 +8,7 @@
 
 #include "Sapphire/Core/Core.h"
 #include "Sapphire/Scene/SceneCamera.h"
+#include "Sapphire/Scene/ScriptableEntity.h"
 
 namespace sph
 {
@@ -63,6 +64,29 @@ namespace sph
 
 		operator sph::Camera& () { return Camera; }
 		operator const sph::Camera& () const { return Camera; }
+	};
+
+	struct NativeScriptComponent
+	{
+		ScriptableEntity* Instance = nullptr;
+
+		std::function<void()> InstantiateFunction;
+		std::function<void()> DestroyInstanceFunction;
+
+		std::function<void(ScriptableEntity*)> OnCreateFunction;
+		std::function<void(ScriptableEntity*)> OnDestroyFunction;
+		std::function<void(ScriptableEntity*, DeltaTime)> OnUpdateFunction;
+
+		template<typename T>
+		void Bind()
+		{
+			InstantiateFunction = [&]() { Instance = new T(); };
+			DestroyInstanceFunction = [&]() { delete (T*)Instance; Instance = nullptr; };
+
+			OnCreateFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnCreate(); };
+			OnDestroyFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnDestroy(); };
+			OnUpdateFunction = [](ScriptableEntity* _instance, DeltaTime _dt) { ((T*)_instance)->OnUpdate(_dt); };
+		}
 	};
 }
 #endif

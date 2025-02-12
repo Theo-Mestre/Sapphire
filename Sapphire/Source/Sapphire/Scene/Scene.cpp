@@ -23,6 +23,27 @@ namespace sph
 	void Scene::OnUpdate(DeltaTime _dt)
 	{
 		SPH_PROFILE_FUNCTION();
+
+		{
+			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+				{
+					if (!nsc.Instance)
+					{
+						nsc.InstantiateFunction();
+						nsc.Instance->m_Entity = Entity{ entity, this };
+
+						if (nsc.OnCreateFunction)
+						{
+							nsc.OnCreateFunction(nsc.Instance);
+						}
+					}
+
+					if (nsc.OnUpdateFunction)
+					{
+						nsc.OnUpdateFunction(nsc.Instance, _dt);
+					}
+				});
+		}
 	}
 
 	void Scene::OnRender(const Ref<Renderer>& _renderer)
@@ -30,8 +51,7 @@ namespace sph
 		SPH_PROFILE_FUNCTION();
 
 		Camera* camera = nullptr;
-		glm::mat4* cameraTransform;
-
+		glm::mat4* cameraTransform = nullptr;
 		{
 			auto view = m_registry.view<CameraComponent, TransformComponent>();
 
