@@ -18,7 +18,7 @@ namespace sph
 		TagComponent() = default;
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& _tag)
-			: Tag(_tag)
+			: Tag(_tag == "" ? "Default Entity" : _tag)
 		{
 		}
 	};
@@ -70,22 +70,20 @@ namespace sph
 	{
 		ScriptableEntity* Instance = nullptr;
 
-		std::function<void()> InstantiateFunction;
-		std::function<void()> DestroyInstanceFunction;
-
-		std::function<void(ScriptableEntity*)> OnCreateFunction;
-		std::function<void(ScriptableEntity*)> OnDestroyFunction;
-		std::function<void(ScriptableEntity*, DeltaTime)> OnUpdateFunction;
+		ScriptableEntity* (*InstanstiateScript)();
+		void (*DestroyScript)(NativeScriptComponent*);
 
 		template<typename T>
 		void Bind()
 		{
-			InstantiateFunction = [&]() { Instance = new T(); };
-			DestroyInstanceFunction = [&]() { delete (T*)Instance; Instance = nullptr; };
+			static_assert(std::is_base_of<ScriptableEntity, T>(), "T must derive from ScriptableEntity!");
 
-			OnCreateFunction = [](ScriptableEntity* _instance) { static_cast<T*>(_instance)->OnCreate(); };
-			OnDestroyFunction = [](ScriptableEntity* _instance) { static_cast<T*>(_instance)->OnDestroy(); };
-			OnUpdateFunction = [](ScriptableEntity* _instance, DeltaTime _dt) { static_cast<T*>(_instance)->OnUpdate(_dt); };
+			InstanstiateScript = []()->ScriptableEntity* { return static_cast<ScriptableEntity*>(new T()); };
+			DestroyScript = [](NativeScriptComponent* _comp)
+				{
+					delete _comp->Instance;
+					_comp->Instance = nullptr;
+				};
 		}
 	};
 }

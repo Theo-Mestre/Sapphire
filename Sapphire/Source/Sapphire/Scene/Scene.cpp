@@ -24,23 +24,16 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		m_registry.view<NativeScriptComponent>().each([=](auto _entity, auto& _script)
+		m_registry.view<NativeScriptComponent>().each([=](auto _entity, auto& _comp)
 			{
-				if (!_script.Instance)
+				if (!_comp.Instance)
 				{
-					_script.InstantiateFunction();
-					_script.Instance->m_Entity = Entity{ _entity, this };
-
-					if (_script.OnCreateFunction)
-					{
-						_script.OnCreateFunction(_script.Instance);
-					}
+					_comp.Instance = _comp.InstanstiateScript();
+					_comp.Instance->m_Entity = Entity{ _entity, this };
+					_comp.Instance->OnCreate();
 				}
 
-				if (_script.OnUpdateFunction)
-				{
-					_script.OnUpdateFunction(_script.Instance, _dt);
-				}
+				_comp.Instance->OnUpdate(_dt);
 			});
 	}
 

@@ -17,6 +17,15 @@ namespace sph
 
 		float GetOrthographicSize() const { return m_orthographicSize; }
 		void SetOrthographicSize(float size) { m_orthographicSize = size; RecalculateProjection(); }
+
+		float GetOrthographicNear() const { return m_orthographicNear; }
+		void SetOrthographicNear(float nearClip) { m_orthographicNear = nearClip; RecalculateProjection(); }
+
+		float GetOrthographicFar() const { return m_orthographicFar; }
+		void SetOrthographicFar(float farClip) { m_orthographicFar = farClip; RecalculateProjection(); }
+
+		float GetAspectRatio() const { return m_aspectRatio; }
+		void SetAspectRatio(float aspectRatio) { m_aspectRatio = aspectRatio; RecalculateProjection(); }
 	private:
 		void RecalculateProjection();
 	private:

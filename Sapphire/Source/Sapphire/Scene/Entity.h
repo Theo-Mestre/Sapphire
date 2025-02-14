@@ -42,16 +42,21 @@ namespace sph
 		{
 			ASSERT(HasComponent<T>(), "Entity does not have component!");
 			m_scene->m_registry.remove<T>(m_handle);
-		}
+		} 
+
+		bool IsValid() const;
+		entt::entity GetHandle() const;
 
 		operator bool() const { return m_handle != entt::null; }
-		operator entt::entity() const { return m_handle; }
+		operator uint32_t() const { return (uint32_t)m_handle; }
+		bool operator==(const Entity& _other) const;
+		bool operator!=(const Entity& _other) const;
 
 		static Entity Create(const Ref<Scene>& _scene, const char* _name = "");
 
 	private:
 		entt::entity m_handle;
-		Scene* m_scene;
+		Scene* m_scene = nullptr;
 	};
 }
 #endif

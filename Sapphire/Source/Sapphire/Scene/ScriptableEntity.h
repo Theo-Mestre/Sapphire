@@ -13,7 +13,12 @@ namespace sph
 		{
 			return m_Entity.GetComponent<T>();
 		}
-	private:
+	protected:
+		virtual void OnCreate() {}
+		virtual void OnDestroy() {}
+		virtual void OnUpdate(DeltaTime _dt) {}
+
+	protected:
 		Entity m_Entity;
 		friend class Scene;
 	};

@@ -6,6 +6,8 @@
 namespace sph
 {
 	class ImGuiLayer;
+	class SceneHierarchyPanel;
+	class PropertiesPanel;
 
 	class EditorLayer
 		: public Layer
@@ -38,6 +40,9 @@ namespace sph
 
 		Ref<UniformBuffer> m_appDataUniformBuffer = nullptr;
 		Ref<Framebuffer> m_framebuffer = nullptr;
+
+		Ref<SceneHierarchyPanel> m_hierarchyPanel;
+		Ref<PropertiesPanel> m_propertiesPanel;
 
 		Entity m_mainCamera;
 		Entity m_secondCamera;
