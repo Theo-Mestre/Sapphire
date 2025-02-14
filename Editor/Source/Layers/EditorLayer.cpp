@@ -4,6 +4,36 @@
 
 namespace sph
 {
+	class CameraController : public ScriptableEntity
+	{
+	public:
+		void OnCreate()
+		{
+			auto& transform = GetComponent<TransformComponent>().Transform;
+			transform[3][0] = rand() % 10 - 5.0f;
+		}
+
+		void OnDestroy()
+		{
+		}
+
+		void OnUpdate(DeltaTime ts)
+		{
+			auto& transform = GetComponent<TransformComponent>().Transform;
+
+			float speed = 5.0f;
+
+			if (Input::IsKeyPressed(KeyCode::A))
+				transform[3][0] -= speed * ts;
+			if (Input::IsKeyPressed(KeyCode::D))
+				transform[3][0] += speed * ts;
+			if (Input::IsKeyPressed(KeyCode::W))
+				transform[3][1] += speed * ts;
+			if (Input::IsKeyPressed(KeyCode::S))
+				transform[3][1] -= speed * ts;
+		}
+	};
+
 	EditorLayer::EditorLayer()
 		: Layer("TestLighting")
 	{
@@ -16,36 +46,6 @@ namespace sph
 	void EditorLayer::OnAttach()
 	{
 		SPH_PROFILE_FUNCTION();
-
-		class CameraController : public ScriptableEntity
-		{
-		public:
-			void OnCreate()
-			{
-				auto& transform = GetComponent<TransformComponent>().Transform;
-				transform[3][0] = rand() % 10 - 5.0f;
-			}
-
-			void OnDestroy()
-			{
-			}
-
-			void OnUpdate(DeltaTime ts)
-			{
-				auto& transform = GetComponent<TransformComponent>().Transform;
-
-				float speed = 5.0f;
-
-				if (Input::IsKeyPressed(KeyCode::A))
-					transform[3][0] -= speed * ts;
-				if (Input::IsKeyPressed(KeyCode::D))
-					transform[3][0] += speed * ts;
-				if (Input::IsKeyPressed(KeyCode::W))
-					transform[3][1] += speed * ts;
-				if (Input::IsKeyPressed(KeyCode::S))
-					transform[3][1] -= speed * ts;
-			}
-		};
 
 		// Renderer
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -63,10 +63,15 @@ namespace sph
 		auto& transform = entity.GetComponent<TransformComponent>();
 		transform.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
 
+		Entity entity2 = Entity::Create(m_currentScene, "Rect");
+		entity2.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		auto& transform2 = entity2.GetComponent<TransformComponent>();
+		transform2.Transform = glm::translate(glm::mat4(1.0f), { 5.0f, 0.0f, 0.0f }) * glm::scale(glm::mat4(1.0f), { 1.0f, 0.5f, 1.0f });
+
 		m_mainCamera = Entity::Create(m_currentScene, "Main Camera");
 		m_mainCamera.AddComponent<CameraComponent>();
 		m_mainCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
-		
+
 		m_secondCamera = Entity::Create(m_currentScene, "Second Camera");
 		m_secondCamera.AddComponent<CameraComponent>().IsPrimary = false;
 		m_secondCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 10.0f, 10.0f, 0.0f });
@@ -112,115 +117,108 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		if (m_enableDocking)
+		if (m_enableDocking == false) return;
+
+		static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+		windowFlags |= ImGuiWindowFlags_NoTitleBar
+			| ImGuiWindowFlags_NoCollapse
+			| ImGuiWindowFlags_NoResize
+			| ImGuiWindowFlags_NoMove
+			| ImGuiWindowFlags_NoBringToFrontOnFocus
+			| ImGuiWindowFlags_NoNavFocus;
+
+		if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
+			windowFlags |= ImGuiWindowFlags_NoBackground;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+		ImGui::Begin("DockSpace Demo", &m_enableDocking, windowFlags);
+
+		ImGui::PopStyleVar();
+		ImGui::PopStyleVar(2);
+
+		// DockSpace
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
-			static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-			ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
-			ImGuiViewport* viewport = ImGui::GetMainViewport();
-			ImGui::SetNextWindowPos(viewport->Pos);
-			ImGui::SetNextWindowSize(viewport->Size);
-			ImGui::SetNextWindowViewport(viewport->ID);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
-			windowFlags |= ImGuiWindowFlags_NoTitleBar
-				| ImGuiWindowFlags_NoCollapse
-				| ImGuiWindowFlags_NoResize
-				| ImGuiWindowFlags_NoMove
-				| ImGuiWindowFlags_NoBringToFrontOnFocus
-				| ImGuiWindowFlags_NoNavFocus;
-
-			if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
-				windowFlags |= ImGuiWindowFlags_NoBackground;
-
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-			ImGui::Begin("DockSpace Demo", &m_enableDocking, windowFlags);
-
-			ImGui::PopStyleVar();
-			ImGui::PopStyleVar(2);
-
-			// DockSpace
-			ImGuiIO& io = ImGui::GetIO();
-			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-			{
-				ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
-				ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
-			}
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("File"))
-				{
-					if (ImGui::MenuItem("Exit"))
-					{
-						m_application->Close();
-					}
-					ImGui::EndMenu();
-				}
-				ImGui::EndMenuBar();
-			}
-
-			// Debug // Entity Editing
-			ImGui::Begin("Debug");
-			{
-				{ // Camera transform
-					{
-						auto& camera = m_mainCamera.GetComponent<CameraComponent>().Camera;
-						float orthoSize = camera.GetOrthographicSize();
-
-						ImGui::Text("Entity ID: %d", (uint32_t)m_mainCamera);
-						ImGui::Text("Entity Tag: %s", m_mainCamera.GetComponent<TagComponent>().Tag.c_str());
-						ImGui::DragFloat3("Transform", glm::value_ptr(m_mainCamera.GetComponent<TransformComponent>().Transform[3]), 0.1f);
-
-						if (ImGui::DragFloat("Ortho Size", &orthoSize))
-							camera.SetOrthographicSize(orthoSize);
-
-						ImGui::Separator();
-					}
-
-					{
-						auto& camera = m_secondCamera.GetComponent<CameraComponent>().Camera;
-						float orthoSize = camera.GetOrthographicSize();
-
-						ImGui::Text("Entity ID: %d", (uint32_t)m_secondCamera);
-						ImGui::Text("Entity Tag: %s", m_secondCamera.GetComponent<TagComponent>().Tag.c_str());
-						ImGui::DragFloat3("Transform", glm::value_ptr(m_secondCamera.GetComponent<TransformComponent>().Transform[3]), 0.1f);
-
-						if (ImGui::DragFloat("Ortho Size", &orthoSize))
-							camera.SetOrthographicSize(orthoSize);
-
-						ImGui::Separator();
-					}
-
-					if (ImGui::Checkbox("Camera A", &m_primaryCamera))
-					{
-						m_mainCamera.GetComponent<CameraComponent>().IsPrimary = m_primaryCamera;
-						m_secondCamera.GetComponent<CameraComponent>().IsPrimary = !m_primaryCamera;
-					}
-				}
-
-				{
-					ImGui::Separator();
-					auto view = m_currentScene->Registry().view<TransformComponent, SpriteRendererComponent, TagComponent>();
-					for (auto entity : view)
-					{
-						auto [transform, sprite, tag] = view.get<TransformComponent, SpriteRendererComponent, TagComponent>(entity);
-
-						ImGui::Text("ID: %d - Tag: %s", (uint32_t)entity, tag.Tag.c_str());
-						ImGui::DragFloat3("Position", glm::value_ptr(transform.Transform[3]), 0.1f);
-						ImGui::ColorEdit4("Color", &sprite.Color.r);
-						ImGui::Separator();
-					}
-				}
-			}
-			ImGui::End();
-
-			// Viewport
-			OnRenderViewport();
-
-			ImGui::End();
+			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
 		}
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Exit"))
+				{
+					m_application->Close();
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+
+		// Debug // Entity Editing
+		ImGui::Begin("Hierarchy");
+		{
+			{ // Camera transform
+				auto view = m_currentScene->Registry().view<TransformComponent, TagComponent, CameraComponent>();
+
+				for (auto entity : view)
+				{
+					auto [transform, tag, camera] = view.get<TransformComponent, TagComponent, CameraComponent>(entity);
+
+					ImGui::PushID((uint32_t)entity);
+					ImGui::Text("ID: %d - Tag: %s", (uint32_t)entity, tag.Tag.c_str());
+					ImGui::DragFloat3("Position", glm::value_ptr(transform.Transform[3]), 0.1f);
+
+					float orthoSize = camera.Camera.GetOrthographicSize();
+					if (ImGui::DragFloat("Ortho Size", &orthoSize))
+					{
+						camera.Camera.SetOrthographicSize(orthoSize);
+					}
+
+					ImGui::PopID();
+					ImGui::Separator();
+				}
+
+				if (ImGui::Checkbox("Switch Main Camera", &m_primaryCamera))
+				{
+					m_mainCamera.GetComponent<CameraComponent>().IsPrimary = m_primaryCamera;
+					m_secondCamera.GetComponent<CameraComponent>().IsPrimary = !m_primaryCamera;
+				}
+			}
+
+			{
+				ImGui::Separator();
+				auto view = m_currentScene->Registry().view<TransformComponent, SpriteRendererComponent, TagComponent>();
+				for (auto entity : view)
+				{
+					ImGui::PushID((uint32_t)entity);
+					auto [transform, sprite, tag] = view.get<TransformComponent, SpriteRendererComponent, TagComponent>(entity);
+
+					ImGui::Text("ID: %d - Tag: %s", (uint32_t)entity, tag.Tag.c_str());
+					ImGui::DragFloat3("Position", &transform.Transform[3].x, 0.1f);
+					ImGui::ColorEdit4("Color", &sprite.Color.r);
+					ImGui::Separator();
+					ImGui::PopID();
+				}
+			}
+		}
+		ImGui::End();
+
+		// Viewport
+		OnRenderViewport();
+
+		ImGui::End();
 	}
 
 	void EditorLayer::OnEvent(Event& _event)

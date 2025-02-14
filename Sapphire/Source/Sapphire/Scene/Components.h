@@ -83,9 +83,9 @@ namespace sph
 			InstantiateFunction = [&]() { Instance = new T(); };
 			DestroyInstanceFunction = [&]() { delete (T*)Instance; Instance = nullptr; };
 
-			OnCreateFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnCreate(); };
-			OnDestroyFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnDestroy(); };
-			OnUpdateFunction = [](ScriptableEntity* _instance, DeltaTime _dt) { ((T*)_instance)->OnUpdate(_dt); };
+			OnCreateFunction = [](ScriptableEntity* _instance) { static_cast<T*>(_instance)->OnCreate(); };
+			OnDestroyFunction = [](ScriptableEntity* _instance) { static_cast<T*>(_instance)->OnDestroy(); };
+			OnUpdateFunction = [](ScriptableEntity* _instance, DeltaTime _dt) { static_cast<T*>(_instance)->OnUpdate(_dt); };
 		}
 	};
 }

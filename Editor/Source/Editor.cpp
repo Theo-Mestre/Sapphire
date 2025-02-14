@@ -13,7 +13,7 @@ namespace sph
 		{
 			SPH_PROFILE_FUNCTION();
 
-			SetRenderer(sph::Renderer2D::Create());
+			SetRenderer(sph::BatchRenderer2D::Create());
 			Application::Init();
 
 			glm::vec2 halfWindowSize = m_window->GetSize() / 2.0f;

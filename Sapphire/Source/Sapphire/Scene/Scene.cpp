@@ -24,26 +24,24 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		{
-			m_registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+		m_registry.view<NativeScriptComponent>().each([=](auto _entity, auto& _script)
+			{
+				if (!_script.Instance)
 				{
-					if (!nsc.Instance)
-					{
-						nsc.InstantiateFunction();
-						nsc.Instance->m_Entity = Entity{ entity, this };
+					_script.InstantiateFunction();
+					_script.Instance->m_Entity = Entity{ _entity, this };
 
-						if (nsc.OnCreateFunction)
-						{
-							nsc.OnCreateFunction(nsc.Instance);
-						}
-					}
-
-					if (nsc.OnUpdateFunction)
+					if (_script.OnCreateFunction)
 					{
-						nsc.OnUpdateFunction(nsc.Instance, _dt);
+						_script.OnCreateFunction(_script.Instance);
 					}
-				});
-		}
+				}
+
+				if (_script.OnUpdateFunction)
+				{
+					_script.OnUpdateFunction(_script.Instance, _dt);
+				}
+			});
 	}
 
 	void Scene::OnRender(const Ref<Renderer>& _renderer)
@@ -55,9 +53,9 @@ namespace sph
 		{
 			auto view = m_registry.view<CameraComponent, TransformComponent>();
 
-			for (auto entity : view)
+			for (auto _entity : view)
 			{
-				auto [cameraComponent, transform] = view.get<CameraComponent, TransformComponent>(entity);
+				auto [cameraComponent, transform] = view.get<CameraComponent, TransformComponent>(_entity);
 
 				if (!cameraComponent.IsPrimary) continue;
 
@@ -69,16 +67,16 @@ namespace sph
 
 		if (!camera)
 		{
-			LogError("No camera entity found!");
+			LogError("No camera _entity found!");
 			return;
 		}
 
 		_renderer->BeginScene(*camera, *cameraTransform);
 
 		auto view = m_registry.view<TransformComponent, SpriteRendererComponent>();
-		for (auto entity : view)
+		for (auto _entity : view)
 		{
-			auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(entity);
+			auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(_entity);
 			_renderer->DrawQuad(transform, sprite.Color);
 		}
 
@@ -89,10 +87,10 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		Entity entity(m_registry.create(), this);
-		entity.AddComponent<TransformComponent>();
-		entity.AddComponent<TagComponent>(_name.empty() ? "Entity" : _name);
-		return entity;
+		Entity _entity(m_registry.create(), this);
+		_entity.AddComponent<TransformComponent>();
+		_entity.AddComponent<TagComponent>(_name.empty() ? "Entity" : _name);
+		return _entity;
 	}
 
 	void Scene::OnViewportResize(uint32_t _width, uint32_t _height)
@@ -102,12 +100,12 @@ namespace sph
 
 		// Resize our non-FixedAspectRatio cameras
 		auto view = m_registry.view<CameraComponent>();
-		for (auto entity : view)
+		for (auto _entity : view)
 		{
-			auto& cameraComponent = view.get<CameraComponent>(entity);
-			
+			auto& cameraComponent = view.get<CameraComponent>(_entity);
+
 			if (cameraComponent.IsFixedAspectRatio) continue;
-			
+
 			cameraComponent.Camera.SetViewportSize(_width, _height);
 		}
 	}
