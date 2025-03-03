@@ -81,29 +81,31 @@ namespace sph
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, _name.c_str());
 		ImGui::PopStyleVar();
 
-		ImGui::SameLine(contentRegionAvailable.x - lineHeight);
-		if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
+		if (!(typeid(T) == typeid(TransformComponent)))
 		{
-			ImGui::OpenPopup("Component Settings");
-		}
-
-		bool removeComponent = false;
-		if (ImGui::BeginPopup("Component Settings"))
-		{
-			if (ImGui::MenuItem("Remove component"))
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight);
+			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
 			{
-				_entity.RemoveComponent<T>();
-				open = false;
+				ImGui::OpenPopup("Component Settings");
 			}
 
-			ImGui::EndPopup();
+			if (ImGui::BeginPopup("Component Settings"))
+			{
+				if (ImGui::MenuItem("Remove component"))
+				{
+					_entity.RemoveComponent<T>();
+					open = false;
+				}
+
+				ImGui::EndPopup();
+			}
 		}
 
 		if (open)
 		{
 			_uiFunction(component);
+			ImGui::TreePop();
 		}
-		ImGui::TreePop();
 	}
 
 	static void DrawVec3Control(const std::string& _label, glm::vec3& _values, float _resetValue = 0.0f, float _columnWidth = 100.0f)

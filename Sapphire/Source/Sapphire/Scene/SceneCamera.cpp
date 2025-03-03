@@ -10,11 +10,20 @@ namespace sph
 		RecalculateProjection();
 	}
 
-	void SceneCamera::SetOrthographic(float size, float nearClip, float farClip)
+	void SceneCamera::SetPerspective(float _verticalFOV, float _nearClip, float _farClip)
 	{
-		m_orthographicSize = size;
-		m_orthographicNear = nearClip;
-		m_orthographicFar = farClip;
+		m_projectionType = ProjectionType::Perspective;
+		m_perspectiveFOV = _verticalFOV;
+		m_perspectiveNear = _nearClip;
+		m_perspectiveFar = _farClip;
+		RecalculateProjection();
+	}
+
+	void SceneCamera::SetOrthographic(float _size, float _nearClip, float _farClip)
+	{
+		m_orthographicSize = _size;
+		m_orthographicNear = _nearClip;
+		m_orthographicFar = _farClip;
 		RecalculateProjection();
 	}
 
@@ -26,6 +35,12 @@ namespace sph
 
 	void SceneCamera::RecalculateProjection()
 	{
+		if (m_projectionType == ProjectionType::Perspective)
+		{
+			m_projection = glm::perspective(m_perspectiveFOV, m_aspectRatio, m_perspectiveNear, m_perspectiveFar);
+			return;
+		}
+
 		float orthoLeft = -m_orthographicSize * m_aspectRatio * 0.5f;
 		float orthoRight = m_orthographicSize * m_aspectRatio * 0.5f;
 		float orthoBottom = -m_orthographicSize * 0.5f;

@@ -19,7 +19,11 @@ namespace sph
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... _args)
 		{
-			ASSERT(!HasComponent<T>(), "Entity already has component!");
+			if (HasComponent<T>())
+			{
+				LogWarn("Entity already has component!");
+				return GetComponent<T>();
+			}
 			T& component = m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(_args)...);
 			m_scene->OnComponentAdded<T>(*this, component);
 			return component;

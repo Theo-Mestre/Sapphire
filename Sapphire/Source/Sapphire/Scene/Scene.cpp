@@ -97,7 +97,6 @@ namespace sph
 		m_viewportWidth = _width;
 		m_viewportHeight = _height;
 
-		// Resize our non-FixedAspectRatio cameras
 		auto view = m_registry.view<CameraComponent>();
 		for (auto _entity : view)
 		{

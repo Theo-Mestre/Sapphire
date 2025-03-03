@@ -13,7 +13,8 @@ namespace sph
 		SceneCamera();
 		virtual ~SceneCamera() = default;
 
-		void SetOrthographic(float size, float nearClip, float farClip);
+		void SetPerspective(float _verticalFOV, float _nearClip, float _farClip);
+		void SetOrthographic(float _size, float _nearClip, float _farClip);
 
 		void SetViewportSize(uint32_t width, uint32_t height);
 
