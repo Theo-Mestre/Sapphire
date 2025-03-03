@@ -92,7 +92,7 @@ namespace sph
 
 	}
 
-	BufferLayout::BufferLayout(const std::initializer_list<BufferElement>& _elements)
+	BufferLayout::BufferLayout(std::initializer_list<BufferElement> _elements)
 		: m_elements(_elements)
 		, m_stride(0)
 	{

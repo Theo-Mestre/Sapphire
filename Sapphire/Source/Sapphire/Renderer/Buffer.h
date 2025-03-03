@@ -35,7 +35,7 @@ namespace sph
 	{
 	public:
 		BufferLayout();
-		BufferLayout(const std::initializer_list<BufferElement>& _elements);
+		BufferLayout(std::initializer_list<BufferElement> _elements);
 
 		inline const std::vector<BufferElement>& GetElements() const { return m_elements; }
 		inline uint32_t GetStride() const { return m_stride; }

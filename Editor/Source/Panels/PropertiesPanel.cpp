@@ -105,23 +105,12 @@ namespace sph
 				camera.SetOrthographicSize(10.0f);
 				camera.SetAspectRatio(16.0f / 9.0f);
 			}
+		}
 
-			//ImGui::Separator();
-			//
-			//if (ImGui::Button("Delete Camera"))
-			//{
-			//	_entity.RemoveComponent<CameraComponent>();
-			//}
-			//
-			//ImGui::Separator();
-			//
-			//if (ImGui::Button("Add Native Script"))
-			//{
-			//	_entity.AddComponent<NativeScriptComponent>();
-			//}
-
-
-
+		if (_entity.HasComponent<SpriteRendererComponent>())
+		{
+			auto& sprite = _entity.GetComponent<SpriteRendererComponent>();
+			ImGui::ColorEdit4("Color", glm::value_ptr(sprite.Color));
 		}
 	}
 }
