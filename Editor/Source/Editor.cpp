@@ -14,17 +14,17 @@ namespace sph
 			SPH_PROFILE_FUNCTION();
 
 			SetRenderer(sph::BatchRenderer2D::Create());
+
 			Application::Init();
 
 			glm::vec2 halfWindowSize = m_window->GetSize() / 2.0f;
 			m_camera = sph::CreateRef<sph::OrthographicCamera>(-halfWindowSize.x, halfWindowSize.x, -halfWindowSize.y, halfWindowSize.y);
 
-			auto testLayer = new EditorLayer();
-			testLayer->SetCamera(m_camera);
-			testLayer->SetImGUILayer(m_imGuiLayer);
-			PushLayer(testLayer);
+			auto editorLayer = new EditorLayer();
+			editorLayer->SetCamera(m_camera);
+			editorLayer->SetImGUILayer(m_imGuiLayer);
+			PushLayer(editorLayer);
 		}
-
 	private:
 		sph::Ref<sph::OrthographicCamera> m_camera = nullptr;
 	};

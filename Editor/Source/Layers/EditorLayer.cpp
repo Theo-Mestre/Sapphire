@@ -14,18 +14,18 @@ namespace sph
 	public:
 		void OnUpdate(DeltaTime ts)
 		{
-			auto& transform = GetComponent<TransformComponent>().Transform;
+			auto& translation = GetComponent<TransformComponent>().Translation;
 
 			static const float speed = 5.0f;
 
 			if (Input::IsKeyPressed(KeyCode::A))
-				transform[3][0] -= speed * ts;
+				translation.x -= speed * ts;
 			if (Input::IsKeyPressed(KeyCode::D))
-				transform[3][0] += speed * ts;
+				translation.x += speed * ts;
 			if (Input::IsKeyPressed(KeyCode::W))
-				transform[3][1] += speed * ts;
+				translation.y += speed * ts;
 			if (Input::IsKeyPressed(KeyCode::S))
-				transform[3][1] -= speed * ts;
+				translation.y -= speed * ts;
 		}
 	};
 
@@ -56,23 +56,24 @@ namespace sph
 		entity.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 		auto& transform = entity.GetComponent<TransformComponent>();
-		transform.Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
+		transform.Translation = { 0.0f, 0.0f, 0.0f };
+		transform.Scale = { 1.0f, 1.0f, 1.0f };
 
 		Entity entity2 = Entity::Create(m_currentScene, "Rect");
 		entity2.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 		auto& transform2 = entity2.GetComponent<TransformComponent>();
-		transform2.Transform = glm::translate(glm::mat4(1.0f), { 5.0f, 0.0f, 0.0f }) * glm::scale(glm::mat4(1.0f), { 1.0f, 0.5f, 1.0f });
+		transform2.Translation = { 5.0f, 0.0f, 0.0f };
+		transform2.Scale = { 2.0f, 1.0f, 1.0f };
 
 		m_mainCamera = Entity::Create(m_currentScene, "Main Camera");
 		m_mainCamera.AddComponent<CameraComponent>();
-		m_mainCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f });
+		m_mainCamera.GetComponent<TransformComponent>().Translation = { 0.0f, 0.0f, 0.0f };
 		m_mainCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_secondCamera = Entity::Create(m_currentScene, "Second Camera");
 		m_secondCamera.AddComponent<CameraComponent>().IsPrimary = false;
-		m_secondCamera.GetComponent<TransformComponent>().Transform = glm::translate(glm::mat4(1.0f), { 10.0f, 10.0f, 0.0f });
+		m_secondCamera.GetComponent<TransformComponent>().Translation = { 10.0f, 10.0f, 0.0f };
 		m_secondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
 
 		// Hierarchy
 		m_hierarchyPanel = CreateRef<SceneHierarchyPanel>(m_currentScene);
@@ -150,12 +151,19 @@ namespace sph
 		ImGui::PopStyleVar(2);
 
 		// DockSpace
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSizeX = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
+
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
 		}
+
+		style.WindowMinSize.x = minWinSizeX;
+
 		if (ImGui::BeginMenuBar())
 		{
 			if (ImGui::BeginMenu("File"))
@@ -168,55 +176,6 @@ namespace sph
 			}
 			ImGui::EndMenuBar();
 		}
-
-		// Debug // Entity Editing
-		ImGui::Begin("Hierarchy");
-		{
-			{ // Camera transform
-				auto view = m_currentScene->Registry().view<TransformComponent, TagComponent, CameraComponent>();
-
-				for (auto entity : view)
-				{
-					auto [transform, tag, camera] = view.get<TransformComponent, TagComponent, CameraComponent>(entity);
-
-					ImGui::PushID((uint32_t)entity);
-					ImGui::Text("ID: %d - Tag: %s", (uint32_t)entity, tag.Tag.c_str());
-					ImGui::DragFloat3("Position", glm::value_ptr(transform.Transform[3]), 0.1f);
-
-					float orthoSize = camera.Camera.GetOrthographicSize();
-					if (ImGui::DragFloat("Ortho Size", &orthoSize))
-					{
-						camera.Camera.SetOrthographicSize(orthoSize);
-					}
-
-					ImGui::PopID();
-					ImGui::Separator();
-				}
-
-				if (ImGui::Checkbox("Switch Main Camera", &m_primaryCamera))
-				{
-					m_mainCamera.GetComponent<CameraComponent>().IsPrimary = m_primaryCamera;
-					m_secondCamera.GetComponent<CameraComponent>().IsPrimary = !m_primaryCamera;
-				}
-			}
-
-			{
-				ImGui::Separator();
-				auto view = m_currentScene->Registry().view<TransformComponent, SpriteRendererComponent, TagComponent>();
-				for (auto entity : view)
-				{
-					ImGui::PushID((uint32_t)entity);
-					auto [transform, sprite, tag] = view.get<TransformComponent, SpriteRendererComponent, TagComponent>(entity);
-
-					ImGui::Text("ID: %d - Tag: %s", (uint32_t)entity, tag.Tag.c_str());
-					ImGui::DragFloat3("Position", &transform.Transform[3].x, 0.1f);
-					ImGui::ColorEdit4("Color", &sprite.Color.r);
-					ImGui::Separator();
-					ImGui::PopID();
-				}
-			}
-		}
-		ImGui::End();
 
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();

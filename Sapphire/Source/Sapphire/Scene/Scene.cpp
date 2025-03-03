@@ -42,7 +42,7 @@ namespace sph
 		SPH_PROFILE_FUNCTION();
 
 		Camera* camera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 		{
 			auto view = m_registry.view<CameraComponent, TransformComponent>();
 
@@ -53,7 +53,7 @@ namespace sph
 				if (!cameraComponent.IsPrimary) continue;
 
 				camera = &cameraComponent.Camera;
-				cameraTransform = &transform.Transform;
+				cameraTransform = transform.GetTransform();
 				break;
 			}
 		}
@@ -64,13 +64,13 @@ namespace sph
 			return;
 		}
 
-		_renderer->BeginScene(*camera, *cameraTransform);
+		_renderer->BeginScene(*camera, cameraTransform);
 
 		auto view = m_registry.view<TransformComponent, SpriteRendererComponent>();
 		for (auto _entity : view)
 		{
 			auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(_entity);
-			_renderer->DrawQuad(transform, sprite.Color);
+			_renderer->DrawQuad(transform.GetTransform(), sprite.Color);
 		}
 
 		_renderer->EndScene();

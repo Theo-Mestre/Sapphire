@@ -67,7 +67,11 @@ namespace sph
 	{
 		auto& tag = _entity.GetComponent<TagComponent>().Tag;
 
-		ImGuiTreeNodeFlags flags = ((_entity == m_selectedEntity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		const ImGuiTreeNodeFlags flags = ((_entity == m_selectedEntity) ? 
+			ImGuiTreeNodeFlags_Selected : 0) | 
+			ImGuiTreeNodeFlags_OpenOnArrow | 
+			ImGuiTreeNodeFlags_SpanAvailWidth;
+
 		bool isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, flags, tag.c_str());
 
 		if (ImGui::IsItemClicked())
@@ -90,8 +94,8 @@ namespace sph
 
 		if (!isOpened) return;
 
-		flags = ImGuiTreeNodeFlags_OpenOnArrow;
-		isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, flags, tag.c_str());
+		ImGuiTreeNodeFlags openFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+		isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, openFlags, tag.c_str());
 
 		if (isOpened)
 		{

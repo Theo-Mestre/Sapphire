@@ -132,7 +132,7 @@ namespace sph
 		Input::Init(m_window);
 
 		// Create a default renderer if none is set by user
-		if (!m_renderer) m_renderer = CreateRef<Renderer2D>();
+		if (m_renderer == nullptr) m_renderer = CreateRef<Renderer2D>();
 		m_renderer->Init();
 
 #ifndef DIST // Disable ImGui in Distribution build
