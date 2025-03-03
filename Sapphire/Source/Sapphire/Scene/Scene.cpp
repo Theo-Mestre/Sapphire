@@ -86,6 +86,12 @@ namespace sph
 		return _entity;
 	}
 
+	void Scene::DestroyEntity(Entity _entity)
+	{
+		SPH_PROFILE_FUNCTION();
+		m_registry.destroy(_entity);
+	}
+
 	void Scene::OnViewportResize(uint32_t _width, uint32_t _height)
 	{
 		m_viewportWidth = _width;
@@ -101,5 +107,37 @@ namespace sph
 
 			cameraComponent.Camera.SetViewportSize(_width, _height);
 		}
+	}
+
+	template<typename T>
+	void Scene::OnComponentAdded(Entity _entity, T& component)
+	{
+		static_assert(false);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TransformComponent>(Entity _entity, TransformComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CameraComponent>(Entity _entity, CameraComponent& component)
+	{
+		component.Camera.SetViewportSize(m_viewportWidth, m_viewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity _entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<TagComponent>(Entity _entity, TagComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity _entity, NativeScriptComponent& component)
+	{
 	}
 }

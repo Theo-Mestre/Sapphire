@@ -1,8 +1,10 @@
 #include "sphpch.h"
-#include "SceneHierarchyPanel.h"
-
 #include <entt/entt.hpp>
+#include <imgui.h>
+#include <imgui_internal.h>
 
+
+#include "SceneHierarchyPanel.h"
 #include "Sapphire/Scene/Scene.h"
 #include "Sapphire/Scene/Components.h"
 
@@ -27,15 +29,30 @@ namespace sph
 		ImGui::Begin("Scene Hierarchy");
 
 		auto view = m_context->m_registry.view<TagComponent>();
+
+		int i = 0;
 		for (auto _entityID : view)
 		{
 			Entity entity = { _entityID, m_context.get() };
+
+			ImGui::PushID(i++);
 			DrawEntityNode(entity);
+			ImGui::PopID();
 		}
 
 		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 		{
 			m_selectedEntity = {};
+		}
+
+		if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
+		{
+			if (ImGui::MenuItem("Create Empty Entity"))
+			{
+				m_context->CreateEntity("Empty Entity");
+			}
+		
+			ImGui::EndPopup();
 		}
 
 		ImGui::End();
@@ -49,19 +66,33 @@ namespace sph
 	void SceneHierarchyPanel::DrawEntityNode(Entity _entity)
 	{
 		auto& tag = _entity.GetComponent<TagComponent>().Tag;
-	
+
 		ImGuiTreeNodeFlags flags = ((_entity == m_selectedEntity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
 		bool isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, flags, tag.c_str());
-	
+
 		if (ImGui::IsItemClicked())
 		{
 			m_selectedEntity = _entity;
 		}
 
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Delete Entity"))
+			{
+				m_context->DestroyEntity(_entity);
+				if (m_selectedEntity == _entity)
+				{
+					m_selectedEntity = {};
+				}
+			}
+			ImGui::EndPopup();
+		}
+
 		if (!isOpened) return;
 
 		flags = ImGuiTreeNodeFlags_OpenOnArrow;
-		isOpened = ImGui::TreeNodeEx((void*)1000, flags, tag.c_str());
+		isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, flags, tag.c_str());
+
 		if (isOpened)
 		{
 			ImGui::TreePop();

@@ -22,10 +22,14 @@ namespace sph
 		void OnRender(const Ref<Renderer>& _renderer);
 
 		Entity CreateEntity(const std::string& _name = "");
+		void DestroyEntity(Entity _entity);
 
 		entt::registry& Registry() { return m_registry; }
 
 		void OnViewportResize(uint32_t _width, uint32_t _height);
+	private:
+		template<typename T>
+		void OnComponentAdded(Entity _entity, T& _component);
 	private:
 		entt::registry m_registry;
 

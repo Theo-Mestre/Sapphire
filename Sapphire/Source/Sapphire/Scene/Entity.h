@@ -20,7 +20,9 @@ namespace sph
 		T& AddComponent(Args&&... _args)
 		{
 			ASSERT(!HasComponent<T>(), "Entity already has component!");
-			return m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(_args)...);
+			T& component = m_scene->m_registry.emplace<T>(m_handle, std::forward<Args>(_args)...);
+			m_scene->OnComponentAdded<T>(*this, component);
+			return component;
 		}
 
 		template<typename T>
@@ -48,7 +50,7 @@ namespace sph
 		entt::entity GetHandle() const;
 
 		operator bool() const { return m_handle != entt::null; }
-		operator uint32_t() const { return (uint32_t)m_handle; }
+		operator entt::entity() const { return m_handle; }
 		bool operator==(const Entity& _other) const;
 		bool operator!=(const Entity& _other) const;
 
