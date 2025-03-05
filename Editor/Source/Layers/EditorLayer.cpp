@@ -180,6 +180,8 @@ namespace sph
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();
 
+		ImGui::ShowDemoWindow();
+
 		// Viewport
 		OnRenderViewport();
 

@@ -74,6 +74,8 @@ namespace sph
 
 		void SetThemeColors(const ImGuiThemeColor& _themeColor = ImGuiThemeColor::Default());
 	private:
+		void SetStyle();
+	private:
 		Window& m_window;
 		float m_time = 0.0f;
 

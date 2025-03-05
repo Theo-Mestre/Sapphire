@@ -48,7 +48,6 @@ namespace sph
 		ImGui::SetWindowSize(ImVec2(430, 290));
 		if (ImPlot::BeginPlot("Frame Time"))
 		{
-			ImGui::GetStyle().WindowPadding = ImVec2(0, 0);
 			ImPlot::GetStyle().PlotBorderSize = 0;
 			ImPlot::GetStyle().PlotDefaultSize = ImVec2(300, 200);
 

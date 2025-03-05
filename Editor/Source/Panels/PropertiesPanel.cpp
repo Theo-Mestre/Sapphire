@@ -130,10 +130,12 @@ namespace sph
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, XSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, XSelector.ActiveButtonColor);
 
+		ImGui::PushTabStop(false);
 		ImGui::PushFont(boldFont);
 		if (ImGui::Button("X", buttonSize)) _values.x = _resetValue;
 		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
+		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##X", &_values.x, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -144,10 +146,12 @@ namespace sph
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, YSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, YSelector.ActiveButtonColor);
 
+		ImGui::PushTabStop(false);
 		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize)) _values.y = _resetValue;
 		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
+		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Y", &_values.y, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -158,19 +162,19 @@ namespace sph
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ZSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ZSelector.ActiveButtonColor);
 
+		ImGui::PushTabStop(false);
 		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Z", buttonSize)) _values.z = _resetValue;
 		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
+		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &_values.z, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 
 		ImGui::PopStyleVar();
-
 		ImGui::Columns(1);
-
 		ImGui::PopID();
 	}
 
