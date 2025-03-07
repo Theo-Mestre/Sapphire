@@ -29,3 +29,4 @@
 # Executables
 *.out
 *.app
+Assets/imgui.ini

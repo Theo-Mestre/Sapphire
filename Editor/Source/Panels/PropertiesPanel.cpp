@@ -114,31 +114,31 @@ namespace sph
 
 		ImGui::PushID(_label.c_str());
 
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f });
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
+
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, _columnWidth);
 		ImGui::Text(_label.c_str());
 		ImGui::NextColumn();
 
+
 		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 4.0f, lineHeight };
 
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
-
-		ImGui::PushFont(boldFont);
-		ImGui::PushStyleColor(ImGuiCol_Button, XSelector.ButtonColor);
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, XSelector.HoveredButtonColor);
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, XSelector.ActiveButtonColor);
-
 		ImGui::PushTabStop(false);
 		{
 			ImGui::PushFont(boldFont);
+			ImGui::PushStyleColor(ImGuiCol_Button, XSelector.ButtonColor);
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, XSelector.HoveredButtonColor);
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, XSelector.ActiveButtonColor);
+
 			if (ImGui::Button("X", buttonSize)) _values.x = _resetValue;
-			ImGui::PopFont();
+
 			ImGui::PopStyleColor(3);
+			ImGui::PopFont();
 		}
 		ImGui::PopTabStop();
 
@@ -146,18 +146,18 @@ namespace sph
 		ImGui::DragFloat("##X", &_values.x, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 
-		ImGui::PushFont(boldFont);
-		ImGui::PushStyleColor(ImGuiCol_Button, YSelector.ButtonColor);
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, YSelector.HoveredButtonColor);
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, YSelector.ActiveButtonColor);
-
 		ImGui::SameLine();
 		ImGui::PushTabStop(false);
 		{
 			ImGui::PushFont(boldFont);
+			ImGui::PushStyleColor(ImGuiCol_Button, YSelector.ButtonColor);
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, YSelector.HoveredButtonColor);
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, YSelector.ActiveButtonColor);
+
 			if (ImGui::Button("Y", buttonSize)) _values.y = _resetValue;
-			ImGui::PopFont();
+
 			ImGui::PopStyleColor(3);
+			ImGui::PopFont();
 		}
 		ImGui::PopTabStop();
 
@@ -165,29 +165,28 @@ namespace sph
 		ImGui::DragFloat("##Y", &_values.y, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 
-		ImGui::PushFont(boldFont);
-		ImGui::PushStyleColor(ImGuiCol_Button, ZSelector.ButtonColor);
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ZSelector.HoveredButtonColor);
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ZSelector.ActiveButtonColor);
-
 		ImGui::SameLine();
 		ImGui::PushTabStop(false);
 		{
 			ImGui::PushFont(boldFont);
+			ImGui::PushStyleColor(ImGuiCol_Button, ZSelector.ButtonColor);
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ZSelector.HoveredButtonColor);
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ZSelector.ActiveButtonColor);
+
 			if (ImGui::Button("Z", buttonSize)) _values.z = _resetValue;
-			ImGui::PopFont();
+
 			ImGui::PopStyleColor(3);
+			ImGui::PopFont();
 		}
 		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &_values.z, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
-		ImGui::PopStyleVar();
 
-		ImGui::PopStyleVar();
-		ImGui::PopStyleVar();
 		ImGui::Columns(1);
+		ImGui::PopStyleVar(2);
+
 		ImGui::PopID();
 	}
 
@@ -238,6 +237,7 @@ namespace sph
 				DrawVec3Control("Rotation", rotation);
 				_component.Rotation = glm::radians(rotation);
 				DrawVec3Control("Scale", _component.Scale, 1.0f);
+				ImGui::Spacing();
 			});
 
 		DrawComponent<CameraComponent>("Camera", _entity, [](auto& _component)

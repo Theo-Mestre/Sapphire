@@ -52,13 +52,6 @@ namespace sph
 		SetThemeColors();
 		SetStyle();
 
-		style.PopupBorderSize = 2.0f;
-		style.PopupRounding = 5.0f;
-		style.FrameRounding = 8.0f;
-		style.ScrollbarRounding = 8.0f;
-		style.GrabRounding = 8.0f;
-		style.WindowMenuButtonPosition = ImGuiDir_Right;
-
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(m_window.GetNativeWindow()), true);
 		ImGui_ImplOpenGL3_Init("#version 410");
@@ -153,6 +146,7 @@ namespace sph
 		style.ScrollbarRounding = 10.0f;
 
 		style.IndentSpacing = 0.0f;
+		style.ItemSpacing = ImVec2(5.0f, 10.0f);
 		style.FramePadding = ImVec2(10.0f, 2.0f);
 		style.FrameRounding = 5.0f;
 
