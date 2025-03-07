@@ -12,6 +12,8 @@
 
 namespace sph
 {
+	class Texture2D;
+
 	struct TagComponent
 	{
 		std::string Tag;
@@ -49,12 +51,19 @@ namespace sph
 
 	struct SpriteRendererComponent
 	{
+		sph::Ref<sph::Texture2D> Texture = nullptr;
 		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		SpriteRendererComponent() = default;
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
+		SpriteRendererComponent(const sph::Ref<sph::Texture2D>& _texture)
+			: Texture(_texture)
+			, Color(1.0f, 1.0f, 1.0f, 1.0f)
+		{
+		}
 		SpriteRendererComponent(const glm::vec4& _color)
-			: Color(_color)
+			: Texture(nullptr)
+			, Color(_color)
 		{
 		}
 

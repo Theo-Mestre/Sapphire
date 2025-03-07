@@ -52,8 +52,8 @@ namespace sph
 
 		m_currentScene = CreateRef<Scene>();
 
-		Entity entity = Entity::Create(m_currentScene, "Square");
-		entity.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		Entity entity = Entity::Create(m_currentScene, "Chicken");
+		entity.AddComponent<SpriteRendererComponent>(m_texture);
 
 		auto& transform = entity.GetComponent<TransformComponent>();
 		transform.Translation = { 0.0f, 0.0f, 0.0f };

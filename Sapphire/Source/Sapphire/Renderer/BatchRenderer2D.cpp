@@ -207,6 +207,19 @@ namespace sph
 		Renderer2D::Stats::QuadCount++;
 	}
 
+	void BatchRenderer2D::DrawQuad(const glm::mat4& _transform, const Ref<Texture2D>& _texture, const glm::vec4& _color)
+	{
+		SPH_PROFILE_FUNCTION();
+
+		CheckBatchState();
+		
+		float textureIndex = SubmitTexture(_texture);
+		
+		UpdateCurrentQuadVertex(_transform, _color, textureIndex, 1.0f);
+		
+		Renderer2D::Stats::QuadCount++;
+	}
+
 	void BatchRenderer2D::DrawSprite(const Sprite& _sprite)
 	{
 		SPH_PROFILE_FUNCTION();
@@ -304,6 +317,9 @@ namespace sph
 	float BatchRenderer2D::SubmitTexture(const Ref<Texture2D>& _texture)
 	{
 		SPH_PROFILE_FUNCTION();
+
+
+		if (_texture == nullptr) { return 0.0f; }
 
 		float textureIndex = 0.0f;
 		for (uint32_t i = 1; i < m_textureSlotIndex; i++)

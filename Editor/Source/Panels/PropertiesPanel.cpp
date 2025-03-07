@@ -3,6 +3,7 @@
 
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/Components.h"
+#include "Sapphire/Renderer/Texture.h"
 
 #include "PropertiesPanel.h"
 #include "Panels/SceneHierarchyPanel.h"
@@ -126,46 +127,52 @@ namespace sph
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
 
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
+
+		ImGui::PushFont(boldFont);
 		ImGui::PushStyleColor(ImGuiCol_Button, XSelector.ButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, XSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, XSelector.ActiveButtonColor);
 
-		ImGui::PushFont(boldFont);
 		if (ImGui::Button("X", buttonSize)) _values.x = _resetValue;
-		ImGui::PopFont();
+
 		ImGui::PopStyleColor(3);
+		ImGui::PopFont();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##X", &_values.x, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
+		ImGui::PushFont(boldFont);
 		ImGui::PushStyleColor(ImGuiCol_Button, YSelector.ButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, YSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, YSelector.ActiveButtonColor);
 
-		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Y", buttonSize)) _values.y = _resetValue;
-		ImGui::PopFont();
+
 		ImGui::PopStyleColor(3);
+		ImGui::PopFont();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Y", &_values.y, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
 		ImGui::SameLine();
 
+		ImGui::PushFont(boldFont);
 		ImGui::PushStyleColor(ImGuiCol_Button, ZSelector.ButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ZSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ZSelector.ActiveButtonColor);
 
-		ImGui::PushFont(boldFont);
 		if (ImGui::Button("Z", buttonSize)) _values.z = _resetValue;
-		ImGui::PopFont();
+
 		ImGui::PopStyleColor(3);
+		ImGui::PopFont();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &_values.z, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
+		ImGui::PopStyleVar();
 
 		ImGui::PopStyleVar();
 
@@ -279,6 +286,20 @@ namespace sph
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", _entity, [](auto& _component)
 			{
+				ImGui::Text("Texture");
+
+				if (_component.Texture == nullptr || 
+					_component.Texture->GetPath().empty())
+				{
+					ImGui::Text("No texture");
+				}
+				else 
+				{
+					ImGui::Text(_component.Texture->GetPath().c_str());
+					ImGui::ImageButton((ImTextureID)_component.Texture->GetRendererID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+				}
+
+				ImGui::Text("Color");
 				ImGui::ColorEdit4("Color", glm::value_ptr(_component.Color));
 			});
 	}

@@ -11,9 +11,10 @@
 namespace sph
 {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& _path, const Properties& _properties)
-		: m_path(_path)
 	{
 		SPH_PROFILE_FUNCTION();
+
+		m_path = _path;
 
 		int channels;
 		stbi_set_flip_vertically_on_load(1);

@@ -18,6 +18,9 @@ namespace sph
 		virtual glm::vec2 GetSize() const = 0;
 		virtual void SetSize(uint32_t _width, uint32_t _height) = 0;
 
+		const std::string& GetPath() const { return m_path; }
+		void SetPath(const std::string& _path) { m_path = _path; }
+
 		virtual uint32_t GetRendererID() const = 0;
 
 		virtual bool operator==(const Texture& _other) const = 0;
@@ -47,6 +50,9 @@ namespace sph
 			WrapMode WrapModeS = WrapMode::ClampToEdge;
 			WrapMode WrapModeT = WrapMode::ClampToEdge;
 		};
+
+	protected:
+		std::string m_path;
 	};
 
 	class Texture2D 

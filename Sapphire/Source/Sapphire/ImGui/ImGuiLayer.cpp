@@ -44,8 +44,6 @@ namespace sph
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 		io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Bold.ttf", 18.0f);
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 18.0f);
@@ -63,6 +61,13 @@ namespace sph
 		}
 
 		SetThemeColors();
+
+		style.PopupBorderSize = 2.0f;
+		style.PopupRounding = 5.0f;
+		style.FrameRounding = 8.0f;
+		style.ScrollbarRounding = 8.0f;
+		style.GrabRounding = 8.0f;
+		style.WindowMenuButtonPosition = ImGuiDir_Right;
 
 		// Setup Platform/Renderer bindings
 		ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(m_window.GetNativeWindow()), true);
@@ -82,7 +87,6 @@ namespace sph
 	void ImGuiLayer::OnUpdate(DeltaTime _dt)
 	{
 		SPH_PROFILE_FUNCTION();
-
 	}
 
 	void ImGuiLayer::OnEvent(Event& _event)
@@ -101,13 +105,7 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		ImGui::Begin("Stats");
-
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", Renderer::Stats::DrawCalls);
-		ImGui::Text("Quads: %d", Renderer::Stats::QuadCount);
-
-		ImGui::End();
+		ImGui::ShowDemoWindow();
 	}
 
 	void ImGuiLayer::Begin()
@@ -176,8 +174,9 @@ namespace sph
 		// Tabs
 		theme.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
 		theme.Colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.3805f, 0.381f, 1.0f);
-		theme.Colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.2805f, 0.281f, 1.0f);
-		theme.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+		theme.Colors[ImGuiCol_TabActive] = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
+		theme.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
+		theme.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.20f, 0.20f, 0.20f, 1.0f);
 
 		// Title
 		theme.Colors[ImGuiCol_TitleBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);

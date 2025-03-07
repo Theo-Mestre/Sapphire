@@ -70,7 +70,7 @@ namespace sph
 		for (auto _entity : view)
 		{
 			auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(_entity);
-			_renderer->DrawQuad(transform.GetTransform(), sprite.Color);
+			_renderer->DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color);
 		}
 
 		_renderer->EndScene();

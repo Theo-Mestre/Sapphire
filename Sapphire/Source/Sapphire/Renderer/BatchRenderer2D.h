@@ -34,6 +34,8 @@ namespace sph
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture) override;
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) override;
 
+		virtual void DrawQuad(const glm::mat4& _transform, const Ref<Texture2D>& _texture, const glm::vec4& _color = glm::vec4(1.0f)) override;
+
 		virtual void DrawSprite(const Sprite& _sprite) override;
 
 		static Ref<Renderer> Create();
