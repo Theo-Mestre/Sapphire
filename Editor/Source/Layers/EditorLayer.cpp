@@ -141,19 +141,19 @@ namespace sph
 			| ImGuiWindowFlags_NoNavFocus;
 
 		if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
+		{
 			windowFlags |= ImGuiWindowFlags_NoBackground;
+		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		ImGui::Begin("DockSpace Demo", &m_enableDocking, windowFlags);
+		ImGui::Begin("DockSpace", &m_enableDocking, windowFlags);
 
 		ImGui::PopStyleVar();
 		ImGui::PopStyleVar(2);
 
 		// DockSpace
 		ImGuiStyle& style = ImGui::GetStyle();
-		float minWinSizeX = style.WindowMinSize.x;
-		style.WindowMinSize.x = 370.0f;
 
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -162,10 +162,12 @@ namespace sph
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
 		}
 
-		style.WindowMinSize.x = minWinSizeX;
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.08f, 0.08f, 0.08f, 1.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-		if (ImGui::BeginMenuBar())
+		if (ImGui::BeginMainMenuBar())
 		{
+
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("Exit"))
@@ -174,8 +176,11 @@ namespace sph
 				}
 				ImGui::EndMenu();
 			}
-			ImGui::EndMenuBar();
+			ImGui::EndMainMenuBar();
+
 		}
+		ImGui::PopStyleColor();
+		ImGui::PopStyleVar();
 
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();

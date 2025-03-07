@@ -35,7 +35,6 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImPlot::CreateContext();
@@ -44,25 +43,12 @@ namespace sph
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 		io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Bold.ttf", 18.0f);
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 18.0f);
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
-
-		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-		ImGuiStyle& style = ImGui::GetStyle();
-
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			style.WindowRounding = 0.0f;
-			style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-		}
-
-
 		SetThemeColors();
 		SetStyle();
 
@@ -84,7 +70,6 @@ namespace sph
 	void ImGuiLayer::OnUpdate(DeltaTime _dt)
 	{
 		SPH_PROFILE_FUNCTION();
-
 	}
 
 	void ImGuiLayer::OnEvent(Event& _event)
@@ -102,14 +87,6 @@ namespace sph
 	void ImGuiLayer::OnImGuiRender()
 	{
 		SPH_PROFILE_FUNCTION();
-
-		ImGui::Begin("Stats");
-
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", Renderer::Stats::DrawCalls);
-		ImGui::Text("Quads: %d", Renderer::Stats::QuadCount);
-
-		ImGui::End();
 	}
 
 	void ImGuiLayer::Begin()
@@ -159,6 +136,8 @@ namespace sph
 		auto& style = ImGui::GetStyle();
 
 		style.WindowMenuButtonPosition = ImGuiDir_Right;
+		style.WindowPadding = ImVec2(5.0f, 5.0f);
+		style.WindowRounding = 5.0f;
 
 		style.TabRounding = 4.0f;
 		style.GrabRounding = 4.0f;
@@ -168,7 +147,7 @@ namespace sph
 
 		style.IndentSpacing = 0.0f;
 		style.FramePadding = ImVec2(10.0f, 2.0f);
-		style.WindowPadding = ImVec2(5.0f, 5.0f);
+		style.FrameRounding = 5.0f;
 
 		style.PopupBorderSize = 5.0f;
 		style.PopupRounding = 5.0f;
