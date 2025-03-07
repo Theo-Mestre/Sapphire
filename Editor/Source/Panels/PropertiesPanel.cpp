@@ -77,8 +77,6 @@ namespace sph
 		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 
-		ImGui::Separator();
-
 		bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, _name.c_str());
 		ImGui::PopStyleVar();
 
@@ -123,9 +121,10 @@ namespace sph
 
 		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+		ImVec2 buttonSize = { lineHeight + 4.0f, lineHeight };
 
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 
@@ -134,40 +133,52 @@ namespace sph
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, XSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, XSelector.ActiveButtonColor);
 
-		if (ImGui::Button("X", buttonSize)) _values.x = _resetValue;
-
-		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+		ImGui::PushTabStop(false);
+		{
+			ImGui::PushFont(boldFont);
+			if (ImGui::Button("X", buttonSize)) _values.x = _resetValue;
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
+		}
+		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##X", &_values.x, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
-		ImGui::SameLine();
 
 		ImGui::PushFont(boldFont);
 		ImGui::PushStyleColor(ImGuiCol_Button, YSelector.ButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, YSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, YSelector.ActiveButtonColor);
 
-		if (ImGui::Button("Y", buttonSize)) _values.y = _resetValue;
-
-		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+		ImGui::SameLine();
+		ImGui::PushTabStop(false);
+		{
+			ImGui::PushFont(boldFont);
+			if (ImGui::Button("Y", buttonSize)) _values.y = _resetValue;
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
+		}
+		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Y", &_values.y, 0.1f, 0.0f, 0.0f, "%.2f");
 		ImGui::PopItemWidth();
-		ImGui::SameLine();
 
 		ImGui::PushFont(boldFont);
 		ImGui::PushStyleColor(ImGuiCol_Button, ZSelector.ButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ZSelector.HoveredButtonColor);
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ZSelector.ActiveButtonColor);
 
-		if (ImGui::Button("Z", buttonSize)) _values.z = _resetValue;
-
-		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+		ImGui::SameLine();
+		ImGui::PushTabStop(false);
+		{
+			ImGui::PushFont(boldFont);
+			if (ImGui::Button("Z", buttonSize)) _values.z = _resetValue;
+			ImGui::PopFont();
+			ImGui::PopStyleColor(3);
+		}
+		ImGui::PopTabStop();
 
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &_values.z, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -175,9 +186,8 @@ namespace sph
 		ImGui::PopStyleVar();
 
 		ImGui::PopStyleVar();
-
+		ImGui::PopStyleVar();
 		ImGui::Columns(1);
-
 		ImGui::PopID();
 	}
 
