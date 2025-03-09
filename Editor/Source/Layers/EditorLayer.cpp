@@ -1,5 +1,6 @@
 ﻿#include "Sapphire/ImGui/ImGuiLayer.h"
 #include "Sapphire/Scene/Entity.h"
+#include "Sapphire/Scene/SceneSerializer.h"
 
 #include "EditorLayer.h"
 
@@ -174,10 +175,17 @@ namespace sph
 				{
 					m_application->Close();
 				}
+				if (ImGui::MenuItem("Save"))
+				{
+					// Test Save Scene
+					SceneSerializer serializer(m_currentScene);
+					serializer.Serialize("Scenes/Scene.sph");
+				}
+
 				ImGui::EndMenu();
 			}
-			ImGui::EndMainMenuBar();
 
+			ImGui::EndMainMenuBar();
 		}
 		ImGui::PopStyleColor();
 		ImGui::PopStyleVar();
@@ -210,10 +218,10 @@ namespace sph
 			m_imguiLayer->SetViewportHovered(ImGui::IsWindowHovered());
 
 			auto viewportSize = ImGui::GetContentRegionAvail();
-			m_viewportSize.x = viewportSize.x;
-			m_viewportSize.y = viewportSize.y;
+			m_viewportSize.x = (int32_t)viewportSize.x;
+			m_viewportSize.y = (int32_t)viewportSize.y;
 
-			uint32_t textureID = m_framebuffer->GetTextureAttachment()->GetRendererID();
+			uint64_t textureID = (uint64_t)m_framebuffer->GetTextureAttachment()->GetRendererID();
 			ImGui::Image((void*)textureID, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
 		}
 		ImGui::End();

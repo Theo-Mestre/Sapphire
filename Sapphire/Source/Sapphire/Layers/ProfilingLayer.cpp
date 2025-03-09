@@ -52,10 +52,11 @@ namespace sph
 			ImPlot::GetStyle().PlotDefaultSize = ImVec2(300, 200);
 
 			ImPlot::SetupAxisLimits(ImAxis_X1, sph::Time::GameTime - 2, sph::Time::GameTime, ImGuiCond_Always);
+			ImPlot::SetupAxisLimits(ImAxis_X1, sph::Time::GameTime - 2, sph::Time::GameTime, ImGuiCond_Always);
 			ImPlot::SetupAxisLimits(ImAxis_Y1, 0.f, 0.125f);
 
 			ImPlot::SetupAxes("Game time", "Frame time");
-			ImPlot::PlotLine("Frame Time", m_frameTimeData->GetGameTimeData(), m_frameTimeData->GetFrameTimeData(), m_frameTimeData->GetFrameTimeDataSize(), ImPlotLineFlags_::ImPlotLineFlags_Shaded);
+			ImPlot::PlotLine("Frame Time", m_frameTimeData->GetGameTimeData(), m_frameTimeData->GetFrameTimeData(), (uint32_t)m_frameTimeData->GetFrameTimeDataSize(), ImPlotLineFlags_::ImPlotLineFlags_Shaded);
 			ImPlot::EndPlot();
 		}
 		ImGui::End();

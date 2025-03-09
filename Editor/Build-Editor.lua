@@ -14,19 +14,19 @@ project (EditorName)
 	  "../" .. ProjectName .. "/Source",
 
       -- Include Third party libs 
+      "../Vendor/include", 
+      "../Vendor/ThirdParty/GLFW/include",
+      "../Vendor/ThirdParty/Glad/include",
       "../Vendor/ThirdParty/ImGui",
       "../Vendor/ThirdParty/ImPlot",
       "../Vendor/ThirdParty/spdlog",
-      "../Vendor/include", 
-
-      -- Debug only
-      "../Vendor/ThirdParty/GLFW/include",
-      "../Vendor/ThirdParty/Glad/include",
+      "../Vendor/ThirdParty/yaml-cpp/include",
+      "../Vendor/ThirdParty/yaml-cpp/src",
     }
 
    links
    {
-	  (ProjectName)
+	  (ProjectName),
    }
 
    flags
@@ -36,6 +36,7 @@ project (EditorName)
 
    defines 
    {
+	  "YAML_CPP_STATIC_DEFINE ",
 	  "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING",
 	  "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
    }

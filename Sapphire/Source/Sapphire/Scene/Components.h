@@ -88,8 +88,8 @@ namespace sph
 	{
 		ScriptableEntity* Instance = nullptr;
 
-		ScriptableEntity* (*InstanstiateScript)();
-		void (*DestroyScript)(NativeScriptComponent*);
+		ScriptableEntity* (*InstanstiateScript)() = nullptr;
+		void (*DestroyScript)(NativeScriptComponent*) = nullptr;
 
 		template<typename T>
 		void Bind()

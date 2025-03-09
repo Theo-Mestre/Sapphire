@@ -14,14 +14,12 @@ project (AppName)
 	  "../" .. ProjectName .. "/Source",
 
       -- Include Third party libs 
+      "../Vendor/ThirdParty/GLFW/include",
+      "../Vendor/ThirdParty/Glad/include",
       "../Vendor/ThirdParty/ImGui",
       "../Vendor/ThirdParty/ImPlot",
       "../Vendor/ThirdParty/spdlog",
       "../Vendor/include", 
-
-      -- Debug only
-      "../Vendor/ThirdParty/GLFW/include",
-      "../Vendor/ThirdParty/Glad/include",
     }
 
    links

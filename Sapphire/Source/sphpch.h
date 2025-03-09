@@ -29,6 +29,8 @@
 
 #include <imgui.h>
 #include <implot.h>
+
+#include <yaml-cpp/yaml.h>
 #pragma warning(pop)
 
 #include "Sapphire/Profiling/Profiler.h"

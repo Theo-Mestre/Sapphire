@@ -10,7 +10,7 @@
 
 namespace sph
 {
-	static struct Vec3Button
+	struct Vec3Button
 	{
 		ImVec4 ButtonColor;
 		ImVec4 HoveredButtonColor;
@@ -306,7 +306,7 @@ namespace sph
 				else 
 				{
 					ImGui::Text(_component.Texture->GetPath().c_str());
-					ImGui::ImageButton((ImTextureID)_component.Texture->GetRendererID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+					ImGui::ImageButton((ImTextureID)(int64_t)_component.Texture->GetRendererID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
 				}
 
 				ImGui::Text("Color");

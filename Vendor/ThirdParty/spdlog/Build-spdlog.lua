@@ -1,8 +1,8 @@
 project "spdlog"
 	kind "StaticLib"
-	cppdialect "C++17"
 	language "C++"
-    staticruntime "off"
+	cppdialect "C++20"
+    staticruntime "on"
 
 	targetdir ("../../../Binaries/" .. OutputDir .. "/%{prj.name}")
     objdir ("../../../Binaries/Intermediates/" .. OutputDir ..  "/%{prj.name}")

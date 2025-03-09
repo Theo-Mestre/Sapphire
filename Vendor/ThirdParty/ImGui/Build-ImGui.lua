@@ -22,6 +22,11 @@ project "ImGui"
 		"imgui_demo.cpp"
 	}
 
+	flags
+    {
+        "MultiProcessorCompile"
+    }
+
 	warnings "Off"
 
 	filter "system:windows"

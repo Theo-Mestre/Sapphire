@@ -4,6 +4,7 @@
 #include "Sapphire/Renderer/Renderer.h"
 #include "Sapphire/Scene/Components.h"
 #include "Sapphire/Scene/Entity.h"
+#include "Sapphire/Scene/SceneSerializer.h"
 
 namespace sph
 {

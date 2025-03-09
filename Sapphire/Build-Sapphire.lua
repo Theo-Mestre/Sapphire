@@ -16,8 +16,9 @@ project (ProjectName)
    defines
    { 
        "SPH_BUILD", 
-       string.upper(ProjectName) .. "_ENABLE_ASSERTS",
+       "SAPPHIRE_ENABLE_ASSERTS",
        "SPH_VISUAL_PROFILING_ENABLED",
+       "YAML_CPP_STATIC_DEFINE ",
 	   "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING", 
 	   "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
    }
@@ -38,15 +39,17 @@ project (ProjectName)
         "../Vendor/ThirdParty/ImGui",
         "../Vendor/ThirdParty/ImPlot",
         "../Vendor/ThirdParty/spdlog",
+        "../Vendor/ThirdParty/yaml-cpp/include",
    }
 
    links    
-   {	  
+   {
        "GLFW",
        "Glad",
        "ImGui",
        "ImPlot",
-       "spdlog"
+       "spdlog",
+       "yaml-cpp",
    }
 
    filter "system:windows"

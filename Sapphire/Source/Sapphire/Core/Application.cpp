@@ -118,8 +118,6 @@ namespace sph
 
 	void Application::Init()
 	{
-		SPH_PROFILE_FUNCTION();
-
 		// Initialize window
 		WindowProperties props;
 		props.Title = "Sapphire Engine";
