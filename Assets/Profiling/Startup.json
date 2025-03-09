@@ -1,1 +1,0 @@
-{"otherData": {},"traceEvents":[{"cat":"function","dur":1,"name":"__cdecl sph::LayerStack::LayerStack(void)","ph":"X","pid":0,"tid":2341668193,"ts":37659353423},{"cat":"function","dur":1494,"name":"void __cdecl sph::Logger::Init(void)","ph":"X","pid":0,"tid":2341668193,"ts":37659353636}]}

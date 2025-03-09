@@ -29,6 +29,7 @@
 
 #include <imgui.h>
 #include <implot.h>
+#include <ImGuizmo.h>
 
 #include <yaml-cpp/yaml.h>
 #pragma warning(pop)

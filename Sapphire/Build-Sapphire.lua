@@ -18,7 +18,7 @@ project (ProjectName)
        "SPH_BUILD", 
        "SAPPHIRE_ENABLE_ASSERTS",
        "SPH_VISUAL_PROFILING_ENABLED",
-       "YAML_CPP_STATIC_DEFINE ",
+       "YAML_CPP_STATIC_DEFINE",
 	   "_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING", 
 	   "_SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS"
    }
@@ -37,6 +37,7 @@ project (ProjectName)
         "../Vendor/ThirdParty/GLFW/include",
         "../Vendor/ThirdParty/Glad/include",
         "../Vendor/ThirdParty/ImGui",
+        "../Vendor/ThirdParty/ImGuizmo",
         "../Vendor/ThirdParty/ImPlot",
         "../Vendor/ThirdParty/spdlog",
         "../Vendor/ThirdParty/yaml-cpp/include",
@@ -47,6 +48,7 @@ project (ProjectName)
        "GLFW",
        "Glad",
        "ImGui",
+       "ImGuizmo",
        "ImPlot",
        "spdlog",
        "yaml-cpp",

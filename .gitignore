@@ -30,3 +30,7 @@
 *.out
 *.app
 Assets/imgui.ini
+Assets/imgui.ini
+Assets/Profiling/Runtime.json
+Assets/Profiling/Shutdown.json
+Assets/Profiling/Startup.json

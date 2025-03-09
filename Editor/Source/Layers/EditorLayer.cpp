@@ -252,6 +252,8 @@ namespace sph
 		ImGui::End();
 
 		ImGui::PopStyleVar();
+
+		ImGuizmo::SetOrthographic(false);
 	}
 
 	void EditorLayer::NewScene()

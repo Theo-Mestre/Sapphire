@@ -20,6 +20,7 @@ group (ProjectName .. "/Dependencies")
 	include "Vendor/ThirdParty/Glad/Build-Glad.lua"
 	include "Vendor/ThirdParty/GLFW/Build-GLFW.lua"
 	include "Vendor/ThirdParty/ImGui/Build-ImGui.lua"
+	include "Vendor/ThirdParty/ImGuizmo/Build-ImGuizmo.lua"
 	include "Vendor/ThirdParty/ImPlot/Build-ImPlot.lua"
 	include "Vendor/ThirdParty/spdlog/Build-spdlog.lua"
 	include "Vendor/ThirdParty/Yaml-cpp/Build-yaml-cpp.lua"

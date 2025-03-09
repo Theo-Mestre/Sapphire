@@ -18,6 +18,7 @@ project (EditorName)
       "../Vendor/ThirdParty/GLFW/include",
       "../Vendor/ThirdParty/Glad/include",
       "../Vendor/ThirdParty/ImGui",
+      "../Vendor/ThirdParty/ImGuizmo",
       "../Vendor/ThirdParty/ImPlot",
       "../Vendor/ThirdParty/spdlog",
       "../Vendor/ThirdParty/yaml-cpp/include",
