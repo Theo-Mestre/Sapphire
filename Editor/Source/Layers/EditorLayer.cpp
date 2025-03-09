@@ -1,6 +1,7 @@
 ﻿#include "Sapphire/ImGui/ImGuiLayer.h"
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/SceneSerializer.h"
+#include "Sapphire/Utilities/FileIO.h"
 
 #include "EditorLayer.h"
 
@@ -52,6 +53,7 @@ namespace sph
 		m_texture = Texture2D::Create("Player.png");
 
 		m_currentScene = CreateRef<Scene>();
+		m_currentScene->SetName("Test Scene");
 
 		Entity entity = Entity::Create(m_currentScene, "Chicken");
 		entity.AddComponent<SpriteRendererComponent>(m_texture);
@@ -175,11 +177,17 @@ namespace sph
 				{
 					m_application->Close();
 				}
-				if (ImGui::MenuItem("Save"))
+				if (ImGui::MenuItem("Save Scene"))
 				{
-					// Test Save Scene
-					SceneSerializer serializer(m_currentScene);
-					serializer.Serialize("Scenes/Scene.sph");
+					SaveSceneAs();
+				}
+				if (ImGui::MenuItem("Open Scene"))
+				{
+					OpenScene();
+				}
+				if (ImGui::MenuItem("New Scene"))
+				{
+					NewScene();
 				}
 
 				ImGui::EndMenu();
@@ -204,6 +212,23 @@ namespace sph
 	void EditorLayer::OnEvent(Event& _event)
 	{
 		SPH_PROFILE_FUNCTION();
+		EventDispatcher dispatcher(_event);
+		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_METHOD(EditorLayer::OnKeyPressed));
+	}
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& _event)
+	{
+		if (_event.GetRepeatCount() > 0) return false;
+		if (Input::IsKeyPressed(KeyCode::LeftControl) == false &&
+			Input::IsKeyPressed(KeyCode::RightControl) == false) return false;
+
+		switch (_event.GetKeyCode())
+		{
+		case KeyCode::N: NewScene(); return true;
+		case KeyCode::O: OpenScene(); return true;
+		case KeyCode::S: SaveSceneAs(); return true;
+		default: return false;
+		}
 	}
 
 	void EditorLayer::OnRenderViewport()
@@ -227,5 +252,36 @@ namespace sph
 		ImGui::End();
 
 		ImGui::PopStyleVar();
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_currentScene = CreateRef<Scene>();
+		m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		m_hierarchyPanel->SetContext(m_currentScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::optional<std::string> filepath = FileIO::OpenFile("Sapphire Scene (*.sph)\0*.sph\0");
+		if (filepath)
+		{
+			m_currentScene = CreateRef<Scene>();
+			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_hierarchyPanel->SetContext(m_currentScene);
+
+			SceneSerializer serializer(m_currentScene);
+			serializer.Deserialize(*filepath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::optional<std::string> filepath = FileIO::SaveFile("Sapphire Scene (*.sph)\0*.sph\0");
+		if (filepath)
+		{
+			SceneSerializer serializer(m_currentScene);
+			serializer.Serialize(*filepath);
+		}
 	}
 }

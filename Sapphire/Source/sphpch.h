@@ -5,6 +5,7 @@
 #include <memory>
 #include <functional>
 #include <algorithm>
+#include <optional>
 
 #include <string>
 #include <array>
@@ -15,7 +16,6 @@
 #include <fstream>
 
 #include <chrono>
-
 
 #pragma warning(push, 0)
 #include <spdlog/spdlog.h>

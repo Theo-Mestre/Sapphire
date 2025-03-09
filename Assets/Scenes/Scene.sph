@@ -1,26 +1,56 @@
-Scene: Untitled
+Scene: Test Scene
 Entities:
-  - Entity: Second Camera
-    Components:
-      TransformComponent:
-        Translation: [10, 10, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: Main Camera
-    Components:
-      TransformComponent:
-        Translation: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
-  - Entity: Rect
-    Components:
-      TransformComponent:
-        Translation: [5, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [2, 1, 1]
-  - Entity: Chicken
-    Components:
-      TransformComponent:
-        Translation: [0, 0, 0]
-        Rotation: [0, 0, 0]
-        Scale: [1, 1, 1]
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Second Camera
+    TransformComponent:
+      Translation: [10, 10, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: false
+      FixedAspectRatio: false
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Main Camera
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 0.7853982
+        PerspectiveNear: 0.01
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Rect
+    TransformComponent:
+      Translation: [5, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [2, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 0, 0, 1]
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Chicken
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]

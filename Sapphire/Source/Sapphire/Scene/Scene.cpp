@@ -11,7 +11,6 @@ namespace sph
 	Scene::Scene()
 	{
 		SPH_PROFILE_FUNCTION();
-
 	}
 
 	Scene::~Scene()
@@ -59,11 +58,7 @@ namespace sph
 			}
 		}
 
-		if (!camera)
-		{
-			LogError("No camera _entity found!");
-			return;
-		}
+		if (camera == nullptr) return;
 
 		_renderer->BeginScene(*camera, cameraTransform);
 

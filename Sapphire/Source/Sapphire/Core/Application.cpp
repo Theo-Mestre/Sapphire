@@ -13,7 +13,10 @@
 #include "Sapphire/Layers/ProfilingLayer.h"
 #include "Sapphire/Profiling/Profiler.h"
 
-#include "KeyCode.h"
+// win
+#ifdef SPH_PLATFORM_WINDOWS
+	#include "Sapphire/Platform/Windows/WindowsFileIO.h"
+#endif
 
 namespace sph
 {
@@ -125,6 +128,8 @@ namespace sph
 		props.Height = 720;
 		m_window = Window::Create(props);
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
+
+		WindowsFileIO::SetHWND((void*)m_window->GetNativeWindow());
 
 		// Initialize Input
 		Input::Init(m_window);

@@ -30,8 +30,15 @@ namespace sph
 
 		void SetImGUILayer(ImGuiLayer* _imguiLayer) { m_imguiLayer = _imguiLayer; }
 
+		// File IO
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+
 	private:
 		void OnRenderViewport();
+
+		bool OnKeyPressed(KeyPressedEvent& _event);
 	private:
 		Ref<OrthographicCamera> m_camera = nullptr;
 		Scope<OrthographicCameraController> m_cameraController = nullptr;

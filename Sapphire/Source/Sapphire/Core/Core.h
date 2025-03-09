@@ -27,6 +27,7 @@
 #define BIT(x) (1 << x)
 
 #define BIND_EVENT_METHOD(method) [this](auto&&... args) -> decltype(auto) { return this->method(std::forward<decltype(args)>(args)...); }
+#define SPH_SCENE_FILE_EXTENSION "sph"
 
 #include <memory>
 

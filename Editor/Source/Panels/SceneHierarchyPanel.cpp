@@ -61,6 +61,7 @@ namespace sph
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& _context)
 	{
 		m_context = _context;
+		m_selectedEntity = {};
 	}
 
 	void SceneHierarchyPanel::DrawEntityNode(Entity _entity)

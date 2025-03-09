@@ -27,11 +27,15 @@ namespace sph
 		entt::registry& Registry() { return m_registry; }
 
 		void OnViewportResize(uint32_t _width, uint32_t _height);
+
+		inline void SetName(const std::string& _name) { m_name = _name; }
+		inline const std::string& GetName() const { return m_name; }
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity _entity, T& _component);
 	private:
 		entt::registry m_registry;
+		std::string m_name;
 
 		uint32_t m_viewportWidth = 0;
 		uint32_t m_viewportHeight = 0;
