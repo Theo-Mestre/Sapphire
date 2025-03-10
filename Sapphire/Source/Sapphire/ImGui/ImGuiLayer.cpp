@@ -148,10 +148,10 @@ namespace sph
 
 		style.IndentSpacing = 0.0f;
 		style.ItemSpacing = ImVec2(5.0f, 10.0f);
-		style.FramePadding = ImVec2(10.0f, 2.0f);
+		style.FramePadding = ImVec2(5.0f, 2.0f);
 		style.FrameRounding = 5.0f;
 
-		style.PopupBorderSize = 5.0f;
+		style.PopupBorderSize = 0.0f;
 		style.PopupRounding = 5.0f;
 	}
 
@@ -194,6 +194,8 @@ namespace sph
 
 		theme.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.43f, 0.69f, 1.0f, 1.0f);
 		theme.Colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+		theme.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
 
 		return theme;
 	}

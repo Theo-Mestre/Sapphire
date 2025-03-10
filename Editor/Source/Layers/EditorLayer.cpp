@@ -129,6 +129,7 @@ namespace sph
 		ImGui::SetNextWindowPos(viewport->Pos);
 		ImGui::SetNextWindowSize(viewport->Size);
 		ImGui::SetNextWindowViewport(viewport->ID);
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -137,9 +138,6 @@ namespace sph
 
 		ImGui::PopStyleVar(3);
 
-		// DockSpace
-		ImGuiStyle& style = ImGui::GetStyle();
-
 		ImGuiIO& io = ImGui::GetIO();
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
@@ -147,50 +145,10 @@ namespace sph
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspaceFlags);
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.08f, 0.08f, 0.08f, 1.0f));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::MenuItem("Exit"))
-				{
-					m_application->Close();
-				}
-				if (ImGui::MenuItem("Save Scene"))
-				{
-					SaveSceneAs();
-				}
-				if (ImGui::MenuItem("Open Scene"))
-				{
-					OpenScene();
-				}
-				if (ImGui::MenuItem("New Scene"))
-				{
-					NewScene();
-				}
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Editor Camera"))
-			{
-				if (ImGui::MenuItem("Reset Transform"))
-				{
-					m_editorCamera->ResetTransform();
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
-		ImGui::PopStyleColor();
-		ImGui::PopStyleVar();
+		OnMenuBarRender();
 
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();
-
-		ImGui::ShowDemoWindow();
 
 		// Viewport
 		OnRenderViewport();
@@ -227,6 +185,47 @@ namespace sph
 		case KeyCode::R: m_gizmoType = ImGuizmo::OPERATION::SCALE; return true;
 		default: return false;
 		}
+	}
+
+	void EditorLayer::OnMenuBarRender()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Exit"))
+				{
+					m_application->Close();
+				}
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					SaveSceneAs();
+				}
+				if (ImGui::MenuItem("Open Scene"))
+				{
+					OpenScene();
+				}
+				if (ImGui::MenuItem("New Scene"))
+				{
+					NewScene();
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Editor Camera"))
+			{
+				if (ImGui::MenuItem("Reset Transform"))
+				{
+					m_editorCamera->ResetTransform();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::OnRenderViewport()

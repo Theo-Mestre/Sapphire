@@ -37,6 +37,7 @@ namespace sph
 		void SaveSceneAs();
 
 	private:
+		void OnMenuBarRender();
 		void OnRenderViewport();
 		void OnDrawGuizmos();
 
