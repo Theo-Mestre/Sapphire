@@ -9,6 +9,7 @@
 
 namespace sph
 {
+	class EditorCamera;
 	class Renderer;
 	class Entity;
 
@@ -18,8 +19,11 @@ namespace sph
 		Scene();
 		~Scene();
 
-		void OnUpdate(DeltaTime _dt);
-		void OnRender(const Ref<Renderer>& _renderer);
+		void OnUpdateRuntime(DeltaTime _dt);
+		void OnUpdateEditor(DeltaTime _dt);
+
+		void OnRenderRuntime(const Ref<Renderer>& _renderer);
+		void OnRenderEditor(const Ref<Renderer>& _renderer, const Ref<EditorCamera>& _camera);
 
 		Entity CreateEntity(const std::string& _name = "");
 		void DestroyEntity(Entity _entity);

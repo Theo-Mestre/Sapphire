@@ -3,9 +3,9 @@
 
 namespace sph
 {
-	namespace mouse
+	namespace Mouse
 	{
-		enum class Button
+		enum Button
 		{
 			// From glfw3.h
 			Button1 = 0,
@@ -23,7 +23,6 @@ namespace sph
 			Middle = Button3
 		};
 	}
-
 }
 
 #endif

@@ -3,12 +3,13 @@
 
 #include "Sapphire/Core/Input.h"
 #include "Sapphire/Core/Log.h"
+#include "Sapphire/Core/KeyCode.h"
+#include "Sapphire/Core/MouseButton.h"
 #include "Sapphire/Platform/Windows/WinWindow.h"
-
 
 static GLFWwindow* s_window;
 
-bool sph::Input::IsKeyPressed(int keycode)
+bool sph::Input::IsKeyPressed(KeyCode::KeyCode keycode)
 {
 	SPH_PROFILE_FUNCTION();
 
@@ -17,7 +18,7 @@ bool sph::Input::IsKeyPressed(int keycode)
 	return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-bool sph::Input::IsMouseButtonPressed(int _button)
+bool sph::Input::IsMouseButtonPressed(Mouse::Button _button)
 {
 	SPH_PROFILE_FUNCTION();
 

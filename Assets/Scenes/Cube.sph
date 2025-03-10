@@ -2,31 +2,31 @@ Scene: ""
 Entities:
   - Entity: 12837192831273
     TagComponent:
-      Tag: Right
+      Tag: RLeft
     TransformComponent:
-      Translation: [0.35, 0, 0.35]
-      Rotation: [0, 0.7853982, 0]
+      Translation: [0.35338068, 5.7095676e-08, -0.35372603]
+      Rotation: [3.1415923, 0.7849098, 3.1415923]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.556962, 0, 0, 1]
+      Color: [0.443038, 0, 0, 1]
   - Entity: 12837192831273
     TagComponent:
-      Tag: Left
+      Tag: RRight
     TransformComponent:
-      Translation: [-0.35, 0, 0.35]
-      Rotation: [0, -0.7853982, 0]
-      Scale: [1, 1, 1]
+      Translation: [-0.35, -5.6135306e-08, -0.35]
+      Rotation: [-3.1415923, -0.78539824, -3.1415923]
+      Scale: [0.9999999, 1, 0.9999999]
     SpriteRendererComponent:
-      Color: [1, 0, 0, 1]
+      Color: [0.8902954, 0, 0, 1]
   - Entity: 12837192831273
     TagComponent:
-      Tag: Top
+      Tag: Bottom
     TransformComponent:
-      Translation: [0, 0.5, 0]
-      Rotation: [1.5707964, 0.7853982, 5.900559e-07]
+      Translation: [0, -0.5, 0]
+      Rotation: [1.5707964, 0.7853982, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.7763713, 0, 0, 1]
+      Color: [0.8227848, 0, 0, 1]
   - Entity: 12837192831273
     TagComponent:
       Tag: MainCamera
@@ -45,3 +45,30 @@ Entities:
         OrthographicFar: 1
       Primary: true
       FixedAspectRatio: false
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Top
+    TransformComponent:
+      Translation: [0, 0.5, 0]
+      Rotation: [-1.5707964, 0.7853982, 5.900559e-07]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.7763713, 0, 0, 1]
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Left
+    TransformComponent:
+      Translation: [-0.35, 0, 0.35]
+      Rotation: [0, -0.7853982, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 0, 0, 1]
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Right
+    TransformComponent:
+      Translation: [0.35, 0, 0.35]
+      Rotation: [0, 0.7853982, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.556962, 0, 0, 1]

@@ -3,6 +3,7 @@
 #include "Sapphire/Scene/SceneSerializer.h"
 #include "Sapphire/Utilities/FileIO.h"
 #include "Sapphire/Maths/Maths.h"
+#include "Sapphire/Renderer/EditorCamera.h"
 
 #include "EditorLayer.h"
 
@@ -34,6 +35,8 @@ namespace sph
 
 		m_currentScene = CreateRef<Scene>();
 		m_currentScene->SetName("Test Scene");
+
+		m_editorCamera = CreateRef<EditorCamera>(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		Entity entity = Entity::Create(m_currentScene, "Chicken");
 		entity.AddComponent<SpriteRendererComponent>(m_texture);
@@ -78,12 +81,14 @@ namespace sph
 			(spec.Width != m_viewportSize.x || spec.Height != m_viewportSize.y))
 		{
 			m_framebuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-
+			m_editorCamera->SetViewportSize(m_viewportSize.x, m_viewportSize.y);
 			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
+		m_editorCamera->OnUpdate(_dt);
+
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
-		m_currentScene->OnUpdate(_dt);
+		m_currentScene->OnUpdateEditor(_dt);
 	}
 
 	void EditorLayer::OnRender(const Ref<Renderer>& _renderer)
@@ -94,7 +99,7 @@ namespace sph
 		m_framebuffer->Clear();
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
-		m_currentScene->OnRender(_renderer);
+		m_currentScene->OnRenderEditor(_renderer, m_editorCamera);
 
 		m_framebuffer->Unbind();
 	}
@@ -106,9 +111,9 @@ namespace sph
 		if (m_enableDocking == false) return;
 
 		static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
-		windowFlags |= ImGuiWindowFlags_NoTitleBar
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar 
+			| ImGuiWindowFlags_NoDocking
+			| ImGuiWindowFlags_NoTitleBar
 			| ImGuiWindowFlags_NoCollapse
 			| ImGuiWindowFlags_NoResize
 			| ImGuiWindowFlags_NoMove
@@ -167,6 +172,16 @@ namespace sph
 				}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Editor Camera"))
+			{
+				if (ImGui::MenuItem("Reset Transform"))
+				{
+					m_editorCamera->ResetTransform();
+				}
+
+				ImGui::EndMenu();
+			}
+
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::PopStyleColor();
@@ -186,6 +201,8 @@ namespace sph
 	void EditorLayer::OnEvent(Event& _event)
 	{
 		SPH_PROFILE_FUNCTION();
+		m_editorCamera->OnEvent(_event);
+
 		EventDispatcher dispatcher(_event);
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_METHOD(EditorLayer::OnKeyPressed));
 	}
@@ -243,21 +260,15 @@ namespace sph
 		Entity selectedEntity = m_hierarchyPanel->GetSelectedEntity();
 		if (!selectedEntity.IsValid() || m_gizmoType == -1) return;
 
-		auto cameraEntity = m_currentScene->GetPrimaryCameraEntity();
-		if (!cameraEntity.IsValid()) return;
-
-		const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-
-		ImGuizmo::SetOrthographic((bool)camera.GetProjectionType());
+		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
+
+		const glm::mat4& cameraProjection = m_editorCamera->GetProjection();
+		glm::mat4 cameraView = m_editorCamera->GetViewMatrix();
 
 		float windowWidth = (float)ImGui::GetWindowWidth();
 		float windowHeight = (float)ImGui::GetWindowHeight();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-		// Camera
-		const glm::mat4& cameraProjection = camera.GetProjection();
-		glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
 
 		// Entity transform
 		auto& tc = selectedEntity.GetComponent<TransformComponent>();

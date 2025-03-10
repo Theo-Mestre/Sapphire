@@ -8,6 +8,7 @@ namespace sph
 	class ImGuiLayer;
 	class SceneHierarchyPanel;
 	class PropertiesPanel;
+	class EditorCamera;
 
 	class EditorLayer
 		: public Layer
@@ -45,6 +46,8 @@ namespace sph
 		Scope<OrthographicCameraController> m_cameraController = nullptr;
 
 		Ref<Scene> m_currentScene = nullptr;
+
+		Ref<EditorCamera> m_editorCamera = nullptr;
 
 		Ref<UniformBuffer> m_appDataUniformBuffer = nullptr;
 		Ref<Framebuffer> m_framebuffer = nullptr;

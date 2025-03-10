@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Sapphire/Renderer/Renderer.h"
+#include "Sapphire/Renderer/EditorCamera.h"
 #include "Sapphire/Scene/Components.h"
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/SceneSerializer.h"
@@ -20,7 +21,7 @@ namespace sph
 		m_registry.clear();
 	}
 
-	void Scene::OnUpdate(DeltaTime _dt)
+	void Scene::OnUpdateRuntime(DeltaTime _dt)
 	{
 		SPH_PROFILE_FUNCTION();
 
@@ -37,7 +38,11 @@ namespace sph
 			});
 	}
 
-	void Scene::OnRender(const Ref<Renderer>& _renderer)
+	void Scene::OnUpdateEditor(DeltaTime _dt)
+	{
+	}
+
+	void Scene::OnRenderRuntime(const Ref<Renderer>& _renderer)
 	{
 		SPH_PROFILE_FUNCTION();
 
@@ -56,6 +61,20 @@ namespace sph
 			_renderer->DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color);
 		}
 
+		_renderer->EndScene();
+	}
+
+	void Scene::OnRenderEditor(const Ref<Renderer>& _renderer, const Ref<EditorCamera>& _camera)
+	{
+		SPH_PROFILE_FUNCTION();
+
+		_renderer->BeginScene(_camera->GetViewProjection());
+		auto group = m_registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		for (auto _entity : group)
+		{
+			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(_entity);
+			_renderer->DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color);
+		}
 		_renderer->EndScene();
 	}
 
