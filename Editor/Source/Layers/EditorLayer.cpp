@@ -244,6 +244,8 @@ namespace sph
 		if (!selectedEntity.IsValid() || m_gizmoType == -1) return;
 
 		auto cameraEntity = m_currentScene->GetPrimaryCameraEntity();
+		if (!cameraEntity.IsValid()) return;
+
 		const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
 
 		ImGuizmo::SetOrthographic((bool)camera.GetProjectionType());
