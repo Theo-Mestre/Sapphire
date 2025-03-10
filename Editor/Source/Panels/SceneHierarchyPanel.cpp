@@ -58,6 +58,16 @@ namespace sph
 		ImGui::End();
 	}
 
+	Entity SceneHierarchyPanel::GetSelectedEntity() const
+	{
+		return m_selectedEntity;
+	}
+
+	void SceneHierarchyPanel::SetSelectedEntity(Entity _entity)
+	{
+		m_selectedEntity = _entity;
+	}
+
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& _context)
 	{
 		m_context = _context;

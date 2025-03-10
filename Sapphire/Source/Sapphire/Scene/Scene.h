@@ -28,6 +28,8 @@ namespace sph
 
 		void OnViewportResize(uint32_t _width, uint32_t _height);
 
+		Entity GetPrimaryCameraEntity();
+
 		inline void SetName(const std::string& _name) { m_name = _name; }
 		inline const std::string& GetName() const { return m_name; }
 	private:

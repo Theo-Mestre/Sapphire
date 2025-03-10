@@ -41,7 +41,6 @@ namespace sph
 
 		float GetPerspectiveFarClip() const { return m_perspectiveFar; }
 		void SetPerspectiveFarClip(float farClip) { m_perspectiveFar = farClip; RecalculateProjection(); }
-	
 		const glm::mat4& GetProjection() const { return m_projection; }
 	private:
 		void RecalculateProjection();

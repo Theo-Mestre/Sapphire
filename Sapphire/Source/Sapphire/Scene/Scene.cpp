@@ -41,26 +41,13 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		Camera* camera = nullptr;
-		glm::mat4 cameraTransform;
-		{
-			auto view = m_registry.view<CameraComponent, TransformComponent>();
+		auto mainCameraEntity = GetPrimaryCameraEntity();
+		if (mainCameraEntity.IsValid() == false) return;
 
-			for (auto _entity : view)
-			{
-				auto [cameraComponent, transform] = view.get<CameraComponent, TransformComponent>(_entity);
+		Camera& camera = mainCameraEntity.GetComponent<CameraComponent>().Camera;
+		glm::mat4 cameraTransform = mainCameraEntity.GetComponent<TransformComponent>().GetTransform();
 
-				if (!cameraComponent.IsPrimary) continue;
-
-				camera = &cameraComponent.Camera;
-				cameraTransform = transform.GetTransform();
-				break;
-			}
-		}
-
-		if (camera == nullptr) return;
-
-		_renderer->BeginScene(*camera, cameraTransform);
+		_renderer->BeginScene(camera, cameraTransform);
 
 		auto view = m_registry.view<TransformComponent, SpriteRendererComponent>();
 		for (auto _entity : view)
@@ -102,6 +89,25 @@ namespace sph
 
 			cameraComponent.Camera.SetViewportSize(_width, _height);
 		}
+	}
+
+	Entity Scene::GetPrimaryCameraEntity()
+	{
+		Camera* camera = nullptr;
+		{
+			auto view = m_registry.view<CameraComponent>();
+
+			for (auto _entity : view)
+			{
+				auto cameraComponent = view.get<CameraComponent>(_entity);
+
+				if (!cameraComponent.IsPrimary) continue;
+
+				return Entity{ _entity, this };
+			}
+		}
+
+		return {};
 	}
 
 	template<typename T>

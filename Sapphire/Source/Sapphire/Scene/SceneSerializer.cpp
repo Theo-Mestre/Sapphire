@@ -10,7 +10,6 @@
 
 namespace YAML
 {
-
 	template<>
 	struct convert<glm::vec3>
 	{
@@ -234,8 +233,6 @@ namespace sph
 			{
 				name = tagComponent["Tag"].as<std::string>();
 			}
-
-			LogTrace("SceneSerializer: Deserialized entity with ID = {0}, name = {1}", uuid, name);
 
 			Entity deserializedEntity = m_scene->CreateEntity(name);
 

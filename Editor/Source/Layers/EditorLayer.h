@@ -37,6 +37,7 @@ namespace sph
 
 	private:
 		void OnRenderViewport();
+		void OnDrawGuizmos();
 
 		bool OnKeyPressed(KeyPressedEvent& _event);
 	private:
@@ -50,6 +51,8 @@ namespace sph
 
 		Ref<SceneHierarchyPanel> m_hierarchyPanel;
 		Ref<PropertiesPanel> m_propertiesPanel;
+
+		int32_t m_gizmoType = -1;
 
 		Entity m_mainCamera;
 		Entity m_secondCamera;

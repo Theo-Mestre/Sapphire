@@ -2,6 +2,7 @@
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/SceneSerializer.h"
 #include "Sapphire/Utilities/FileIO.h"
+#include "Sapphire/Maths/Maths.h"
 
 #include "EditorLayer.h"
 
@@ -10,27 +11,6 @@
 
 namespace sph
 {
-	// Test Script
-	class CameraController : public ScriptableEntity
-	{
-	public:
-		void OnUpdate(DeltaTime ts)
-		{
-			auto& translation = GetComponent<TransformComponent>().Translation;
-
-			static const float speed = 5.0f;
-
-			if (Input::IsKeyPressed(KeyCode::A))
-				translation.x -= speed * ts;
-			if (Input::IsKeyPressed(KeyCode::D))
-				translation.x += speed * ts;
-			if (Input::IsKeyPressed(KeyCode::W))
-				translation.y += speed * ts;
-			if (Input::IsKeyPressed(KeyCode::S))
-				translation.y -= speed * ts;
-		}
-	};
-
 	EditorLayer::EditorLayer()
 		: Layer("TestLighting")
 	{
@@ -69,14 +49,13 @@ namespace sph
 		transform2.Scale = { 2.0f, 1.0f, 1.0f };
 
 		m_mainCamera = Entity::Create(m_currentScene, "Main Camera");
-		m_mainCamera.AddComponent<CameraComponent>();
 		m_mainCamera.GetComponent<TransformComponent>().Translation = { 0.0f, 0.0f, 0.0f };
-		m_mainCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		auto camera = m_mainCamera.AddComponent<CameraComponent>().Camera;
+		camera.SetOrthographic(10.0f, -100.0f, 100.0f);
 
 		m_secondCamera = Entity::Create(m_currentScene, "Second Camera");
 		m_secondCamera.AddComponent<CameraComponent>().IsPrimary = false;
 		m_secondCamera.GetComponent<TransformComponent>().Translation = { 10.0f, 10.0f, 0.0f };
-		m_secondCamera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		// Hierarchy
 		m_hierarchyPanel = CreateRef<SceneHierarchyPanel>(m_currentScene);
@@ -129,13 +108,6 @@ namespace sph
 		static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
 
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->Pos);
-		ImGui::SetNextWindowSize(viewport->Size);
-		ImGui::SetNextWindowViewport(viewport->ID);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-
 		windowFlags |= ImGuiWindowFlags_NoTitleBar
 			| ImGuiWindowFlags_NoCollapse
 			| ImGuiWindowFlags_NoResize
@@ -148,12 +120,17 @@ namespace sph
 			windowFlags |= ImGuiWindowFlags_NoBackground;
 		}
 
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
 		ImGui::Begin("DockSpace", &m_enableDocking, windowFlags);
 
-		ImGui::PopStyleVar();
-		ImGui::PopStyleVar(2);
+		ImGui::PopStyleVar(3);
 
 		// DockSpace
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -170,7 +147,6 @@ namespace sph
 
 		if (ImGui::BeginMainMenuBar())
 		{
-
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("Exit"))
@@ -189,10 +165,8 @@ namespace sph
 				{
 					NewScene();
 				}
-
 				ImGui::EndMenu();
 			}
-
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::PopStyleColor();
@@ -224,9 +198,16 @@ namespace sph
 
 		switch (_event.GetKeyCode())
 		{
+			// File IO
 		case KeyCode::N: NewScene(); return true;
 		case KeyCode::O: OpenScene(); return true;
 		case KeyCode::S: SaveSceneAs(); return true;
+
+			// Gizmos
+		case KeyCode::Q: m_gizmoType = -1; return true;
+		case KeyCode::W: m_gizmoType = ImGuizmo::OPERATION::TRANSLATE; return true;
+		case KeyCode::E: m_gizmoType = ImGuizmo::OPERATION::ROTATE; return true;
+		case KeyCode::R: m_gizmoType = ImGuizmo::OPERATION::SCALE; return true;
 		default: return false;
 		}
 	}
@@ -248,12 +229,63 @@ namespace sph
 
 			uint64_t textureID = (uint64_t)m_framebuffer->GetTextureAttachment()->GetRendererID();
 			ImGui::Image((void*)textureID, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+
+			OnDrawGuizmos();
 		}
 		ImGui::End();
 
 		ImGui::PopStyleVar();
+	}
 
-		ImGuizmo::SetOrthographic(false);
+	void EditorLayer::OnDrawGuizmos()
+	{
+		// Guizmos
+		Entity selectedEntity = m_hierarchyPanel->GetSelectedEntity();
+		if (!selectedEntity.IsValid() || m_gizmoType == -1) return;
+
+		auto cameraEntity = m_currentScene->GetPrimaryCameraEntity();
+		const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+
+		ImGuizmo::SetOrthographic((bool)camera.GetProjectionType());
+		ImGuizmo::SetDrawlist();
+
+		float windowWidth = (float)ImGui::GetWindowWidth();
+		float windowHeight = (float)ImGui::GetWindowHeight();
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+		// Camera
+		const glm::mat4& cameraProjection = camera.GetProjection();
+		glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+		// Entity transform
+		auto& tc = selectedEntity.GetComponent<TransformComponent>();
+		glm::mat4 transform = tc.GetTransform();
+
+		// Snapping
+		bool snap = Input::IsKeyPressed(KeyCode::LeftControl);
+		float snapValue = 0.5f; // Snap to 0.5m for translation/scale
+		// Snap to 45 degrees for rotation
+		if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)
+		{
+			snapValue = 45.0f;
+		}
+
+		float snapValues[3] = { snapValue, snapValue, snapValue };
+
+		ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+			(ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+			nullptr, snap ? snapValues : nullptr);
+
+		if (ImGuizmo::IsUsing())
+		{
+			glm::vec3 translation, rotation, scale;
+			Maths::DecomposeTransform(transform, translation, rotation, scale);
+
+			glm::vec3 deltaRotation = rotation - tc.Rotation;
+			tc.Translation = translation;
+			tc.Rotation += deltaRotation;
+			tc.Scale = scale;
+		}
 	}
 
 	void EditorLayer::NewScene()

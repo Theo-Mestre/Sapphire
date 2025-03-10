@@ -16,6 +16,9 @@ namespace sph
 
 		void OnImGuiRender();
 
+		Entity GetSelectedEntity() const;
+		void SetSelectedEntity(Entity _entity);
+
 		void SetContext(const Ref<Scene>& _context);
 	private:
 		void DrawEntityNode(Entity _entity);
