@@ -24,12 +24,8 @@ namespace sph
 		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& _event) override;
 
-		void SetCamera(const Ref<OrthographicCamera>& _camera) { m_camera = _camera; }
-
 		void EnableDocking(bool _enable) { m_enableDocking = _enable; }
 		bool IsDockingEnabled() const { return m_enableDocking; }
-
-		void SetImGUILayer(ImGuiLayer* _imguiLayer) { m_imguiLayer = _imguiLayer; }
 
 		// File IO
 		void NewScene();
@@ -43,9 +39,6 @@ namespace sph
 
 		bool OnKeyPressed(KeyPressedEvent& _event);
 	private:
-		Ref<OrthographicCamera> m_camera = nullptr;
-		Scope<OrthographicCameraController> m_cameraController = nullptr;
-
 		Ref<Scene> m_currentScene = nullptr;
 
 		Ref<EditorCamera> m_editorCamera = nullptr;

@@ -97,17 +97,6 @@ namespace sph
 		m_quadVertexBufferBase = nullptr;
 	}
 
-	void BatchRenderer2D::BeginScene(const OrthographicCamera& _camera)
-	{
-		SPH_PROFILE_FUNCTION();
-
-		m_vertexArray->Bind();
-		m_shader->Bind();
-		m_shader->SetMat4("u_viewProjection", _camera.GetViewProjectionMatrix());
-
-		ResetBatchStates();
-	}
-
 	void BatchRenderer2D::BeginScene(const glm::mat4& _viewProjection)
 	{
 		SPH_PROFILE_FUNCTION();

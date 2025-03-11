@@ -22,7 +22,6 @@ namespace sph
 		virtual void Init() = 0;
 		virtual void Shutdown() = 0;
 
-		virtual void BeginScene(const OrthographicCamera& _camera) = 0;
 		virtual void BeginScene(const glm::mat4& _viewProjection) = 0;
 		virtual void BeginScene(const Camera& _camera, const glm::mat4& _transform) = 0;
 		virtual void EndScene() = 0;

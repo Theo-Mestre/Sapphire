@@ -38,6 +38,9 @@ namespace sph
 
 		m_editorCamera = CreateRef<EditorCamera>(30.0f, 1.778f, 0.1f, 1000.0f);
 
+		m_imguiLayer = m_application->GetLayerOfType<ImGuiLayer>();
+		ASSERT(m_imguiLayer != nullptr, "EditorLayer requires ImGuiLayer!");
+
 		Entity entity = Entity::Create(m_currentScene, "Chicken");
 		entity.AddComponent<SpriteRendererComponent>(m_texture);
 
@@ -81,7 +84,7 @@ namespace sph
 			(spec.Width != m_viewportSize.x || spec.Height != m_viewportSize.y))
 		{
 			m_framebuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			m_editorCamera->SetViewportSize(m_viewportSize.x, m_viewportSize.y);
+			m_editorCamera->SetViewportSize((float)m_viewportSize.x, (float)m_viewportSize.y);
 			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 

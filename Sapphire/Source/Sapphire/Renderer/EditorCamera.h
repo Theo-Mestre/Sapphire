@@ -11,7 +11,7 @@ namespace sph
 	{
 	public:
 		EditorCamera() = default;
-		EditorCamera(float _fov, float aspectRatio, float nearClip, float farClip);
+		EditorCamera(float _fov, float _aspectRatio, float _nearClip, float _farClip);
 
 		void OnUpdate(DeltaTime _dt);
 		void OnEvent(Event& _event);

@@ -30,6 +30,9 @@ namespace sph
 		virtual void PopLayer(Layer* _layer);
 		virtual void PopOverlay(Layer* _overlay);
 
+		template <typename T>
+		T* GetLayerOfType();
+
 		// Window and rendering
 		inline Window& GetWindow() const { return *m_window; }
 		void SetRenderer(Ref<Renderer> _renderer) { m_renderer = _renderer; }

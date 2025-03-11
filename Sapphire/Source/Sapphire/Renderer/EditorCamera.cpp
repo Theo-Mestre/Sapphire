@@ -14,11 +14,17 @@
 namespace sph
 {
 	EditorCamera::EditorCamera(float _fov, float _aspectRatio, float _nearClip, float _farClip)
-		: m_FOV(_fov)
+		: Camera(glm::perspective(glm::radians(_fov), _aspectRatio, _nearClip, _farClip))
+		, m_FOV(_fov)
 		, m_aspectRatio(_aspectRatio)
 		, m_nearClip(_nearClip)
 		, m_farClip(_farClip)
+		, m_position(0.0f, 0.0f, 0.0f)
+		, m_focalPoint(0.0f, 0.0f, 0.0f)
+		, m_distance(10.0f)
+		, m_viewMatrix(1.0f)
 	{
+		UpdateView();
 	}
 
 	void EditorCamera::OnUpdate(DeltaTime dt)

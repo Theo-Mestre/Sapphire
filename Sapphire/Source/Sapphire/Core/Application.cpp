@@ -119,6 +119,25 @@ namespace sph
 		m_layerStack.PopOverlay(_overlay);
 	}
 
+	template<typename T>
+	T* Application::GetLayerOfType()
+	{
+		static_assert(std::is_base_of<Layer, T>::value, "T must be a layer!");
+		for (auto layer : m_layerStack)
+		{
+			if (typeid(*layer) == typeid(T))
+			{
+				return static_cast<T*>(layer);
+			}
+		}
+	}
+
+	template<>
+	ImGuiLayer* Application::GetLayerOfType<ImGuiLayer>()
+	{
+		return m_imGuiLayer;
+	}
+
 	void Application::Init()
 	{
 		// Initialize window

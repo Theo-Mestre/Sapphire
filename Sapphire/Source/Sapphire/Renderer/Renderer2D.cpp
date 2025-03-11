@@ -70,14 +70,6 @@ namespace sph
 		m_whiteTexture.reset();
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& _camera)
-	{
-		SPH_PROFILE_FUNCTION();
-
-		m_shader->Bind();
-		m_shader->SetMat4("u_viewProjection", _camera.GetViewProjectionMatrix());
-	}
-
 	void Renderer2D::BeginScene(const glm::mat4& _viewProjection)
 	{
 		SPH_PROFILE_FUNCTION();

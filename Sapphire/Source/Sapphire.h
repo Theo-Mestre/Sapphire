@@ -38,8 +38,6 @@
 
 #include "Sapphire/Renderer/Camera.h"
 
-#include "Sapphire/Core/OrthographicCameraController.h"
-
 #include "Sapphire/Profiling/Profiler.h"
 
 #include <glm/glm.hpp>
