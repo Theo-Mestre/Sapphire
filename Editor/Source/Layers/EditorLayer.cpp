@@ -71,37 +71,19 @@ namespace sph
 			m_editorCamera->SetViewportSize((float)m_viewportSize.x, (float)m_viewportSize.y);
 			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
-		m_framebuffer->Bind();
 
 		m_editorCamera->OnUpdate(_dt);
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
 		m_currentScene->OnUpdateEditor(_dt);
 
-		auto pos = ImGui::GetMousePos();
-		pos.x -= m_viewportBounds[0].x;
-		pos.y -= m_viewportBounds[0].y;
-		glm::vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
-		pos.y += viewportSize.y;
-		pos.y = viewportSize.y - pos.y;
-		int mouseX = (int)pos.x;
-		int mouseY = (int)pos.y;
-
-		LogDebug("Mouse: {0}, {1}", mouseX, mouseY);
-
-		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
-		{
-			int32_t pixelData = m_framebuffer->ReadPixel(1, mouseX, mouseY);
-			m_hoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_currentScene.get());
-		}
-		m_framebuffer->ClearAttachment(1, -1);
-		m_framebuffer->Unbind();
+		OnMousePickingUpdate();
 	}
 
 	void EditorLayer::OnRender(const Ref<Renderer>& _renderer)
 	{
 		SPH_PROFILE_FUNCTION();
-	
+
 		m_framebuffer->Bind();
 		m_framebuffer->Clear();
 
@@ -227,6 +209,27 @@ namespace sph
 		return false;
 	}
 
+	void EditorLayer::OnMousePickingUpdate()
+	{
+		m_framebuffer->Bind();
+		auto pos = ImGui::GetMousePos();
+		pos.x -= m_viewportBounds[0].x;
+		pos.y -= m_viewportBounds[0].y;
+		glm::vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+		pos.y += viewportSize.y;
+		pos.y = viewportSize.y - pos.y;
+		int mouseX = (int)pos.x;
+		int mouseY = (int)pos.y;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int32_t pixelData = m_framebuffer->ReadPixel(1, mouseX, mouseY);
+			m_hoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_currentScene.get());
+		}
+		m_framebuffer->ClearAttachment(1, -1);
+		m_framebuffer->Unbind();
+	}
+
 	void EditorLayer::OnMenuBarRender()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -235,10 +238,6 @@ namespace sph
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Exit"))
-				{
-					m_application->Close();
-				}
 				if (ImGui::MenuItem("Save Scene"))
 				{
 					SaveSceneAs();
@@ -250,6 +249,10 @@ namespace sph
 				if (ImGui::MenuItem("New Scene"))
 				{
 					NewScene();
+				}
+				if (ImGui::MenuItem("Exit"))
+				{
+					m_application->Close();
 				}
 				ImGui::EndMenu();
 			}
@@ -315,9 +318,12 @@ namespace sph
 		const glm::mat4& cameraProjection = m_editorCamera->GetProjection();
 		glm::mat4 cameraView = m_editorCamera->GetViewMatrix();
 
-		float windowWidth = (float)ImGui::GetWindowWidth();
-		float windowHeight = (float)ImGui::GetWindowHeight();
-		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+		ImGuizmo::SetRect(
+			m_viewportBounds[0].x,
+			m_viewportBounds[0].y,
+			m_viewportBounds[1].x - m_viewportBounds[0].x,
+			m_viewportBounds[1].y - m_viewportBounds[0].y
+		);
 
 		// Entity transform
 		auto& tc = selectedEntity.GetComponent<TransformComponent>();

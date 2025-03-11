@@ -34,6 +34,8 @@ namespace sph
 		void SaveSceneAs();
 
 	private:
+		void OnMousePickingUpdate();
+
 		void OnMenuBarRender();
 		void OnRenderViewport();
 		void OnDrawGuizmos();

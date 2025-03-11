@@ -46,7 +46,7 @@ void main()
 	int intTexIndex = int(round(v_texIndex));
 
 	vec4 texColor = texture(u_textures[intTexIndex], v_texCoord * v_tilingFactor);
-	color = v_color * texColor + vec4(v_entityID, 0.0, 0.0, 1.0);
+	color = v_color * texColor;
 
 	entityIDMap = v_entityID;
 }
