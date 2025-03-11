@@ -61,7 +61,7 @@ namespace sph
 		for (auto _entity : view)
 		{
 			auto [transform, sprite] = view.get<TransformComponent, SpriteRendererComponent>(_entity);
-			_renderer->DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color);
+			_renderer->DrawSprite(transform.GetTransform(), sprite, (int32_t)_entity);
 		}
 
 		_renderer->EndScene();
@@ -76,7 +76,7 @@ namespace sph
 		for (auto _entity : group)
 		{
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(_entity);
-			_renderer->DrawQuad(transform.GetTransform(), sprite.Texture, sprite.Color);
+			_renderer->DrawSprite(transform.GetTransform(), sprite, (int32_t)_entity);
 		}
 		_renderer->EndScene();
 	}

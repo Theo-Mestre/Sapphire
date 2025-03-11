@@ -39,6 +39,7 @@ namespace sph
 		void OnDrawGuizmos();
 
 		bool OnKeyPressed(KeyPressedEvent& _event);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& _event);
 	private:
 		Ref<Scene> m_currentScene = nullptr;
 
@@ -52,9 +53,7 @@ namespace sph
 
 		int32_t m_gizmoType = -1;
 
-		Entity m_mainCamera;
-		Entity m_secondCamera;
-		bool m_primaryCamera = true;
+		Entity m_hoveredEntity = Entity();
 
 		Ref<Texture2D> m_texture = nullptr;
 
@@ -62,6 +61,7 @@ namespace sph
 
 		bool m_enableDocking = true;
 		glm::ivec2 m_viewportSize = { 0, 0 };
+		glm::vec2 m_viewportBounds[2] = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 		ImGuiLayer* m_imguiLayer = nullptr;
 	};

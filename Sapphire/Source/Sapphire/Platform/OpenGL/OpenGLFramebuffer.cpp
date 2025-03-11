@@ -9,7 +9,7 @@ namespace sph
 {
 	static constexpr uint32_t MAX_FRAMEBUFFER_SIZE = 8192;
 
-	namespace Utilities 
+	namespace Utilities
 	{
 		static GLenum TextureTarget(bool _multisampled)
 		{
@@ -98,10 +98,13 @@ namespace sph
 
 		for (auto spec : m_specification.Attachments.Attachments)
 		{
-			if (!Utilities::IsDepthFormat(spec.TextureFormat))
-				m_colorAttachmentSpecifications.emplace_back(spec);
-			else
+			if (Utilities::IsDepthFormat(spec.TextureFormat))
+			{
 				m_depthAttachmentSpecification = spec;
+				continue;
+			}
+
+			m_colorAttachmentSpecifications.emplace_back(spec);
 		}
 
 		Resize();
@@ -110,15 +113,16 @@ namespace sph
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		SPH_PROFILE_FUNCTION();
-		glDeleteTextures(m_colorAttachments.size(), m_colorAttachments.data());
 		glDeleteFramebuffers(1, &m_rendererID);
+		glDeleteTextures(m_colorAttachments.size(), m_colorAttachments.data());
+		glDeleteTextures(1, &m_depthAttachment);
 	}
 
 	void OpenGLFramebuffer::Bind()
 	{
 		SPH_PROFILE_FUNCTION();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID); 
+		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);
 		glViewport(0, 0, m_specification.Width, m_specification.Height);
 	}
 
@@ -139,7 +143,7 @@ namespace sph
 			glDeleteFramebuffers(1, &m_rendererID);
 			glDeleteTextures(m_colorAttachments.size(), m_colorAttachments.data());
 			glDeleteTextures(1, &m_depthAttachment);
-			
+
 			m_colorAttachments.clear();
 			m_depthAttachment = 0;
 		}
@@ -226,11 +230,11 @@ namespace sph
 	{
 		ASSERT(_attachmentIndex < m_colorAttachments.size(), "Framebuffer: Color attachment index is invalid!");
 
-		int32_t pixelData;
+		int32_t pixelData = -1;
 
 		glReadBuffer(GL_COLOR_ATTACHMENT0 + _attachmentIndex);
 		glReadPixels(_x, _y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
-		
+
 		return pixelData;
 	}
 
@@ -240,8 +244,8 @@ namespace sph
 
 		auto& spec = m_colorAttachmentSpecifications[_attachmentIndex];
 
-		glClearTexImage(m_colorAttachments[_attachmentIndex], 0, 
-			Utilities::FramebufferTextureFormatToGL(spec.TextureFormat), 
+		glClearTexImage(m_colorAttachments[_attachmentIndex], 0,
+			Utilities::FramebufferTextureFormatToGL(spec.TextureFormat),
 			GL_INT, &_value);
 	}
 

@@ -37,9 +37,7 @@ namespace sph
 		spec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		spec.Width = 1280;
 		spec.Height = 720;
-
 		m_framebuffer = Framebuffer::Create(spec);
-		m_framebuffer->Clear();
 
 		// Scene
 		m_currentScene = CreateRef<Scene>();
@@ -73,19 +71,37 @@ namespace sph
 			m_editorCamera->SetViewportSize((float)m_viewportSize.x, (float)m_viewportSize.y);
 			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
+		m_framebuffer->Bind();
 
 		m_editorCamera->OnUpdate(_dt);
 
-		m_framebuffer->ClearAttachment(1, -1);
-
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
 		m_currentScene->OnUpdateEditor(_dt);
+
+		auto pos = ImGui::GetMousePos();
+		pos.x -= m_viewportBounds[0].x;
+		pos.y -= m_viewportBounds[0].y;
+		glm::vec2 viewportSize = m_viewportBounds[1] - m_viewportBounds[0];
+		pos.y += viewportSize.y;
+		pos.y = viewportSize.y - pos.y;
+		int mouseX = (int)pos.x;
+		int mouseY = (int)pos.y;
+
+		LogDebug("Mouse: {0}, {1}", mouseX, mouseY);
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
+		{
+			int32_t pixelData = m_framebuffer->ReadPixel(1, mouseX, mouseY);
+			m_hoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_currentScene.get());
+		}
+		m_framebuffer->ClearAttachment(1, -1);
+		m_framebuffer->Unbind();
 	}
 
 	void EditorLayer::OnRender(const Ref<Renderer>& _renderer)
 	{
 		SPH_PROFILE_FUNCTION();
-
+	
 		m_framebuffer->Bind();
 		m_framebuffer->Clear();
 
@@ -141,6 +157,18 @@ namespace sph
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();
 
+		ImGui::Begin("Debug");
+		{
+			std::string name = "None";
+			if (m_hoveredEntity.IsValid())
+			{
+				name = m_hoveredEntity.GetComponent<TagComponent>().Tag;
+			}
+			ImGui::Text("Hovered Entity: %s", name.c_str());
+
+		}
+		ImGui::End();
+
 		// Viewport
 		OnRenderViewport();
 
@@ -154,6 +182,7 @@ namespace sph
 
 		EventDispatcher dispatcher(_event);
 		dispatcher.Dispatch<KeyPressedEvent>(BIND_EVENT_METHOD(EditorLayer::OnKeyPressed));
+		dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_METHOD(EditorLayer::OnMouseButtonPressed));
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& _event)
@@ -162,17 +191,17 @@ namespace sph
 		if (Input::IsKeyPressed(KeyCode::LeftControl) == false &&
 			Input::IsKeyPressed(KeyCode::RightControl) == false) return false;
 
+		// File IO
 		switch (_event.GetKeyCode())
 		{
-			// File IO
 		case KeyCode::N: NewScene(); return true;
 		case KeyCode::O: OpenScene(); return true;
 		case KeyCode::S: SaveSceneAs(); return true;
-		default:
+		default: break;
 		}
 
 		// Gizmos
-		if (ImGuizmo::IsUsing()) return;
+		if (ImGuizmo::IsUsing()) return false;
 		switch (_event.GetKeyCode())
 		{
 		case KeyCode::Q: m_gizmoType = -1; return true;
@@ -181,6 +210,21 @@ namespace sph
 		case KeyCode::R: m_gizmoType = ImGuizmo::OPERATION::SCALE; return true;
 		default: return false;
 		}
+	}
+
+	bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& _event)
+	{
+		auto mousePosition = Input::GetMousePosition();
+
+		if (_event.GetMouseButton() == Mouse::Button::Left)
+		{
+			if (m_hoveredEntity.IsValid())
+			{
+				m_hierarchyPanel->SetSelectedEntity(m_hoveredEntity);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	void EditorLayer::OnMenuBarRender()
@@ -241,6 +285,16 @@ namespace sph
 
 			uint64_t textureID = (uint64_t)m_framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+
+			auto viewportOffset = ImGui::GetCursorPos();
+			auto windowSize = ImGui::GetWindowSize();
+			ImVec2 minBound = ImGui::GetWindowPos();
+			minBound.x += viewportOffset.x;
+			minBound.y += viewportOffset.y;
+
+			ImVec2 maxBound = { minBound.x + windowSize.x, minBound.y + windowSize.y };
+			m_viewportBounds[0] = { minBound.x, minBound.y };
+			m_viewportBounds[1] = { maxBound.x, maxBound.y };
 
 			OnDrawGuizmos();
 		}

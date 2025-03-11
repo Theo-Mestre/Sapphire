@@ -6,7 +6,7 @@
 #include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Renderer/SubTexture2D.h"
 #include "Sapphire/Renderer/Camera.h"
-#include "Sapphire/Renderer/Sprite.h"
+#include "Sapphire/Scene/Components.h"
 #include "Sapphire/Core/Log.h"
 
 namespace sph
@@ -176,15 +176,15 @@ namespace sph
 		Renderer::Stats::QuadCount++;
 	}
 
-	void Renderer2D::DrawSprite(const Sprite& _sprite)
+	void Renderer2D::DrawSprite(const glm::mat4& _transform, const SpriteRendererComponent& _sprite, int32_t _entityID)
 	{
 		SPH_PROFILE_FUNCTION();
 
 		m_shader->Bind();
-		m_shader->SetMat4("u_transform", _sprite.GetTransform());
-		m_shader->SetFloat4("u_color", _sprite.GetColor());
+		m_shader->SetMat4("u_transform", _transform);
+		m_shader->SetFloat4("u_color", _sprite.Color);
 
-		_sprite.GetTexture()->Bind();
+		_sprite.Texture->Bind();
 		m_vertexArray->Bind();
 		RenderCommand::DrawIndexed(m_vertexArray);
 		Renderer::Stats::DrawCalls++;

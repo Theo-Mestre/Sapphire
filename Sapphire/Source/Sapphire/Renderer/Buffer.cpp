@@ -38,21 +38,21 @@ namespace sph
 
 
 	BufferElement::BufferElement()
-		: name("")
-		, type(ShaderDataType::None)
-		, size(0)
-		, offset(0)
-		, normalized(false)
+		: Name("")
+		, Type(ShaderDataType::None)
+		, Size(0)
+		, Offset(0)
+		, Normalized(false)
 	{
 		SPH_PROFILE_FUNCTION();
 	}
 
 	BufferElement::BufferElement(ShaderDataType _type, const std::string& _name, bool _normalized)
-		: name(_name)
-		, type(_type)
-		, size(ShaderDataTypeSize(_type))
-		, offset(0)
-		, normalized(_normalized)
+		: Name(_name)
+		, Type(_type)
+		, Size(ShaderDataTypeSize(_type))
+		, Offset(0)
+		, Normalized(_normalized)
 	{
 		SPH_PROFILE_FUNCTION();
 	}
@@ -61,7 +61,7 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		switch (type)
+		switch (Type)
 		{
 		case ShaderDataType::Float:		return 1;
 		case ShaderDataType::Float2:	return 2;
@@ -108,8 +108,8 @@ namespace sph
 		m_stride = 0;
 		for (auto& element : m_elements)
 		{
-			element.offset = m_stride;
-			m_stride += element.size;
+			element.Offset = m_stride;
+			m_stride += element.Size;
 		}
 	}
 

@@ -169,8 +169,7 @@ namespace sph
 
 	uint32_t OpenGLShader::LinkProgram(uint32_t _vertexShader, uint32_t _fragmentShader)
 	{
-		SPH_PROFILE_FUNCTION();
-
+		SPH_PROFILE_FUNCTION(); 
 		GLuint program = glCreateProgram();
 
 		// Attach the shaders to the program

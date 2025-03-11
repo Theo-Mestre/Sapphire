@@ -8,7 +8,7 @@
 #include "Sapphire/Renderer/Camera.h"
 #include "Sapphire/Renderer/RenderCommand.h"
 #include "Sapphire/Renderer/SubTexture2D.h"
-#include "Sapphire/Renderer/Sprite.h"
+#include "Sapphire/Scene/Components.h"
 #include "Sapphire/Profiling/Profiler.h"
 #include "Sapphire/Core/Log.h"
 
@@ -21,6 +21,7 @@ namespace sph
 		glm::vec2 texCoord;
 		float texIndex;
 		float tilingFactor;
+		int entityID;
 	};
 
 	BatchRenderer2D::~BatchRenderer2D()
@@ -48,7 +49,8 @@ namespace sph
 			{ ShaderDataType::Float4, "a_Color" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
 			{ ShaderDataType::Float, "a_TexIndex" },
-			{ ShaderDataType::Float, "a_TilingFactor" }
+			{ ShaderDataType::Float, "a_TilingFactor" },
+			{ ShaderDataType::Int, "a_entityID" }
 		};
 		m_vertexBuffer->SetLayout(layout);
 		m_vertexArray->AddVertexBuffer(m_vertexBuffer);
@@ -209,15 +211,15 @@ namespace sph
 		Renderer2D::Stats::QuadCount++;
 	}
 
-	void BatchRenderer2D::DrawSprite(const Sprite& _sprite)
+	void BatchRenderer2D::DrawSprite(const glm::mat4& _transform, const SpriteRendererComponent& _sprite, int32_t _entityID)
 	{
 		SPH_PROFILE_FUNCTION();
 
 		CheckBatchState();
 
-		float textureIndex = SubmitTexture(_sprite.GetTexture());
+		float textureIndex = SubmitTexture(_sprite.Texture);
 
-		UpdateCurrentQuadVertex(_sprite.GetTransform(), _sprite.GetColor(), textureIndex, 1.0f);
+		UpdateCurrentQuadVertex(_transform, _sprite.Color, textureIndex, 1.0f, _entityID);
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()
@@ -278,13 +280,14 @@ namespace sph
 			m_quadVertexBufferPointer->texIndex = _texID;
 			m_quadVertexBufferPointer->texCoord = _texCoords[i];
 			m_quadVertexBufferPointer->tilingFactor = _tilingFactor;
+			m_quadVertexBufferPointer->entityID = -1;
 			m_quadVertexBufferPointer++;
 		}
 
 		m_quadIndexCount += 6;
 	}
 
-	void BatchRenderer2D::UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords)
+	void BatchRenderer2D::UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, int32_t _entityID, const glm::vec2* _texCoords)
 	{
 		SPH_PROFILE_FUNCTION();
 
@@ -297,6 +300,7 @@ namespace sph
 			m_quadVertexBufferPointer->texIndex = _texID;
 			m_quadVertexBufferPointer->texCoord = _texCoords[i];
 			m_quadVertexBufferPointer->tilingFactor = _tilingFactor;
+			m_quadVertexBufferPointer->entityID = _entityID;
 			m_quadVertexBufferPointer++;
 		}
 

@@ -35,7 +35,7 @@ namespace sph
 
 		virtual void DrawQuad(const glm::mat4& _transform, const Ref<Texture2D>& _texture, const glm::vec4& _color = glm::vec4(1.0f)) override;
 
-		virtual void DrawSprite(const Sprite& _sprite) override;
+		virtual void DrawSprite(const glm::mat4& _transform, const SpriteRendererComponent& _sprite, int32_t _entityID = -1) override;
 
 		static Ref<Renderer> Create();
 
@@ -45,7 +45,7 @@ namespace sph
 		void CheckBatchState();
 		void ResetBatchStates();
 		void UpdateCurrentQuadVertex(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = s_defaultTexCoords);
-		void UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, const glm::vec2* _texCoords = s_defaultTexCoords);
+		void UpdateCurrentQuadVertex(const glm::mat4& _transform, const glm::vec4& _color, float _texID, float _tilingFactor, int32_t _entityID = -1, const glm::vec2* _texCoords = s_defaultTexCoords);
 
 		float SubmitTexture(const Ref<Texture2D>& _texture);
 	private:

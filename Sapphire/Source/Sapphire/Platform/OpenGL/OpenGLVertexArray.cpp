@@ -82,14 +82,52 @@ namespace sph
 		const auto& layout = _vertexBuffer->GetLayout();
 		for (const auto& element : layout)
 		{
-			glEnableVertexAttribArray(m_vertexBufferIndex);
-			glVertexAttribPointer(m_vertexBufferIndex,
-				element.GetComponentCount(),
-				ShaderDataTypeToOpenGLBaseType(element.type),
-				element.normalized ? GL_TRUE : GL_FALSE,
-				layout.GetStride(),
-				reinterpret_cast<const void*>(static_cast<uintptr_t>(element.offset)));
-			m_vertexBufferIndex++;
+			if (element.Type <= ShaderDataType::Float4)
+			{
+				glEnableVertexAttribArray(m_vertexBufferIndex);
+				glVertexAttribPointer(m_vertexBufferIndex,
+					element.GetComponentCount(),
+					ShaderDataTypeToOpenGLBaseType(element.Type),
+					element.Normalized ? GL_TRUE : GL_FALSE,
+					layout.GetStride(),
+					(const void*)element.Offset);
+				m_vertexBufferIndex++;
+				continue;
+			}
+			else if (element.Type <= ShaderDataType::Mat4)
+			{
+				uint8_t count = element.GetComponentCount();
+				for (uint8_t i = 0; i < count; i++)
+				{
+					glEnableVertexAttribArray(m_vertexBufferIndex);
+					glVertexAttribPointer(m_vertexBufferIndex,
+						count,
+						ShaderDataTypeToOpenGLBaseType(element.Type),
+						element.Normalized ? GL_TRUE : GL_FALSE,
+						layout.GetStride(),
+						(const void*)(element.Offset + sizeof(float) * count * i));
+					glVertexAttribDivisor(m_vertexBufferIndex, 1);
+					m_vertexBufferIndex++;
+				}
+				continue;
+			}
+			else if (element.Type <= ShaderDataType::Bool)
+			{
+				glEnableVertexAttribArray(m_vertexBufferIndex);
+				glVertexAttribIPointer(m_vertexBufferIndex,
+					element.GetComponentCount(),
+					ShaderDataTypeToOpenGLBaseType(element.Type),
+
+					layout.GetStride(),
+					(const void*)element.Offset);
+				m_vertexBufferIndex++;
+				break;
+				continue;
+			}
+			else
+			{
+				ASSERT(false, "Unknown ShaderDataType!");
+			}
 		}
 
 		m_vertexBuffers.push_back(_vertexBuffer);

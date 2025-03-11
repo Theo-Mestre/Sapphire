@@ -20,11 +20,11 @@ namespace sph
 
 	struct BufferElement
 	{
-		std::string name;
-		ShaderDataType type;
-		uint32_t size;
-		uint32_t offset;
-		bool normalized;
+		std::string Name;
+		ShaderDataType Type;
+		uint32_t Size;
+		uint32_t Offset;
+		bool Normalized;
 
 		BufferElement();
 		BufferElement(ShaderDataType _type, const std::string& _name, bool _normalized = false);

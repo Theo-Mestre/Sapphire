@@ -11,7 +11,7 @@ namespace sph
 	class Camera;
 	class Texture2D;
 	class SubTexture2D;
-	class Sprite;
+	class SpriteRendererComponent;
 
 	class Renderer
 	{
@@ -32,7 +32,7 @@ namespace sph
 		virtual void DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture) = 0;
 		virtual void DrawQuad(const glm::mat4& _transform, const Ref<Texture2D>& _texture, const glm::vec4& _color = glm::vec4(1.0f)) = 0;
 
-		virtual void DrawSprite(const Sprite& _sprite) = 0;
+		virtual void DrawSprite(const glm::mat4& _transform, const SpriteRendererComponent& _sprite, int32_t _entityID = -1) = 0;
 
 		void OnWindowResize(uint32_t _width, uint32_t _height);
 

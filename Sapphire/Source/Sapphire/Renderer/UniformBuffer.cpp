@@ -38,8 +38,8 @@ namespace sph
 		m_stride = 0;
 		for (auto& element : m_elements)
 		{
-			element.offset = m_stride;
-			m_stride += element.size;
+			element.Offset = m_stride;
+			m_stride += element.Size;
 		}
 	}
 
