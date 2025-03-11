@@ -63,7 +63,7 @@ namespace sph
 	{
 		SPH_PROFILE_FUNCTION();
 
-		FramebufferSpecification spec = m_framebuffer->GetSpecification();
+		const FramebufferSpecification& spec = m_framebuffer->GetSpecification();
 		bool viewportSizeIsValid = m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f;
 		bool viewportSizeChanged = spec.Width != m_viewportSize.x || spec.Height != m_viewportSize.y;
 
@@ -75,6 +75,8 @@ namespace sph
 		}
 
 		m_editorCamera->OnUpdate(_dt);
+
+		m_framebuffer->ClearAttachment(1, -1);
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
 		m_currentScene->OnUpdateEditor(_dt);

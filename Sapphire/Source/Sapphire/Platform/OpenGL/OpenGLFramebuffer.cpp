@@ -9,7 +9,7 @@ namespace sph
 {
 	static constexpr uint32_t MAX_FRAMEBUFFER_SIZE = 8192;
 
-	namespace Utils 
+	namespace Utilities 
 	{
 		static GLenum TextureTarget(bool _multisampled)
 		{
@@ -78,6 +78,17 @@ namespace sph
 			return false;
 		}
 
+		static GLenum FramebufferTextureFormatToGL(FramebufferTextureFormat _format)
+		{
+			switch (_format)
+			{
+			case FramebufferTextureFormat::RGBA8:       return GL_RGBA8;
+			case FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+			}
+
+			ASSERT(false, "Unknown format!");
+			return 0;
+		}
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& _specification)
@@ -87,7 +98,7 @@ namespace sph
 
 		for (auto spec : m_specification.Attachments.Attachments)
 		{
-			if (!Utils::IsDepthFormat(spec.TextureFormat))
+			if (!Utilities::IsDepthFormat(spec.TextureFormat))
 				m_colorAttachmentSpecifications.emplace_back(spec);
 			else
 				m_depthAttachmentSpecification = spec;
@@ -142,19 +153,19 @@ namespace sph
 		if (m_colorAttachmentSpecifications.size())
 		{
 			m_colorAttachments.resize(m_colorAttachmentSpecifications.size());
-			Utils::CreateTextures(multisample, m_colorAttachments.data(), m_colorAttachments.size());
+			Utilities::CreateTextures(multisample, m_colorAttachments.data(), m_colorAttachments.size());
 
 			for (size_t i = 0; i < m_colorAttachments.size(); i++)
 			{
-				Utils::BindTexture(multisample, m_colorAttachments[i]);
+				Utilities::BindTexture(multisample, m_colorAttachments[i]);
 				switch (m_colorAttachmentSpecifications[i].TextureFormat)
 				{
 				case FramebufferTextureFormat::RGBA8:
 
-					Utils::AttachColorTexture(m_colorAttachments[i], m_specification.Samples, GL_RGBA8, GL_RGBA, m_specification.Width, m_specification.Height, i);
+					Utilities::AttachColorTexture(m_colorAttachments[i], m_specification.Samples, GL_RGBA8, GL_RGBA, m_specification.Width, m_specification.Height, i);
 					break;
 				case FramebufferTextureFormat::RED_INTEGER:
-					Utils::AttachColorTexture(m_colorAttachments[i], m_specification.Samples, GL_R32I, GL_RED_INTEGER, m_specification.Width, m_specification.Height, i);
+					Utilities::AttachColorTexture(m_colorAttachments[i], m_specification.Samples, GL_R32I, GL_RED_INTEGER, m_specification.Width, m_specification.Height, i);
 					break;
 				}
 			}
@@ -162,12 +173,12 @@ namespace sph
 
 		if (m_depthAttachmentSpecification.TextureFormat != FramebufferTextureFormat::None)
 		{
-			Utils::CreateTextures(multisample, &m_depthAttachment, 1);
-			Utils::BindTexture(multisample, m_depthAttachment);
+			Utilities::CreateTextures(multisample, &m_depthAttachment, 1);
+			Utilities::BindTexture(multisample, m_depthAttachment);
 			switch (m_depthAttachmentSpecification.TextureFormat)
 			{
 			case FramebufferTextureFormat::DEPTH24STENCIL8:
-				Utils::AttachDepthTexture(m_depthAttachment, m_specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_specification.Width, m_specification.Height);
+				Utilities::AttachDepthTexture(m_depthAttachment, m_specification.Samples, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, m_specification.Width, m_specification.Height);
 				break;
 			}
 		}
@@ -221,6 +232,17 @@ namespace sph
 		glReadPixels(_x, _y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 		
 		return pixelData;
+	}
+
+	void OpenGLFramebuffer::ClearAttachment(uint32_t _attachmentIndex, int32_t _value)
+	{
+		ASSERT(_attachmentIndex < m_colorAttachments.size(), "Framebuffer: Color attachment index is invalid!");
+
+		auto& spec = m_colorAttachmentSpecifications[_attachmentIndex];
+
+		glClearTexImage(m_colorAttachments[_attachmentIndex], 0, 
+			Utilities::FramebufferTextureFormatToGL(spec.TextureFormat), 
+			GL_INT, &_value);
 	}
 
 	uint32_t OpenGLFramebuffer::GetColorAttachmentRendererID(uint32_t _index) const

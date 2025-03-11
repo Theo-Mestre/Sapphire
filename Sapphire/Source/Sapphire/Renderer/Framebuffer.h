@@ -62,6 +62,8 @@ namespace sph
 
 		virtual int32_t ReadPixel(uint32_t _attachmentIndex, int32_t _x, int32_t _y) = 0;
 
+		virtual void ClearAttachment(uint32_t _attachmentIndex, int32_t _value) = 0;
+		
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t _index = 0) const = 0;
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
 

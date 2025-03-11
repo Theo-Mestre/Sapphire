@@ -23,6 +23,8 @@ namespace sph
 
 		virtual int32_t ReadPixel(uint32_t _attachmentIndex, int32_t _x, int32_t _y) override;
 
+		virtual void ClearAttachment(uint32_t _attachmentIndex, int32_t _value) override;
+
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t _index = 0) const override;
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_specification; }
 
