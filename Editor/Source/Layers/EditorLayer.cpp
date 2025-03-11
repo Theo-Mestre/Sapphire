@@ -13,7 +13,7 @@
 namespace sph
 {
 	EditorLayer::EditorLayer()
-		: Layer("TestLighting")
+		: Layer("EditorLayer")
 	{
 	}
 
@@ -28,40 +28,24 @@ namespace sph
 		// Renderer
 		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 
-		auto windowSize = m_application->GetWindow().GetSize();
-		m_framebuffer = Framebuffer::Create({ (uint32_t)windowSize.x, (uint32_t)windowSize.y });
-
-		m_texture = Texture2D::Create("Player.png");
-
-		m_currentScene = CreateRef<Scene>();
-		m_currentScene->SetName("Test Scene");
-
-		m_editorCamera = CreateRef<EditorCamera>(30.0f, 1.778f, 0.1f, 1000.0f);
-
+		// ImGuiLayer
 		m_imguiLayer = m_application->GetLayerOfType<ImGuiLayer>();
 		ASSERT(m_imguiLayer != nullptr, "EditorLayer requires ImGuiLayer!");
 
-		Entity entity = Entity::Create(m_currentScene, "Chicken");
-		entity.AddComponent<SpriteRendererComponent>(m_texture);
+		// Viewport Framebuffer
+		FramebufferSpecification spec;
+		spec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
+		spec.Width = 1280;
+		spec.Height = 720;
 
-		auto& transform = entity.GetComponent<TransformComponent>();
-		transform.Translation = { 0.0f, 0.0f, 0.0f };
-		transform.Scale = { 1.0f, 1.0f, 1.0f };
+		m_framebuffer = Framebuffer::Create(spec);
+		m_framebuffer->Clear();
 
-		Entity entity2 = Entity::Create(m_currentScene, "Rect");
-		entity2.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-		auto& transform2 = entity2.GetComponent<TransformComponent>();
-		transform2.Translation = { 5.0f, 0.0f, 0.0f };
-		transform2.Scale = { 2.0f, 1.0f, 1.0f };
+		// Scene
+		m_currentScene = CreateRef<Scene>();
 
-		m_mainCamera = Entity::Create(m_currentScene, "Main Camera");
-		m_mainCamera.GetComponent<TransformComponent>().Translation = { 0.0f, 0.0f, 0.0f };
-		auto camera = m_mainCamera.AddComponent<CameraComponent>().Camera;
-		camera.SetOrthographic(10.0f, -100.0f, 100.0f);
-
-		m_secondCamera = Entity::Create(m_currentScene, "Second Camera");
-		m_secondCamera.AddComponent<CameraComponent>().IsPrimary = false;
-		m_secondCamera.GetComponent<TransformComponent>().Translation = { 10.0f, 10.0f, 0.0f };
+		// Editor Camera
+		m_editorCamera = CreateRef<EditorCamera>(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
 		// Hierarchy
 		m_hierarchyPanel = CreateRef<SceneHierarchyPanel>(m_currentScene);
@@ -80,8 +64,10 @@ namespace sph
 		SPH_PROFILE_FUNCTION();
 
 		FramebufferSpecification spec = m_framebuffer->GetSpecification();
-		if (m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&
-			(spec.Width != m_viewportSize.x || spec.Height != m_viewportSize.y))
+		bool viewportSizeIsValid = m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f;
+		bool viewportSizeChanged = spec.Width != m_viewportSize.x || spec.Height != m_viewportSize.y;
+
+		if (viewportSizeIsValid && viewportSizeChanged)
 		{
 			m_framebuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_editorCamera->SetViewportSize((float)m_viewportSize.x, (float)m_viewportSize.y);
@@ -114,7 +100,7 @@ namespace sph
 		if (m_enableDocking == false) return;
 
 		static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar 
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar
 			| ImGuiWindowFlags_NoDocking
 			| ImGuiWindowFlags_NoTitleBar
 			| ImGuiWindowFlags_NoCollapse
@@ -180,8 +166,13 @@ namespace sph
 		case KeyCode::N: NewScene(); return true;
 		case KeyCode::O: OpenScene(); return true;
 		case KeyCode::S: SaveSceneAs(); return true;
+		default:
+		}
 
-			// Gizmos
+		// Gizmos
+		if (ImGuizmo::IsUsing()) return;
+		switch (_event.GetKeyCode())
+		{
 		case KeyCode::Q: m_gizmoType = -1; return true;
 		case KeyCode::W: m_gizmoType = ImGuizmo::OPERATION::TRANSLATE; return true;
 		case KeyCode::E: m_gizmoType = ImGuizmo::OPERATION::ROTATE; return true;
@@ -246,7 +237,7 @@ namespace sph
 			m_viewportSize.x = (int32_t)viewportSize.x;
 			m_viewportSize.y = (int32_t)viewportSize.y;
 
-			uint64_t textureID = (uint64_t)m_framebuffer->GetTextureAttachment()->GetRendererID();
+			uint64_t textureID = (uint64_t)m_framebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)textureID, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
 
 			OnDrawGuizmos();
@@ -315,13 +306,18 @@ namespace sph
 		std::optional<std::string> filepath = FileIO::OpenFile("Sapphire Scene (*.sph)\0*.sph\0");
 		if (filepath)
 		{
-			m_currentScene = CreateRef<Scene>();
-			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			m_hierarchyPanel->SetContext(m_currentScene);
-
-			SceneSerializer serializer(m_currentScene);
-			serializer.Deserialize(*filepath);
+			OpenScene(*filepath);
 		}
+	}
+
+	void EditorLayer::OpenScene(const std::string& _scenePath)
+	{
+		m_currentScene = CreateRef<Scene>();
+		m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		m_hierarchyPanel->SetContext(m_currentScene);
+
+		SceneSerializer serializer(m_currentScene);
+		serializer.Deserialize(_scenePath);
 	}
 
 	void EditorLayer::SaveSceneAs()

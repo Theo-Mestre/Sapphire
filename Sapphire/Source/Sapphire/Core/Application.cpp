@@ -13,7 +13,6 @@
 #include "Sapphire/Layers/ProfilingLayer.h"
 #include "Sapphire/Profiling/Profiler.h"
 
-// win
 #ifdef SPH_PLATFORM_WINDOWS
 	#include "Sapphire/Platform/Windows/WindowsFileIO.h"
 #endif
@@ -148,8 +147,9 @@ namespace sph
 		m_window = Window::Create(props);
 		m_window->SetEventCallback(BIND_EVENT_METHOD(Application::OnEvent));
 
+#ifdef SPH_PLATFORM_WINDOWS
 		WindowsFileIO::SetHWND((void*)m_window->GetNativeWindow());
-
+#endif
 		// Initialize Input
 		Input::Init(m_window);
 

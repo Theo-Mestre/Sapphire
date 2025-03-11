@@ -10,9 +10,12 @@
 namespace sph
 {
 	Scene::Scene()
-	{
-		SPH_PROFILE_FUNCTION();
-	}
+		: m_name("Untitled Scene")
+	{ 	}
+
+	Scene::Scene(const std::string& _name)
+		: m_name(_name)
+	{	}
 
 	Scene::~Scene()
 	{
@@ -132,7 +135,7 @@ namespace sph
 	template<typename T>
 	void Scene::OnComponentAdded(Entity _entity, T& component)
 	{
-		static_assert(false);
+		static_assert(false && "Unknown component type!");
 	}
 
 	template<>

@@ -28,6 +28,7 @@ void main()
 #version 330 core
 
 layout(location = 0) out vec4 color;
+layout(location = 1) out int entityIDMap;
 
 in vec2 v_texCoord;
 in vec4 v_color;
@@ -42,4 +43,6 @@ void main()
 
 	vec4 texColor = texture(u_textures[intTexIndex], v_texCoord * v_tilingFactor);
 	color = v_color * texColor;
+
+	entityIDMap = 1;
 }

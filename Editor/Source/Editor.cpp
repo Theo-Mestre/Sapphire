@@ -16,9 +16,7 @@ namespace sph
 			SetRenderer(sph::BatchRenderer2D::Create());
 
 			Application::Init();
-
-			auto editorLayer = new EditorLayer();
-			PushLayer(editorLayer);
+			PushLayer(new EditorLayer());
 		}
 	};
 

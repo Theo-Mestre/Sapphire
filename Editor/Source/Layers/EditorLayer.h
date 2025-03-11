@@ -30,6 +30,7 @@ namespace sph
 		// File IO
 		void NewScene();
 		void OpenScene();
+		void OpenScene(const std::string& _scenePath);
 		void SaveSceneAs();
 
 	private:

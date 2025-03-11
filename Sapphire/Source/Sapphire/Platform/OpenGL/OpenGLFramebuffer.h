@@ -17,17 +17,23 @@ namespace sph
 		virtual void Bind() override;
 		virtual void Unbind() override;
 
-		virtual void AttachTexture() override;
 		virtual void Resize() override;
 		virtual void Resize(uint32_t _width, uint32_t _height) override;
 		virtual void Clear() override;
 
-		virtual const Ref<Texture2D>& GetTextureAttachment() const override { return m_textureAttachment; }
+		virtual int32_t ReadPixel(uint32_t _attachmentIndex, int32_t _x, int32_t _y) override;
+
+		virtual uint32_t GetColorAttachmentRendererID(uint32_t _index = 0) const override;
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_specification; }
 
 	private:
 		FramebufferSpecification m_specification;
-		Ref<Texture2D> m_textureAttachment;
+
+		std::vector<FramebufferTextureSpecification> m_colorAttachmentSpecifications;
+		FramebufferTextureSpecification m_depthAttachmentSpecification = FramebufferTextureFormat::None;
+
+		std::vector<uint32_t> m_colorAttachments;
+		uint32_t m_depthAttachment = 0;
 	};
 }
 

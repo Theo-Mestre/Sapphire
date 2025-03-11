@@ -17,6 +17,7 @@ namespace sph
 	{
 	public:
 		Scene();
+		Scene(const std::string& _name);
 		~Scene();
 
 		void OnUpdateRuntime(DeltaTime _dt);

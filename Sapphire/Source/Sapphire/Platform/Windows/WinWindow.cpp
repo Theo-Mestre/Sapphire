@@ -54,6 +54,8 @@ namespace sph
 
 		if (!s_GLFWInitialized)
 		{
+			SPH_PROFILE_SCOPE("glfwInit");
+
 			// Initialize GLFW
 			int glfwInitResult = glfwInit();
 			ASSERT(glfwInitResult, "Failed to initialize GLFW!");
@@ -67,10 +69,12 @@ namespace sph
 		m_window = glfwCreateWindow(_properties.Width, _properties.Height, _properties.Title.c_str(), nullptr, nullptr);
 		ASSERT(m_window, "Failed to create a GLFW window!");
 
+#ifdef DEBUG
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
 		// Create the graphics context
 		m_context = new OpenGLContext(m_window);
 		m_context->Init();
-
 		glfwSetWindowUserPointer(m_window, &m_data);
 
 		InitEventCallbacks();
@@ -177,6 +181,14 @@ namespace sph
 	void WinWindow::Shutdown(void)
 	{
 		glfwDestroyWindow(m_window);
+
+		delete m_context;
+
+		if (s_GLFWInitialized)
+		{
+			glfwTerminate();
+			s_GLFWInitialized = false;
+		}
 	}
 
 #ifdef SPH_PLATFORM_WINDOWS
