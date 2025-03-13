@@ -63,6 +63,11 @@ namespace sph
 
 				tc.Translation = { _comp.Position.x, _comp.Position.y, tc.Translation.z };
 			});
+
+		m_registry.view<PlayerController>().each([=](auto _entity, auto& _comp)
+			{
+				_comp.Update(_dt);
+			});
 	}
 
 	void Scene::OnUpdateEditor(DeltaTime _dt)
@@ -218,5 +223,11 @@ namespace sph
 
 		component.Position = translation;
 
+	}
+
+	template<>
+	void Scene::OnComponentAdded<PlayerController>(Entity _entity, PlayerController& component)
+	{
+		component.m_registry = &m_registry;
 	}
 }

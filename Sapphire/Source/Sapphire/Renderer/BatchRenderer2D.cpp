@@ -339,7 +339,7 @@ namespace sph
 			if (m_textureSlotIndex >= s_maxTextureSlots)
 			{
 				Flush();
-				m_textureSlotIndex = 0;
+				m_textureSlotIndex = 1;
 			}
 
 			textureIndex = (float)m_textureSlotIndex;

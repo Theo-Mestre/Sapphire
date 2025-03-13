@@ -11,6 +11,8 @@
 #include "Sapphire/Core/Core.h"
 #include "Sapphire/Scene/SceneCamera.h"
 #include "Sapphire/Scene/ScriptableEntity.h"
+#include "Sapphire/Core/KeyCode.h"
+#include "Sapphire/Core/Input.h"
 
 namespace sph
 {
@@ -155,6 +157,84 @@ namespace sph
 		ParallaxComponent() = default;
 		ParallaxComponent(const ParallaxComponent&) = default;
 		~ParallaxComponent() = default;
+	};
+
+	struct PlayerController
+	{
+	public:
+		entt::registry* m_registry = nullptr;
+
+		TransformComponent* m_transform = nullptr;
+		TransformComponent* m_camera = nullptr;
+		SpriteAnimatorComponent* m_animator = nullptr;
+
+		glm::vec2 m_cameraLimits = { 10.0f, -4.0f };
+		glm::vec2 m_playerLimits = { 10.0f, -6.0f };
+
+		float m_speed = 1.50f;
+
+		void Update(sph::DeltaTime _dt)
+		{
+			float direction = 0.0f;
+
+			if (m_transform == nullptr || m_camera == nullptr || m_animator == nullptr)
+			{
+				m_transform = m_registry->try_get<TransformComponent>(m_registry->view<PlayerController>().front());
+				m_animator = m_registry->try_get<SpriteAnimatorComponent>(m_registry->view<PlayerController>().front());
+				m_animator->CurrentFrame.y = 9;
+
+				auto view = m_registry->view<TransformComponent, CameraComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
+					if (camera.IsPrimary)
+					{
+						m_camera = &transform;
+						break;
+					}
+				}
+			}
+
+			m_animator->CurrentFrame.y = 0;
+			if (sph::Input::IsKeyPressed(sph::KeyCode::D))
+			{
+				m_animator->CurrentFrame.y = 2;
+				direction += 1.0f;
+			}
+			else if (sph::Input::IsKeyPressed(sph::KeyCode::A))
+			{
+				m_animator->CurrentFrame.y = 1;
+				direction -= 1.0f;
+			}
+
+			m_transform->Translation.x += direction * m_speed * _dt;
+
+			if (m_transform->Translation.x < m_playerLimits.x)
+			{
+				m_transform->Translation.x = m_playerLimits.x;
+			}
+			else if (m_transform->Translation.x > m_playerLimits.y)
+			{
+				m_transform->Translation.x = m_playerLimits.y;
+			}
+
+
+			if (m_camera)
+			{
+				auto& cameraTranslation = m_camera->Translation;
+
+				cameraTranslation.x = m_transform->Translation.x;
+
+				if (cameraTranslation.x < m_cameraLimits.x)
+				{
+					cameraTranslation.x = m_cameraLimits.x;
+				}
+				else if (cameraTranslation.x > m_cameraLimits.y)
+				{
+					cameraTranslation.x = m_cameraLimits.y;
+				}
+			}
+		}
 	};
 }
 #endif

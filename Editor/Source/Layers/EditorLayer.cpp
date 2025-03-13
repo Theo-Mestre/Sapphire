@@ -1,6 +1,7 @@
 ﻿#include "Sapphire/ImGui/ImGuiLayer.h"
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/SceneSerializer.h"
+#include "Sapphire/Scene/Components.h"
 #include "Sapphire/Utilities/FileIO.h"
 #include "Sapphire/Maths/Maths.h"
 #include "Sapphire/Renderer/EditorCamera.h"
@@ -10,24 +11,6 @@
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/PropertiesPanel.h"
 #include "Panels/ContentDrawerPanel.h"
-
-class RotateScript : public sph::ScriptableEntity
-{
-public:
-	void OnCreate() override
-	{
-	}
-	void OnDestroy() override
-	{
-	}
-	void OnUpdate(sph::DeltaTime _dt) override
-	{
-		auto& tc = GetComponent<sph::TransformComponent>();
-		tc.Rotation.x += 1.0f * _dt;
-		tc.Rotation.y += 3.0f * _dt;
-		tc.Rotation.z += 2.0f * _dt;
-	}
-};
 
 namespace sph
 {
@@ -78,9 +61,6 @@ namespace sph
 		// Play Button
 		m_iconPlay = Texture2D::Create("Editor/Icons/Play.png");
 		m_iconStop = Texture2D::Create("Editor/Icons/Stop.png");
-
-		// Load Scene
-		OpenScene("Demo/DemoScene.sph");
 	}
 
 	void EditorLayer::OnDetach()

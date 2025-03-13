@@ -3,7 +3,6 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 
-
 #include "SceneHierarchyPanel.h"
 #include "Sapphire/Scene/Scene.h"
 #include "Sapphire/Scene/Components.h"

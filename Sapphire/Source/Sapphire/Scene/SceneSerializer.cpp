@@ -17,8 +17,8 @@ namespace YAML
 		static Node encode(const glm::vec2& rhs)
 		{
 			Node node;
-			node.push_back(rhs.x);
-			node.push_back(rhs.y);
+			node.push_back((float)rhs.x);
+			node.push_back((float)rhs.y);
 			node.SetStyle(EmitterStyle::Flow);
 			return node;
 		}
@@ -225,6 +225,16 @@ namespace sph
 			out << YAML::EndMap;
 		}
 
+		if (entity.HasComponent<PlayerController>())
+		{
+			out << YAML::Key << "PlayerController";
+			out << YAML::BeginMap;
+
+			auto& playerController = entity.GetComponent<PlayerController>();
+			out << YAML::Key << "CameraLimits" << YAML::Value << playerController.m_cameraLimits;
+			out << YAML::Key << "PlayerLimits" << YAML::Value << playerController.m_playerLimits;
+			out << YAML::EndMap;
+		}
 
 		out << YAML::EndMap;
 	}
@@ -378,6 +388,15 @@ namespace sph
 				pc.InitialPosition = parallaxComponent["InitialPosition"].as<glm::vec2>();
 				pc.Threshold = parallaxComponent["Threshold"].as<glm::vec2>();
 			}
+
+			auto playerController = entity["PlayerController"];
+			if (playerController)
+			{
+				auto& pc = deserializedEntity.AddComponent<PlayerController>();
+				pc.m_cameraLimits = playerController["CameraLimits"].as<glm::vec2>();
+				pc.m_playerLimits = playerController["PlayerLimits"].as<glm::vec2>();
+			}
+
 		}
 
 		LogDebug("SceneSerializer: Loaded Scene '{0}' from '{1}'", sceneName, _filepath);

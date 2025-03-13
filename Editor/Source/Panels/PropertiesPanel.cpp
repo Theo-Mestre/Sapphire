@@ -242,6 +242,12 @@ namespace sph
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("Player Controller"))
+			{
+				m_context->m_selectedEntity.AddComponent<PlayerController>();
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 
@@ -356,6 +362,14 @@ namespace sph
 				ImGui::DragFloat2("Speed", glm::value_ptr(_component.Speed), 0.01f);
 				ImGui::DragFloat2("Threshold", glm::value_ptr(_component.Threshold), 0.01f);
 
+				ImGui::Spacing();
+			});
+
+		DrawComponent<PlayerController>("Player Controller", _entity, [](PlayerController& _component)
+			{
+				ImGui::DragFloat2("Camera Limits", glm::value_ptr(_component.m_cameraLimits), 0.01f);
+				ImGui::DragFloat2("Player Limits", glm::value_ptr(_component.m_playerLimits), 0.01f);
+				ImGui::DragFloat("Speed", &_component.m_speed, 0.01f);
 				ImGui::Spacing();
 			});
 	}
