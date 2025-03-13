@@ -45,6 +45,24 @@ namespace sph
 				_comp.Update(_dt);
 				_comp.ApplyTexCoords();
 			});
+
+		m_registry.view<ParallaxComponent>().each([=](auto _entity, auto& _comp)
+			{
+				auto& tc = m_registry.get<TransformComponent>(_entity);
+				_comp.Position = tc.Translation;
+				_comp.Position += _comp.Speed * _dt;
+
+				if (glm::abs(_comp.Position.x - _comp.InitialPosition.x) >= glm::abs(_comp.Threshold.x))
+				{
+					_comp.Position.x = _comp.InitialPosition.x;
+				}
+				if (glm::abs(_comp.Position.y - _comp.InitialPosition.y) >= glm::abs(_comp.Threshold.y))
+				{
+					_comp.Position.y = _comp.InitialPosition.y;
+				}
+
+				tc.Translation = { _comp.Position.x, _comp.Position.y, tc.Translation.z };
+			});
 	}
 
 	void Scene::OnUpdateEditor(DeltaTime _dt)
@@ -191,5 +209,14 @@ namespace sph
 		}
 
 		component.ApplyTexCoords();
+	}
+
+	template<>
+	void Scene::OnComponentAdded<ParallaxComponent>(Entity _entity, ParallaxComponent& component)
+	{
+		auto translation = _entity.GetComponent<TransformComponent>().Translation;
+
+		component.Position = translation;
+
 	}
 }

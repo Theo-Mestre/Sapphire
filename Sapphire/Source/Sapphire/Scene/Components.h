@@ -144,5 +144,17 @@ namespace sph
 				};
 		}
 	};
+
+	struct ParallaxComponent 
+	{
+		glm::vec2 InitialPosition = { 0.0f, 0.0f };
+		glm::vec2 Position = { 0.0f, 0.0f };
+		glm::vec2 Speed = { 0.0f, 0.0f };
+		glm::vec2 Threshold = { 0.0f, 0.0f };
+
+		ParallaxComponent() = default;
+		ParallaxComponent(const ParallaxComponent&) = default;
+		~ParallaxComponent() = default;
+	};
 }
 #endif

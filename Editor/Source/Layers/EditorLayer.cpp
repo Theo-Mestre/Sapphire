@@ -79,10 +79,8 @@ namespace sph
 		m_iconPlay = Texture2D::Create("Editor/Icons/Play.png");
 		m_iconStop = Texture2D::Create("Editor/Icons/Stop.png");
 
-		auto texture = Texture2D::Create("Textures/AnimationFull.png");
-		Entity chicken = Entity::Create(m_currentScene, "Chicken");
-		chicken.AddComponent<SpriteRendererComponent>(texture);
-		chicken.AddComponent<NativeScriptComponent>().Bind<RotateScript>();
+		// Load Scene
+		OpenScene("Demo/DemoScene.sph");
 	}
 
 	void EditorLayer::OnDetach()

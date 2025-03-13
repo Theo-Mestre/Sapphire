@@ -49,7 +49,7 @@ namespace sph
 		{
 			if (ImGui::MenuItem("Create Empty Entity"))
 			{
-				m_context->CreateEntity("Empty Entity");
+				m_selectedEntity = m_context->CreateEntity("Empty Entity");
 			}
 		
 			ImGui::EndPopup();

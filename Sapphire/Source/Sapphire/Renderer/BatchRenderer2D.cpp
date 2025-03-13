@@ -157,7 +157,7 @@ namespace sph
 		float textureIndex = 0.0f;
 		UpdateCurrentQuadVertex(_transform, _color, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, float _rotation, const glm::vec4& _color)
@@ -169,7 +169,7 @@ namespace sph
 		float textureIndex = 0.0f;
 		UpdateCurrentQuadVertex(_position, _size, _rotation, _color, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<Texture2D>& _texture)
@@ -182,7 +182,7 @@ namespace sph
 
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f);
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::vec3& _position, const glm::vec2& _size, const Ref<SubTexture2D>& _subTexture)
@@ -195,7 +195,7 @@ namespace sph
 		
 		UpdateCurrentQuadVertex(_position, _size, 0.0f, { 1.0f, 1.0f, 1.0f, 1.0f }, textureIndex, 1.0f, _subTexture->GetTexCoords());
 
-		Renderer2D::Stats::QuadCount++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawQuad(const glm::mat4& _transform, const Ref<Texture2D>& _texture, const glm::vec4& _color)
@@ -208,7 +208,7 @@ namespace sph
 		
 		UpdateCurrentQuadVertex(_transform, _color, textureIndex, 1.0f);
 		
-		Renderer2D::Stats::QuadCount++;
+		Renderer::Stats::QuadCount++;
 	}
 
 	void BatchRenderer2D::DrawSprite(const glm::mat4& _transform, const SpriteRendererComponent& _sprite, int32_t _entityID)
@@ -228,6 +228,8 @@ namespace sph
 		};
 
 		UpdateCurrentQuadVertex(_transform, _sprite.Color, textureIndex, _sprite.TilingFactor, _entityID, texCoords);
+
+		Renderer::Stats::QuadCount++;
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()

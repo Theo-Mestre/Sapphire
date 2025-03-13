@@ -43,8 +43,8 @@ namespace sph
 		ImGui::Begin("Metrics");
 		ImGui::Text(" Frame Time: %f", Time::DeltaTime);
 		ImGui::Text(" FPS: %f", 1.f / Time::DeltaTime);
-		ImGui::Text(" Quad number : %d", Renderer2D::Stats::QuadCount);
-		ImGui::Text(" Draw call : %d", Renderer2D::Stats:: DrawCalls);
+		ImGui::Text(" Quad number : %d", Renderer::Stats::QuadCount);
+		ImGui::Text(" Draw call : %d", Renderer::Stats:: DrawCalls);
 		ImGui::SetWindowSize(ImVec2(430, 290));
 		if (ImPlot::BeginPlot("Frame Time"))
 		{

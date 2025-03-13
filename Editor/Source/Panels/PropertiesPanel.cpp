@@ -236,6 +236,12 @@ namespace sph
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("Parallax Component"))
+			{
+				m_context->m_selectedEntity.AddComponent<ParallaxComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 
@@ -340,6 +346,15 @@ namespace sph
 				ImGui::DragInt2("Frame Count", glm::value_ptr(_component.FrameCount));
 				ImGui::DragFloat("Frame Time", &_component.FrameTime, 0.01f, 0.0f, 10.0f);
 				ImGui::Checkbox("Looping", &_component.IsLooping);
+
+				ImGui::Spacing();
+			});
+		
+		DrawComponent<ParallaxComponent>("Parallax Component", _entity, [](ParallaxComponent& _component)
+			{
+				ImGui::DragFloat2("Initial Position", glm::value_ptr(_component.InitialPosition), 0.01f);
+				ImGui::DragFloat2("Speed", glm::value_ptr(_component.Speed), 0.01f);
+				ImGui::DragFloat2("Threshold", glm::value_ptr(_component.Threshold), 0.01f);
 
 				ImGui::Spacing();
 			});
