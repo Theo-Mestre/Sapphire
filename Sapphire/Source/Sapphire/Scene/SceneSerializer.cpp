@@ -62,6 +62,19 @@ namespace YAML
 			return true;
 		}
 
+	};
+	template<>
+	struct convert<glm::i32vec2>
+	{
+		static Node encode(const glm::i32vec2& rhs)
+		{
+			Node node;
+			node.push_back(rhs.x);
+			node.push_back(rhs.y);
+			node.SetStyle(EmitterStyle::Flow);
+			return node;
+		}
+
 		static bool decode(const Node& node, glm::i32vec2& rhs)
 		{
 			if (!node.IsSequence() || node.size() != 2)
@@ -71,7 +84,6 @@ namespace YAML
 			return true;
 		}
 	};
-
 }
 
 namespace sph
@@ -306,7 +318,17 @@ namespace sph
 			if (spriteRendererComponent)
 			{
 				auto& src = deserializedEntity.AddComponent<SpriteRendererComponent>();
+				src.Texture = Texture2D::Create(spriteRendererComponent["TextureName"].as<std::string>());
 				src.Color = spriteRendererComponent["Color"].as<glm::vec4>();
+			}
+
+			auto spriteAnimatorComponent = entity["SpriteAnimatorComponent"];
+			if (spriteAnimatorComponent)
+			{
+				auto& sac = deserializedEntity.AddComponent<SpriteAnimatorComponent>();
+				sac.FrameCount = spriteAnimatorComponent["FrameCount"].as<glm::i32vec2>();
+				sac.FrameTime = spriteAnimatorComponent["FrameTime"].as<float>();
+				sac.IsLooping = spriteAnimatorComponent["IsLooping"].as<bool>();
 			}
 		}
 

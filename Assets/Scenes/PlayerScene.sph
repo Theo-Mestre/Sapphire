@@ -1,0 +1,16 @@
+Scene: Untitled Scene
+Entities:
+  - Entity: 1
+    TagComponent:
+      Tag: Player
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      TextureName: Textures/AnimationFull.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [6, 1]
+      FrameTime: 0.1
+      IsLooping: true

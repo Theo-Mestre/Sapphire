@@ -43,7 +43,7 @@ namespace sph
 		m_registry.view<SpriteAnimatorComponent>().each([=](auto _entity, auto& _comp)
 			{
 				_comp.Update(_dt);
-				_comp.Apply();
+				_comp.ApplyTexCoords();
 			});
 	}
 
@@ -52,7 +52,7 @@ namespace sph
 		m_registry.view<SpriteAnimatorComponent>().each([=](auto _entity, auto& _comp)
 			{
 				_comp.Update(_dt);
-				_comp.Apply();
+				_comp.ApplyTexCoords();
 			});
 	}
 
