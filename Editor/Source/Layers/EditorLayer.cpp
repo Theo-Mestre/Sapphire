@@ -11,6 +11,24 @@
 #include "Panels/PropertiesPanel.h"
 #include "Panels/ContentDrawerPanel.h"
 
+class RotateScript : public sph::ScriptableEntity
+{
+public:
+	void OnCreate() override
+	{
+	}
+	void OnDestroy() override
+	{
+	}
+	void OnUpdate(sph::DeltaTime _dt) override
+	{
+		auto& tc = GetComponent<sph::TransformComponent>();
+		tc.Rotation.x += 1.0f * _dt;
+		tc.Rotation.y += 3.0f * _dt;
+		tc.Rotation.z += 2.0f * _dt;
+	}
+};
+
 namespace sph
 {
 	extern const std::filesystem::path g_AssetPath;
@@ -61,9 +79,10 @@ namespace sph
 		m_iconPlay = Texture2D::Create("Editor/Icons/Play.png");
 		m_iconStop = Texture2D::Create("Editor/Icons/Stop.png");
 
-		auto texture = Texture2D::Create("Chicken.png");
+		auto texture = Texture2D::Create("Textures/Chicken.png");
 		Entity chicken = Entity::Create(m_currentScene, "Chicken");
 		chicken.AddComponent<SpriteRendererComponent>(texture);
+		chicken.AddComponent<NativeScriptComponent>().Bind<RotateScript>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -86,30 +105,17 @@ namespace sph
 			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
-		// To Delete
-		m_editorCamera->OnUpdate(_dt);
+		switch (m_sceneState)
+		{
+		case SceneState::Edit:
+			m_editorCamera->OnUpdate(_dt);
+			m_currentScene->OnUpdateEditor(_dt);
+			break;
 
-		ASSERT(m_currentScene != nullptr, "Scene is not set!");
-		m_currentScene->OnUpdateEditor(_dt);
-
-		//switch (m_SceneState)
-		//{
-		//case SceneState::Edit:
-		//{
-		//	if (m_ViewportFocused)
-		//		m_CameraController.OnUpdate(ts);
-		//
-		//	m_EditorCamera.OnUpdate(ts);
-		//
-		//	m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
-		//	break;
-		//}
-		//case SceneState::Play:
-		//{
-		//	m_ActiveScene->OnUpdateRuntime(ts);
-		//	break;
-		//}
-		//}
+		case SceneState::Play:
+			m_currentScene->OnUpdateRuntime(_dt);
+			break;
+		}
 
 		OnMousePickingUpdate();
 	}
@@ -122,7 +128,17 @@ namespace sph
 		m_framebuffer->Clear();
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
-		m_currentScene->OnRenderEditor(_renderer, m_editorCamera);
+
+		switch (m_sceneState)
+		{
+		case SceneState::Edit:
+			m_currentScene->OnRenderEditor(_renderer, m_editorCamera);
+			break;
+
+		case SceneState::Play:
+			m_currentScene->OnRenderRuntime(_renderer);
+			break;
+		}
 
 		m_framebuffer->Unbind();
 	}
@@ -191,7 +207,7 @@ namespace sph
 
 		if (ImGui::BeginDragDropTarget())
 		{
-			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_DRAWER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payload->Data;
 				OpenScene(std::filesystem::path(g_AssetPath) / path);
@@ -201,34 +217,6 @@ namespace sph
 
 		OnToolbarRender();
 
-		ImGui::End();
-	}
-
-	void EditorLayer::OnToolbarRender()
-	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-		auto& colors = ImGui::GetStyle().Colors;
-		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
-		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
-
-		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-		float size = ImGui::GetWindowHeight() - 4.0f;
-		Ref<Texture2D> icon = m_sceneState == SceneState::Edit ? m_iconPlay : m_iconStop;
-		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
-		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
-		{
-			if (m_sceneState == SceneState::Edit)
-				OnScenePlay();
-			else if (m_sceneState == SceneState::Play)
-				OnSceneStop();
-		}
-		ImGui::PopStyleVar(2);
-		ImGui::PopStyleColor(3);
 		ImGui::End();
 	}
 
@@ -403,8 +391,8 @@ namespace sph
 
 		// Snapping
 		bool snap = Input::IsKeyPressed(KeyCode::LeftControl);
-		float snapValue = 0.5f; // Snap to 0.5m for translation/scale
-		// Snap to 45 degrees for rotation
+		float snapValue = 0.5f;
+
 		if (m_gizmoType == ImGuizmo::OPERATION::ROTATE)
 		{
 			snapValue = 45.0f;
@@ -426,6 +414,45 @@ namespace sph
 			tc.Rotation += deltaRotation;
 			tc.Scale = scale;
 		}
+	}
+
+	void EditorLayer::OnToolbarRender()
+	{
+		// Style
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(0, 0));
+
+		// Color
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		auto flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+		ImGui::Begin("##toolbar", nullptr, flags);
+
+		static const float padding = 4.0f;
+		float size = ImGui::GetWindowHeight() - padding;
+
+		ImTextureID icon = m_sceneState == SceneState::Edit
+			? (ImTextureID)(uint64_t)m_iconPlay->GetRendererID()
+			: (ImTextureID)(uint64_t)m_iconStop->GetRendererID();
+
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+
+		if (ImGui::ImageButton(icon, ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			m_sceneState == SceneState::Edit
+				? OnScenePlay()
+				: OnSceneStop();
+		}
+		ImGui::PopStyleVar(3);
+		ImGui::PopStyleColor(3);
+		ImGui::End();
 	}
 
 	void EditorLayer::NewScene()
@@ -478,6 +505,5 @@ namespace sph
 	void EditorLayer::OnSceneStop()
 	{
 		m_sceneState = SceneState::Edit;
-
 	}
 }

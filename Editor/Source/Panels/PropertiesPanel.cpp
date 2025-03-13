@@ -124,7 +124,6 @@ namespace sph
 		ImGui::Text(_label.c_str());
 		ImGui::NextColumn();
 
-
 		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
 
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -201,16 +200,18 @@ namespace sph
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
 
+			ImGui::PushItemWidth(ImGui::GetWindowContentRegionMax().x - 125.0f);
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
+			ImGui::PopItemWidth();
 		}
 
-		ImGui::SameLine();
+		ImGui::SameLine(ImGui::GetWindowContentRegionMax().x - 115.0f);
 		ImGui::PushItemWidth(-1);
 
-		if (ImGui::Button("Add Component"))
+		if (ImGui::Button("Add Component", ImVec2(115.0f, 0.0f)))
 			ImGui::OpenPopup("AddComponent");
 
 		if (ImGui::BeginPopup("AddComponent"))
@@ -311,7 +312,7 @@ namespace sph
 
 				if (ImGui::BeginDragDropTarget())
 				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_DRAWER_ITEM"))
 					{
 						const wchar_t* path = (const wchar_t*)payload->Data;
 						std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;

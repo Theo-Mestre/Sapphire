@@ -11,7 +11,7 @@ namespace sph
 	class Camera;
 	class Texture2D;
 	class SubTexture2D;
-	class SpriteRendererComponent;
+	struct SpriteRendererComponent;
 
 	class Renderer
 	{

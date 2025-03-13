@@ -21,7 +21,7 @@ namespace sph
 
 	void ContentDrawerPanel::OnImGuiRender()
 	{
-		ImGui::Begin("Content Browser");
+		ImGui::Begin("Content Drawer");
 
 		if (m_currentDirectory != std::filesystem::path(g_AssetPath))
 		{
@@ -57,7 +57,7 @@ namespace sph
 			if (ImGui::BeginDragDropSource())
 			{
 				const wchar_t* itemPath = relativePath.c_str();
-				ImGui::SetDragDropPayload("CONTENT_BROWSER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
+				ImGui::SetDragDropPayload("CONTENT_DRAWER_ITEM", itemPath, (wcslen(itemPath) + 1) * sizeof(wchar_t));
 				ImGui::EndDragDropSource();
 			}
 
