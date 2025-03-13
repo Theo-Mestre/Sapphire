@@ -6,9 +6,10 @@
 namespace sph
 {
 	class ImGuiLayer;
-	class SceneHierarchyPanel;
-	class PropertiesPanel;
 	class EditorCamera;
+	class SceneHierarchyPanel;
+	class ContentDrawerPanel;
+	class PropertiesPanel;
 
 	class EditorLayer
 		: public Layer
@@ -30,18 +31,28 @@ namespace sph
 		// File IO
 		void NewScene();
 		void OpenScene();
-		void OpenScene(const std::string& _scenePath);
+		void OpenScene(const std::filesystem::path& _path);
 		void SaveSceneAs();
 
+		void OnScenePlay();
+		void OnSceneStop();
 	private:
 		void OnMousePickingUpdate();
 
 		void OnMenuBarRender();
 		void OnRenderViewport();
 		void OnDrawGuizmos();
+		void OnToolbarRender();
 
 		bool OnKeyPressed(KeyPressedEvent& _event);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& _event);
+
+	private:
+		enum class SceneState
+		{
+			Edit = 0, Play = 1
+		};
+
 	private:
 		Ref<Scene> m_currentScene = nullptr;
 
@@ -50,16 +61,18 @@ namespace sph
 		Ref<UniformBuffer> m_appDataUniformBuffer = nullptr;
 		Ref<Framebuffer> m_framebuffer = nullptr;
 
-		Ref<SceneHierarchyPanel> m_hierarchyPanel;
-		Ref<PropertiesPanel> m_propertiesPanel;
+		Ref<SceneHierarchyPanel> m_hierarchyPanel = nullptr;
+		Ref<PropertiesPanel> m_propertiesPanel = nullptr;
+		Ref<ContentDrawerPanel> m_contentDrawerPanel = nullptr;
+
+		Ref<Texture2D> m_iconPlay;
+		Ref<Texture2D> m_iconStop;
 
 		int32_t m_gizmoType = -1;
 
 		Entity m_hoveredEntity = Entity();
 
-		Ref<Texture2D> m_texture = nullptr;
-
-		Ref<Sprite> m_sprite = nullptr;
+		SceneState m_sceneState = SceneState::Edit;
 
 		bool m_enableDocking = true;
 		glm::ivec2 m_viewportSize = { 0, 0 };

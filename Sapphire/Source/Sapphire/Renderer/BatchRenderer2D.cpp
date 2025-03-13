@@ -219,7 +219,7 @@ namespace sph
 
 		float textureIndex = SubmitTexture(_sprite.Texture);
 
-		UpdateCurrentQuadVertex(_transform, _sprite.Color, textureIndex, 1.0f, _entityID);
+		UpdateCurrentQuadVertex(_transform, _sprite.Color, textureIndex, _sprite.TilingFactor, _entityID);
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()

@@ -10,6 +10,8 @@
 
 namespace sph
 {
+	extern const std::filesystem::path g_AssetPath;
+
 	struct Vec3Button
 	{
 		ImVec4 ButtonColor;
@@ -298,19 +300,30 @@ namespace sph
 			{
 				ImGui::Text("Texture");
 
-				if (_component.Texture == nullptr || 
-					_component.Texture->GetPath().empty())
+				if (_component.Texture == nullptr)
 				{
-					ImGui::Text("No texture");
+					ImGui::Button("No texture", ImVec2(100.0f, 0.0f));
 				}
-				else 
+				else
 				{
-					ImGui::Text(_component.Texture->GetPath().c_str());
 					ImGui::ImageButton((ImTextureID)(int64_t)_component.Texture->GetRendererID(), ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+				}
+
+				if (ImGui::BeginDragDropTarget())
+				{
+					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+					{
+						const wchar_t* path = (const wchar_t*)payload->Data;
+						std::filesystem::path texturePath = std::filesystem::path(g_AssetPath) / path;
+						_component.Texture = Texture2D::Create(texturePath.string());
+					}
+					ImGui::EndDragDropTarget();
 				}
 
 				ImGui::Text("Color");
 				ImGui::ColorEdit4("Color", glm::value_ptr(_component.Color));
+
+				ImGui::DragFloat("Tiling Factor", &_component.TilingFactor, 0.1f, 0.0f, 100.0f);
 			});
 	}
 }

@@ -9,9 +9,12 @@
 
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/PropertiesPanel.h"
+#include "Panels/ContentDrawerPanel.h"
 
 namespace sph
 {
+	extern const std::filesystem::path g_AssetPath;
+
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer")
 	{
@@ -50,6 +53,17 @@ namespace sph
 
 		// Properties
 		m_propertiesPanel = CreateRef<PropertiesPanel>(m_hierarchyPanel);
+
+		// Content Drawer
+		m_contentDrawerPanel = CreateRef<ContentDrawerPanel>();
+
+		// Play Button
+		m_iconPlay = Texture2D::Create("Editor/Icons/Play.png");
+		m_iconStop = Texture2D::Create("Editor/Icons/Stop.png");
+
+		auto texture = Texture2D::Create("Chicken.png");
+		Entity chicken = Entity::Create(m_currentScene, "Chicken");
+		chicken.AddComponent<SpriteRendererComponent>(texture);
 	}
 
 	void EditorLayer::OnDetach()
@@ -72,10 +86,30 @@ namespace sph
 			m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
+		// To Delete
 		m_editorCamera->OnUpdate(_dt);
 
 		ASSERT(m_currentScene != nullptr, "Scene is not set!");
 		m_currentScene->OnUpdateEditor(_dt);
+
+		//switch (m_SceneState)
+		//{
+		//case SceneState::Edit:
+		//{
+		//	if (m_ViewportFocused)
+		//		m_CameraController.OnUpdate(ts);
+		//
+		//	m_EditorCamera.OnUpdate(ts);
+		//
+		//	m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+		//	break;
+		//}
+		//case SceneState::Play:
+		//{
+		//	m_ActiveScene->OnUpdateRuntime(ts);
+		//	break;
+		//}
+		//}
 
 		OnMousePickingUpdate();
 	}
@@ -138,6 +172,7 @@ namespace sph
 
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();
+		m_contentDrawerPanel->OnImGuiRender();
 
 		ImGui::Begin("Debug");
 		{
@@ -154,6 +189,46 @@ namespace sph
 		// Viewport
 		OnRenderViewport();
 
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
+			{
+				const wchar_t* path = (const wchar_t*)payload->Data;
+				OpenScene(std::filesystem::path(g_AssetPath) / path);
+			}
+			ImGui::EndDragDropTarget();
+		}
+
+		OnToolbarRender();
+
+		ImGui::End();
+	}
+
+	void EditorLayer::OnToolbarRender()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Ref<Texture2D> icon = m_sceneState == SceneState::Edit ? m_iconPlay : m_iconStop;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			if (m_sceneState == SceneState::Edit)
+				OnScenePlay();
+			else if (m_sceneState == SceneState::Play)
+				OnSceneStop();
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(3);
 		ImGui::End();
 	}
 
@@ -318,12 +393,9 @@ namespace sph
 		const glm::mat4& cameraProjection = m_editorCamera->GetProjection();
 		glm::mat4 cameraView = m_editorCamera->GetViewMatrix();
 
-		ImGuizmo::SetRect(
-			m_viewportBounds[0].x,
-			m_viewportBounds[0].y,
-			m_viewportBounds[1].x - m_viewportBounds[0].x,
-			m_viewportBounds[1].y - m_viewportBounds[0].y
-		);
+		float windowWidth = (float)ImGui::GetWindowWidth();
+		float windowHeight = (float)ImGui::GetWindowHeight();
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 		// Entity transform
 		auto& tc = selectedEntity.GetComponent<TransformComponent>();
@@ -372,14 +444,20 @@ namespace sph
 		}
 	}
 
-	void EditorLayer::OpenScene(const std::string& _scenePath)
+	void EditorLayer::OpenScene(const std::filesystem::path& _path)
 	{
+		if (FileIO::GetFileExtension(_path.string()) != SPH_SCENE_FILE_EXTENSION)
+		{
+			LogError("SceneSerializer: Filepath is not a scene file");
+			return;
+		}
+
 		m_currentScene = CreateRef<Scene>();
 		m_currentScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_hierarchyPanel->SetContext(m_currentScene);
 
 		SceneSerializer serializer(m_currentScene);
-		serializer.Deserialize(_scenePath);
+		serializer.Deserialize(_path.string());
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -390,5 +468,16 @@ namespace sph
 			SceneSerializer serializer(m_currentScene);
 			serializer.Serialize(*filepath);
 		}
+	}
+
+	void EditorLayer::OnScenePlay()
+	{
+		m_sceneState = SceneState::Play;
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_sceneState = SceneState::Edit;
+
 	}
 }

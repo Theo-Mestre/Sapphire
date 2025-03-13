@@ -207,6 +207,11 @@ namespace sph
 			LogError("SceneSerializer: Filepath is empty");
 			return false;
 		}
+		if (FileIO::GetFileExtension(_filepath) != SPH_SCENE_FILE_EXTENSION)
+		{
+			LogError("SceneSerializer: Filepath is not a scene file");
+			return false;
+		}
 
 		YAML::Node data = YAML::LoadFile(_filepath);
 

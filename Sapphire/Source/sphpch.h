@@ -12,6 +12,7 @@
 #include <vector>
 #include <cstring>
 #include <cstdint>
+#include <filesystem>
 
 #include <fstream>
 

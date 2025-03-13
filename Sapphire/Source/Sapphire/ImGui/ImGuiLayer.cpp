@@ -44,8 +44,9 @@ namespace sph
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-		io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Bold.ttf", 18.0f);
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", 18.0f);
+		float fontSize = 18.0f;
+		io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Bold.ttf", fontSize);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Fonts/OpenSans-Regular.ttf", fontSize);
 
 		// Setup Dear ImGui style
 		ImGui::StyleColorsDark();
