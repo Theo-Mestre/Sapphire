@@ -7,6 +7,7 @@
 #include "Sapphire/Scene/Components.h"
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Utilities/FileIO.h"
+#include "Sapphire/Renderer/Texture.h"
 
 namespace YAML
 {
@@ -60,6 +61,15 @@ namespace YAML
 			rhs.w = node[3].as<float>();
 			return true;
 		}
+
+		static bool decode(const Node& node, glm::i32vec2& rhs)
+		{
+			if (!node.IsSequence() || node.size() != 2)
+				return false;
+			rhs.x = node[0].as<int>();
+			rhs.y = node[1].as<int>();
+			return true;
+		}
 	};
 
 }
@@ -80,10 +90,17 @@ namespace sph
 		return out;
 	}
 
+	YAML::Emitter& operator<<(YAML::Emitter& out, const glm::i32vec2& v)
+	{
+		out << YAML::Flow;
+		out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+		return out;
+	}
+
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)
 	{
 		out << YAML::BeginMap;
-		out << YAML::Key << "Entity" << YAML::Value << "12837192831273"; // Add GUID here
+		out << YAML::Key << "Entity" << YAML::Value << std::to_string(entity);
 
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -139,8 +156,23 @@ namespace sph
 			out << YAML::Key << "SpriteRendererComponent";
 			out << YAML::BeginMap;
 
-			auto& spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
-			out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.Color;
+			auto& spriteRenderer = entity.GetComponent<SpriteRendererComponent>();
+
+			out << YAML::Key << "TextureName" << YAML::Value << spriteRenderer.Texture->GetPath();
+			out << YAML::Key << "Color" << YAML::Value << spriteRenderer.Color;
+
+			out << YAML::EndMap;
+		}
+
+		if (entity.HasComponent<SpriteAnimatorComponent>())
+		{
+			out << YAML::Key << "SpriteAnimatorComponent";
+			out << YAML::BeginMap;
+
+			auto& spriteAnimator = entity.GetComponent<SpriteAnimatorComponent>();
+			out << YAML::Key << "FrameCount" << YAML::Value << spriteAnimator.FrameCount;
+			out << YAML::Key << "FrameTime" << YAML::Value << spriteAnimator.FrameTime;
+			out << YAML::Key << "IsLooping" << YAML::Value << spriteAnimator.IsLooping;
 
 			out << YAML::EndMap;
 		}

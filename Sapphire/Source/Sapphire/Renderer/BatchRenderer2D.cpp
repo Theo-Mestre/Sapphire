@@ -219,7 +219,15 @@ namespace sph
 
 		float textureIndex = SubmitTexture(_sprite.Texture);
 
-		UpdateCurrentQuadVertex(_transform, _sprite.Color, textureIndex, _sprite.TilingFactor, _entityID);
+		glm::vec2 texCoords[4] = 
+		{
+			_sprite.TexCoords,
+			{ _sprite.TexCoords.z, _sprite.TexCoords.y },
+			{ _sprite.TexCoords.z, _sprite.TexCoords.w },
+			{ _sprite.TexCoords.x, _sprite.TexCoords.w }
+		};
+
+		UpdateCurrentQuadVertex(_transform, _sprite.Color, textureIndex, _sprite.TilingFactor, _entityID, texCoords);
 	}
 
 	Ref<Renderer> BatchRenderer2D::Create()

@@ -34,7 +34,7 @@ namespace sph
 		glm::vec3 Scale = { 1.0f, 1.0f, 1.0f };
 
 		TransformComponent() = default;
-		TransformComponent(const TransformComponent&) = default; 
+		TransformComponent(const TransformComponent&) = default;
 		TransformComponent(const glm::vec3& _translation)
 			: Translation(_translation) {
 		}
@@ -53,6 +53,7 @@ namespace sph
 	{
 		sph::Ref<sph::Texture2D> Texture = nullptr;
 		glm::vec4 Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		glm::vec4 TexCoords = { 0.0f, 0.0f, 1.0f, 1.0f };
 		float TilingFactor = 1.0f;
 
 		SpriteRendererComponent() = default;
@@ -70,6 +71,44 @@ namespace sph
 
 		operator glm::vec4& () { return Color; }
 		operator const glm::vec4& () const { return Color; }
+	};
+
+	struct SpriteAnimatorComponent
+	{
+		SpriteRendererComponent* SpriteRenderer = nullptr;
+		glm::i32vec2 FrameCount = { 1, 1 };
+		glm::i32vec2 CurrentFrame = { 0, 0 };
+
+		float FrameTime = 0.1f;
+		float FrameTimer = 0.0f;
+		bool IsLooping = true;
+
+		SpriteAnimatorComponent() = default;
+		SpriteAnimatorComponent(const SpriteAnimatorComponent&) = default;
+
+		void Update(DeltaTime _dt)
+		{
+			FrameTimer += _dt;
+			if (FrameTimer < FrameTime) return;
+
+			FrameTimer = 0.0f;
+			CurrentFrame.x++;
+			if (CurrentFrame.x < FrameCount.x) return;
+
+			CurrentFrame.x = IsLooping ? 0 : FrameCount.x - 1;
+		};
+
+		void ApplyTexCoords()
+		{
+			if (SpriteRenderer == nullptr) return;
+
+			glm::vec2 size = { 1.0f / FrameCount.x, 1.0f / FrameCount.y };
+
+			glm::vec2 min = { size.x * CurrentFrame.x, size.y * CurrentFrame.y };
+			glm::vec2 max = { min.x + size.x, min.y + size.y };
+
+			SpriteRenderer->TexCoords = { min, max };
+		}
 	};
 
 	struct CameraComponent

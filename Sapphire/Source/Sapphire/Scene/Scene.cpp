@@ -39,10 +39,21 @@ namespace sph
 
 				_comp.Instance->OnUpdate(_dt);
 			});
+
+		m_registry.view<SpriteAnimatorComponent>().each([=](auto _entity, auto& _comp)
+			{
+				_comp.Update(_dt);
+				_comp.Apply();
+			});
 	}
 
 	void Scene::OnUpdateEditor(DeltaTime _dt)
 	{
+		m_registry.view<SpriteAnimatorComponent>().each([=](auto _entity, auto& _comp)
+			{
+				_comp.Update(_dt);
+				_comp.Apply();
+			});
 	}
 
 	void Scene::OnRenderRuntime(const Ref<Renderer>& _renderer)
@@ -162,5 +173,23 @@ namespace sph
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity _entity, NativeScriptComponent& component)
 	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteAnimatorComponent>(Entity _entity, SpriteAnimatorComponent& component)
+	{
+		if (component.SpriteRenderer == nullptr)
+		{
+			if (_entity.HasComponent<SpriteRendererComponent>())
+			{
+				component.SpriteRenderer = &_entity.GetComponent<SpriteRendererComponent>();
+			}
+			else
+			{
+				component.SpriteRenderer = &_entity.AddComponent<SpriteRendererComponent>();
+			}
+		}
+
+		component.ApplyTexCoords();
 	}
 }

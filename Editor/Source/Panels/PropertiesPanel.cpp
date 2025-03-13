@@ -212,7 +212,9 @@ namespace sph
 		ImGui::PushItemWidth(-1);
 
 		if (ImGui::Button("Add Component", ImVec2(115.0f, 0.0f)))
+		{
 			ImGui::OpenPopup("AddComponent");
+		}
 
 		if (ImGui::BeginPopup("AddComponent"))
 		{
@@ -225,6 +227,12 @@ namespace sph
 			if (ImGui::MenuItem("Sprite Renderer"))
 			{
 				m_context->m_selectedEntity.AddComponent<SpriteRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Sprite Animator"))
+			{
+				m_context->m_selectedEntity.AddComponent<SpriteAnimatorComponent>();
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -325,6 +333,15 @@ namespace sph
 				ImGui::ColorEdit4("Color", glm::value_ptr(_component.Color));
 
 				ImGui::DragFloat("Tiling Factor", &_component.TilingFactor, 0.1f, 0.0f, 100.0f);
+			});
+
+		DrawComponent<SpriteAnimatorComponent>("Sprite Animator", _entity, [](auto& _component)
+			{
+				ImGui::DragInt2("Frame Count", glm::value_ptr(_component.FrameCount));
+				ImGui::DragFloat("Frame Time", &_component.FrameTime, 0.01f, 0.0f, 10.0f);
+				ImGui::Checkbox("Looping", &_component.IsLooping);
+
+				ImGui::Spacing();
 			});
 	}
 }
