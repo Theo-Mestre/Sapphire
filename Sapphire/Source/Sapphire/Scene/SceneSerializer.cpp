@@ -318,7 +318,11 @@ namespace sph
 			if (spriteRendererComponent)
 			{
 				auto& src = deserializedEntity.AddComponent<SpriteRendererComponent>();
-				src.Texture = Texture2D::Create(spriteRendererComponent["TextureName"].as<std::string>());
+				if (spriteRendererComponent["TextureName"])
+				{
+					auto path = spriteRendererComponent["TextureName"].as<std::string>();
+					src.Texture = Texture2D::Create(path);
+				}
 				src.Color = spriteRendererComponent["Color"].as<glm::vec4>();
 			}
 
