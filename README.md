@@ -2,6 +2,8 @@
 
 Sapphire is a game engine developed in C++ using OpenGL. It started as a personal project to explore game engine architecture and learn how to manage a multi-system application. Inspired by The [Cherno's game engine series](https://www.youtube.com/playlist?list=PLlrATfBNZ98dC-V-N3m0Go4deliWHPFwT), this project has been a hands-on journey into graphics programming, rendering techniques, and engine development.
 
+You can check out the presentation I made for this project [here](https://docs.google.com/presentation/d/1hBBXi7OgnB5CnnUq6ogenfiARTrwbtATjnQTT7INczE/edit?usp=sharing). 
+
 ## Why I Built This
 I wanted to understand how a game engine works under the hood while also tackling the challenges of structuring a multi-system application. Rather than focusing purely on the complexity of code, my goal was to design an engine that effectively integrates different components, such as rendering, scene management, and EditorUI.
 
