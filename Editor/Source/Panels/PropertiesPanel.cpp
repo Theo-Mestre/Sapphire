@@ -64,6 +64,8 @@ namespace sph
 	template<typename T, typename UIFunction>
 	static void DrawComponent(const std::string& _name, Entity _entity, UIFunction _uiFunction)
 	{
+		bool removeComponent = false;
+
 		if (_entity.HasComponent<T>() == false) return;
 
 		const ImGuiTreeNodeFlags treeNodeFlags =
@@ -95,7 +97,12 @@ namespace sph
 				if (ImGui::MenuItem("Remove component"))
 				{
 					_entity.RemoveComponent<T>();
-					open = false;
+					ImGui::EndPopup();
+					if (open)
+					{
+						ImGui::TreePop();
+					}
+					return;
 				}
 
 				ImGui::EndPopup();
