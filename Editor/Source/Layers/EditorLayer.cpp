@@ -239,7 +239,7 @@ namespace sph
 	{
 		auto mousePosition = Input::GetMousePosition();
 
-		if (_event.GetMouseButton() == Mouse::Button::Left)
+		if (_event.GetMouseButton() == Mouse::Button::Left && ImGuizmo::IsOver() == false)
 		{
 			if (m_hoveredEntity.IsValid())
 			{

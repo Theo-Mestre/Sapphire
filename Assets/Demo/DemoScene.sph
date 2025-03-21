@@ -2,232 +2,359 @@ Scene: Untitled Scene
 Entities:
   - Entity: 1
     TagComponent:
-      Tag: Natalie
+      Tag: Player
     TransformComponent:
-      Translation: [4, 3.9, 2.5]
+      Translation: [4.379101, -2.46, 2.6]
       Rotation: [0, 0, 0]
-      Scale: [1.5, 1.5, 1]
+      Scale: [1.4, 1.4, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Nathalie.png
+      TextureName: ../Assets\Demo\Characters\SpriteSheet.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 3]
+      FrameTime: 0.1
+      IsLooping: true
+    PlayerController:
+      CameraLimits: [-32, -3]
+      PlayerLimits: [-38, 7]
+  - Entity: 1
+    TagComponent:
+      Tag: Cadavre
+    TransformComponent:
+      Translation: [-38.1, -2.76, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.8, 0.8, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Cadavre.png
+      Color: [1, 1, 1, 1]
+  - Entity: 1
+    TagComponent:
+      Tag: Automate1
+    TransformComponent:
+      Translation: [-16.26, 3, -4]
+      Rotation: [0, 0, 0]
+      Scale: [3, 2.5, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\AnimVolantSheet.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [6, 1]
+      FrameTime: 0.1
+      IsLooping: true
+    ParallaxComponent:
+      Speed: [2, 0]
+      InitialPosition: [-64, 0]
+      Threshold: [80, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Automate
+    TransformComponent:
+      Translation: [-16.782104, -3.8, 6.5]
+      Rotation: [0, 0, 0]
+      Scale: [1.5, 2, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\AutomateWalking.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
       FrameCount: [10, 1]
-      FrameTime: 0.1
+      FrameTime: 0.025
       IsLooping: true
+    ParallaxComponent:
+      Speed: [1, 0]
+      InitialPosition: [-48, 0]
+      Threshold: [80, 10]
   - Entity: 1
     TagComponent:
-      Tag: Winston
+      Tag: Cloud2
     TransformComponent:
-      Translation: [1.2, -2.45, 2.5]
+      Translation: [-79.091354, 0.51, -10]
       Rotation: [0, 0, 0]
-      Scale: [-0.56, 1.46, 1]
+      Scale: [16, 9, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Winston.png
+      TextureName: ../Assets\Demo\Enviro\Cloud_2.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
-      FrameCount: [10, 1]
+      FrameCount: [1, 1]
       FrameTime: 0.1
       IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Weyland
-    TransformComponent:
-      Translation: [-35.9, -2.45, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [0.56, 1.46, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Weyland.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [20, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Tomato
-    TransformComponent:
-      Translation: [-30.2, -2.47, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [-0.56, 1.36, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Tomato.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [10, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: San-Son
-    TransformComponent:
-      Translation: [-10.2, -2.47, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [0.56, 1.36, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\San-Son.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [18, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: San-jy
-    TransformComponent:
-      Translation: [-24.3, -2.47, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [0.56, 1.36, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\San-Jy.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [20, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Oranda
-    TransformComponent:
-      Translation: [-16.6, -2.47, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [0.56, 1.36, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Oranda.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [21, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Marty
-    TransformComponent:
-      Translation: [-31.2, -2.47, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [0.56, 1.36, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Marty.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [13, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Cloud3
-    TransformComponent:
-      Translation: [-11.799225, 1.1920929e-07, -10]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Cloud_3.png
-      Color: [1, 1, 1, 1]
     ParallaxComponent:
       Speed: [-3, 0]
       InitialPosition: [48, 0]
       Threshold: [128, 10]
   - Entity: 1
     TagComponent:
-      Tag: Wagon2
+      Tag: Cloud1
     TransformComponent:
-      Translation: [-31.4, -0.76, -0.1]
-      Rotation: [0, 0, 0]
-      Scale: [16, 7.5, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Wagons\Wagon2.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [10, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Logo
-    TransformComponent:
-      Translation: [5, 7, 15]
-      Rotation: [0, 0, 0]
-      Scale: [4.9, 1, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Textures\TitleSpritesheet.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [10, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Louise
-    TransformComponent:
-      Translation: [0.3, -2.47, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [0.56, 1.3496001, 0.56]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Louise.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [10, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Lola
-    TransformComponent:
-      Translation: [-13, -2.5, 2.5]
-      Rotation: [0, 0, 0]
-      Scale: [-0.7, 1.3, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Lola.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [14, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Wagon1Foreground
-    TransformComponent:
-      Translation: [-10.1, -2.78, 5]
-      Rotation: [0, 0, 0]
-      Scale: [1.5, 0.75, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Wagons\Foreground1.png
-      Color: [1, 1, 1, 1]
-  - Entity: 1
-    TagComponent:
-      Tag: Wagon0Foreground
-    TransformComponent:
-      Translation: [0.3, -2.05, 5]
-      Rotation: [0, 0, 0]
-      Scale: [13, 2.225, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Wagons\Foreground.png
-      Color: [1, 1, 1, 1]
-  - Entity: 1
-    TagComponent:
-      Tag: Wagon0
-    TransformComponent:
-      Translation: [0, 0, -0.1]
-      Rotation: [0, 0, 0]
-      Scale: [16, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Wagons\Wagon0.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [10, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: RailFront0
-    TransformComponent:
-      Translation: [-72.43213, -2.1, 7.5]
+      Translation: [-7.95, 0.8, -17.5]
       Rotation: [0, 0, 0]
       Scale: [32, 9, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\LandFront.png
+      TextureName: ../Assets\Demo\Enviro\Cloud1.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [0, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Mountains3
+    TransformComponent:
+      Translation: [-50.397766, -0.4, -15]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Mount1.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-2, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Mountains2
+    TransformComponent:
+      Translation: [-18.398132, -0.4, -15]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Mount2.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-2, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Mountains1
+    TransformComponent:
+      Translation: [13.633545, -1.35, -15]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\RocherFond.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-2, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: FrontRail3
+    TransformComponent:
+      Translation: [48.3, -2.1, 7.5]
+      Rotation: [0, 0, 0]
+      Scale: [32.3, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\LandFront2.png
       Color: [1, 1, 1, 1]
     ParallaxComponent:
       Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: FrontRail2
+    TransformComponent:
+      Translation: [16.2, -2.1, 7.5]
+      Rotation: [0, 0, 0]
+      Scale: [32.3, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\ForestFront2.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: RailFront1
+    TransformComponent:
+      Translation: [-16.1, -2.1, 7.5]
+      Rotation: [0, 0, 0]
+      Scale: [32.3, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\ForestFront.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Rail3
+    TransformComponent:
+      Translation: [-68.66992, -0.19904566, -5]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Rail.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Rail2
+    TransformComponent:
+      Translation: [27.655151, -0.2, -5]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Rail.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Rail1
+    TransformComponent:
+      Translation: [-4.3406982, -0.2, -5]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Rail.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Jared
+    TransformComponent:
+      Translation: [-8.380845, -2.41, 2.5]
+      Rotation: [0, 0, 4.7683716e-07]
+      Scale: [0.6, 1.5, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Jared.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [17, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Elisabeth
+    TransformComponent:
+      Translation: [-19.4, -2.42, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.56, 1.5, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Elisabeth.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [24, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Assistant
+    TransformComponent:
+      Translation: [-3.7919266, -2.42, 2.5]
+      Rotation: [0, 0, 4.7683716e-07]
+      Scale: [-0.5, 1.5, 0.663]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Assistant.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [17, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Admiral
+    TransformComponent:
+      Translation: [-4.8, -2.425, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.5, 1.5, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Amiral.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [20, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Mecano
+    TransformComponent:
+      Translation: [6.4, -1.7, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [-1.5, 3, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Mechano.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Wagon1
+    TransformComponent:
+      Translation: [-15.7, -0.76, -0.1]
+      Rotation: [0, 0, 0]
+      Scale: [16, 7.5, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Wagons\Wagon1.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Rail0
+    TransformComponent:
+      Translation: [-36.34204, -0.2, -5]
+      Rotation: [0, 0, 0]
+      Scale: [32.3, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Rail.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-20, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Sky
+    TransformComponent:
+      Translation: [-15, 1.5, -20]
+      Rotation: [0, 0, 0]
+      Scale: [70, 15, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Textures\Sky.png
+      Color: [1, 1, 1, 1]
+  - Entity: 1
+    TagComponent:
+      Tag: Cloud0
+    TransformComponent:
+      Translation: [-37.029617, 2.6442895, -17.5]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Cloud0.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [0, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Mountains0
+    TransformComponent:
+      Translation: [45.598816, -0.4, -15]
+      Rotation: [0, 0, 0]
+      Scale: [32, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Enviro\Mount1.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-2, 0]
       InitialPosition: [48, 0]
       Threshold: [128, 10]
   - Entity: 1
@@ -250,51 +377,13 @@ Entities:
       FixedAspectRatio: false
   - Entity: 1
     TagComponent:
-      Tag: Mountains0
+      Tag: RailFront0
     TransformComponent:
-      Translation: [-36.10254, -0.4, -15]
+      Translation: [-48.2, -2.1, 7.5]
       Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
+      Scale: [32.3, 9, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Mount1.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-2, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Cloud0
-    TransformComponent:
-      Translation: [-37.029617, 2.6442895, -17.5]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Cloud0.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [0, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Sky
-    TransformComponent:
-      Translation: [-20, 1.5, -20]
-      Rotation: [0, 0, 0]
-      Scale: [60, 15, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Textures\Sky.png
-      Color: [1, 1, 1, 1]
-  - Entity: 1
-    TagComponent:
-      Tag: Rail0
-    TransformComponent:
-      Translation: [-72.43213, -0.2, -5]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Rail.png
+      TextureName: ../Assets\Demo\Enviro\LandFront.png
       Color: [1, 1, 1, 1]
     ParallaxComponent:
       Speed: [-20, 0]
@@ -302,13 +391,89 @@ Entities:
       Threshold: [128, 10]
   - Entity: 1
     TagComponent:
-      Tag: Wagon1
+      Tag: Wagon0
     TransformComponent:
-      Translation: [-15.7, -0.76, -0.1]
+      Translation: [0, 0, -0.1]
+      Rotation: [0, 0, 0]
+      Scale: [16, 9, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Wagons\Wagon0.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Wagon0Foreground
+    TransformComponent:
+      Translation: [0.3, -2.05, 5]
+      Rotation: [0, 0, 0]
+      Scale: [13, 2.225, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Wagons\Foreground.png
+      Color: [1, 1, 1, 1]
+  - Entity: 1
+    TagComponent:
+      Tag: Wagon1Foreground
+    TransformComponent:
+      Translation: [-10.1, -2.78, 5]
+      Rotation: [0, 0, 0]
+      Scale: [1.5, 0.75, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Wagons\Foreground1.png
+      Color: [1, 1, 1, 1]
+  - Entity: 1
+    TagComponent:
+      Tag: Lola
+    TransformComponent:
+      Translation: [-13, -2.5, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [-0.7, 1.3, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Lola.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [14, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Louise
+    TransformComponent:
+      Translation: [0.3, -2.47, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.56, 1.3496001, 0.56]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Louise.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Logo
+    TransformComponent:
+      Translation: [5, 7, 15]
+      Rotation: [0, 0, 0]
+      Scale: [4.9, 1, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Textures\TitleSpritesheet.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Wagon2
+    TransformComponent:
+      Translation: [-31.4, -0.76, -0.1]
       Rotation: [0, 0, 0]
       Scale: [16, 7.5, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Wagons\Wagon1.png
+      TextureName: ../Assets\Demo\Wagons\Wagon2.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
       FrameCount: [10, 1]
@@ -316,27 +481,55 @@ Entities:
       IsLooping: true
   - Entity: 1
     TagComponent:
-      Tag: Mecano
+      Tag: Cloud3
     TransformComponent:
-      Translation: [6.4, -1.7, 2.5]
+      Translation: [-17.245422, 1.1920929e-07, -10]
       Rotation: [0, 0, 0]
-      Scale: [-1.5, 3, 1]
+      Scale: [32, 9, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Mechano.png
+      TextureName: ../Assets\Demo\Enviro\Cloud_3.png
+      Color: [1, 1, 1, 1]
+    ParallaxComponent:
+      Speed: [-3, 0]
+      InitialPosition: [48, 0]
+      Threshold: [128, 10]
+  - Entity: 1
+    TagComponent:
+      Tag: Marty
+    TransformComponent:
+      Translation: [-31.2, -2.47, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.56, 1.36, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Marty.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
-      FrameCount: [10, 1]
+      FrameCount: [13, 1]
       FrameTime: 0.1
       IsLooping: true
   - Entity: 1
     TagComponent:
-      Tag: Admiral
+      Tag: Oranda
     TransformComponent:
-      Translation: [-4.8, -2.425, 2.5]
+      Translation: [-16.6, -2.47, 2.5]
       Rotation: [0, 0, 0]
-      Scale: [0.5, 1.5, 1]
+      Scale: [0.56, 1.36, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Amiral.png
+      TextureName: ../Assets\Demo\Characters\Oranda.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [21, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: San-jy
+    TransformComponent:
+      Translation: [-24.3, -2.47, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.56, 1.36, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\San-Jy.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
       FrameCount: [20, 1]
@@ -344,264 +537,71 @@ Entities:
       IsLooping: true
   - Entity: 1
     TagComponent:
-      Tag: Assistant
+      Tag: San-Son
     TransformComponent:
-      Translation: [-3.7919266, -2.42, 2.5]
-      Rotation: [0, 0, 4.7683716e-07]
-      Scale: [-0.5, 1.5, 0.663]
+      Translation: [-10.2, -2.47, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.56, 1.36, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Assistant.png
+      TextureName: ../Assets\Demo\Characters\San-Son.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
-      FrameCount: [17, 1]
+      FrameCount: [18, 1]
       FrameTime: 0.1
       IsLooping: true
   - Entity: 1
     TagComponent:
-      Tag: Elisabeth
+      Tag: Tomato
     TransformComponent:
-      Translation: [-19.4, -2.42, 2.5]
+      Translation: [-30.2, -2.47, 2.5]
       Rotation: [0, 0, 0]
-      Scale: [0.56, 1.5, 1]
+      Scale: [-0.56, 1.36, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Elisabeth.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [24, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Jared
-    TransformComponent:
-      Translation: [-8.380845, -2.41, 2.5]
-      Rotation: [0, 0, 4.7683716e-07]
-      Scale: [0.6, 1.5, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Jared.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [17, 1]
-      FrameTime: 0.1
-      IsLooping: true
-  - Entity: 1
-    TagComponent:
-      Tag: Rail1
-    TransformComponent:
-      Translation: [-40.406372, -0.2, -5]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Rail.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-20, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Rail2
-    TransformComponent:
-      Translation: [-8.380615, -0.2, -5]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Rail.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-20, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Rail3
-    TransformComponent:
-      Translation: [23.647583, -0.19904566, -5]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Rail.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-20, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: RailFront1
-    TransformComponent:
-      Translation: [-40.406372, -2.1, 7.5]
-      Rotation: [0, 0, 0]
-      Scale: [32.1, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\ForestFront.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-20, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: FrontRail2
-    TransformComponent:
-      Translation: [-8.380615, -2.1, 7.5]
-      Rotation: [0, 0, 0]
-      Scale: [32.1, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\ForestFront2.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-20, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: FrontRail3
-    TransformComponent:
-      Translation: [23.647583, -2.1, 7.5]
-      Rotation: [0, 0, 0]
-      Scale: [32.1, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\LandFront2.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-20, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Mountains1
-    TransformComponent:
-      Translation: [-68.06207, -1.35, -15]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\RocherFond.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-2, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Mountains2
-    TransformComponent:
-      Translation: [27.91687, -0.4, -15]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Mount2.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-2, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Mountains3
-    TransformComponent:
-      Translation: [-4.076233, -0.4, -15]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Mount1.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [-2, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Cloud1
-    TransformComponent:
-      Translation: [-7.95, 0.8, -17.5]
-      Rotation: [0, 0, 0]
-      Scale: [32, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Cloud1.png
-      Color: [1, 1, 1, 1]
-    ParallaxComponent:
-      Speed: [0, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Cloud2
-    TransformComponent:
-      Translation: [-73.64987, 0.51, -10]
-      Rotation: [0, 0, 0]
-      Scale: [16, 9, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Enviro\Cloud_2.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [1, 1]
-      FrameTime: 0.1
-      IsLooping: true
-    ParallaxComponent:
-      Speed: [-3, 0]
-      InitialPosition: [48, 0]
-      Threshold: [128, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Automate
-    TransformComponent:
-      Translation: [-17.849644, -3.8, 6.5]
-      Rotation: [0, 0, 0]
-      Scale: [1.5, 2, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\AutomateWalking.png
+      TextureName: ../Assets\Demo\Characters\Tomato.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
       FrameCount: [10, 1]
-      FrameTime: 0.025
-      IsLooping: true
-    ParallaxComponent:
-      Speed: [1, 0]
-      InitialPosition: [-48, 0]
-      Threshold: [80, 10]
-  - Entity: 1
-    TagComponent:
-      Tag: Automate1
-    TransformComponent:
-      Translation: [-21.009077, 3, -4]
-      Rotation: [0, 0, 0]
-      Scale: [3, 2.5, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\AnimVolantSheet.png
-      Color: [1, 1, 1, 1]
-    SpriteAnimatorComponent:
-      FrameCount: [6, 1]
       FrameTime: 0.1
       IsLooping: true
-    ParallaxComponent:
-      Speed: [2, 0]
-      InitialPosition: [-64, 0]
-      Threshold: [80, 10]
   - Entity: 1
     TagComponent:
-      Tag: Cadavre
+      Tag: Weyland
     TransformComponent:
-      Translation: [-38.1, -2.76, 2.5]
+      Translation: [-35.9, -2.45, 2.5]
       Rotation: [0, 0, 0]
-      Scale: [0.8, 0.8, 1]
+      Scale: [0.56, 1.46, 1]
     SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\Cadavre.png
-      Color: [1, 1, 1, 1]
-  - Entity: 1
-    TagComponent:
-      Tag: Player
-    TransformComponent:
-      Translation: [4.176071, -2.46, 2.6]
-      Rotation: [0, 0, 0]
-      Scale: [1.4, 1.4, 1]
-    SpriteRendererComponent:
-      TextureName: ../Assets\Demo\Characters\SpriteSheet.png
+      TextureName: ../Assets\Demo\Characters\Weyland.png
       Color: [1, 1, 1, 1]
     SpriteAnimatorComponent:
-      FrameCount: [10, 3]
+      FrameCount: [20, 1]
       FrameTime: 0.1
       IsLooping: true
-    PlayerController:
-      CameraLimits: [-32, -3]
-      PlayerLimits: [-38, 7]
+  - Entity: 1
+    TagComponent:
+      Tag: Winston
+    TransformComponent:
+      Translation: [1.2, -2.45, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [-0.56, 1.46, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Winston.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
+  - Entity: 1
+    TagComponent:
+      Tag: Natalie
+    TransformComponent:
+      Translation: [4, 3.9, 2.5]
+      Rotation: [0, 0, 0]
+      Scale: [1.5, 1.5, 1]
+    SpriteRendererComponent:
+      TextureName: ../Assets\Demo\Characters\Nathalie.png
+      Color: [1, 1, 1, 1]
+    SpriteAnimatorComponent:
+      FrameCount: [10, 1]
+      FrameTime: 0.1
+      IsLooping: true
