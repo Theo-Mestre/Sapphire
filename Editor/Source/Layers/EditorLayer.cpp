@@ -32,7 +32,7 @@ namespace sph
 		SPH_PROFILE_FUNCTION();
 
 		// Renderer
-		RenderCommand::SetClearColor({ 0.12f, 0.12f, 0.12f, 1.0f });
+		RenderCommand::SetClearColor({ 0.06f, 0.06f, 0.06f, 1.0f });
 
 		InitializeIcons();
 
@@ -284,19 +284,19 @@ namespace sph
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::MenuItem("Save Scene"))
+				if (ImGui::MenuItem("Save Scene", "Ctrl+S"))
 				{
 					SaveSceneAs();
 				}
-				if (ImGui::MenuItem("Open Scene"))
+				if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
 				{
 					OpenScene();
 				}
-				if (ImGui::MenuItem("New Scene"))
+				if (ImGui::MenuItem("New Scene", "Ctrl+N"))	
 				{
 					NewScene();
 				}
-				if (ImGui::MenuItem("Exit"))
+				if (ImGui::MenuItem("Exit", "Alt+F4"))
 				{
 					m_application->Close();
 				}
@@ -316,29 +316,6 @@ namespace sph
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::PopStyleVar();
-
-		//if (ImGui::BeginMenuBar())
-		//{
-		//	if (ImGui::Button("Play"))
-		//	{
-		//		m_sceneState = m_sceneState == SceneState::Edit ? SceneState::Play : SceneState::Edit;
-		//	}
-		//	ImGui::SameLine();
-		//	ImGui::Text("Scene State: %s", m_sceneState == SceneState::Edit ? "Edit" : "Play");
-		//	ImGui::EndMenuBar();
-		//}
-
-		//ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
-		//float height = ImGui::GetFrameHeight();
-		//
-		//if (ImGui::BeginViewportSideBar("##SecondaryMenuBar", nullptr, ImGuiDir_Up, height, window_flags))
-		//{
-		//	if (ImGui::BeginMenuBar()) {
-		//		ImGui::Text("Happy secondary menu bar");
-		//		ImGui::EndMenuBar();
-		//	}
-		//}
-		//ImGui::End();
 	}
 
 	void EditorLayer::OnRenderViewport()
@@ -455,6 +432,7 @@ namespace sph
 	void EditorLayer::OnSelectionToolRender()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.17f, 0.17f, 0.17f, 1.0f));
 
 		if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_MenuBar))
 		{
@@ -536,6 +514,7 @@ namespace sph
 		ImGui::End();
 
 		ImGui::PopStyleVar();
+		ImGui::PopStyleColor();
 	}
 
 	void EditorLayer::NewScene()

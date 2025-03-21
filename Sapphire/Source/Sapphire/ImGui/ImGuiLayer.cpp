@@ -143,6 +143,7 @@ namespace sph
 		style.WindowBorderSize = 0.0f;
 
 		style.TabRounding = 4.0f;
+		style.TabBorderSize = 0.0f;
 		style.GrabRounding = 4.0f;
 
 		style.ScrollbarSize = 10.0f;
@@ -156,14 +157,16 @@ namespace sph
 		style.PopupBorderSize = 0.0f;
 		style.PopupRounding = 5.0f;
 
-		style.DockingSeparatorSize = 1.0f;
+		style.DockingSeparatorSize = 3.0f;
 	}
 
 	ImGuiThemeColor ImGuiThemeColor::Default()
 	{
 		ImGuiThemeColor theme;
 
-		theme.Colors[ImGuiCol_WindowBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
+		theme.Colors[ImGuiCol_WindowBg] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+
+		theme.Colors[ImGuiCol_Border] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
 
 		// Headers
 		theme.Colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
@@ -171,7 +174,8 @@ namespace sph
 		theme.Colors[ImGuiCol_HeaderActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
 
 		// Buttons
-		theme.Colors[ImGuiCol_Button] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
+
+		theme.Colors[ImGuiCol_Button] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
 		theme.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.3f, 0.305f, 0.31f, 1.0f);
 		theme.Colors[ImGuiCol_ButtonActive] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
 
@@ -183,23 +187,27 @@ namespace sph
 		// Tabs
 		theme.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
 		theme.Colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.3805f, 0.381f, 1.0f);
-		theme.Colors[ImGuiCol_TabActive] = ImVec4(0.0f, 0.5f, 1.0f, 1.0f);
-		theme.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
-		theme.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
+		theme.Colors[ImGuiCol_TabActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		theme.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		theme.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
 
 		// Title
-		theme.Colors[ImGuiCol_TitleBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
-		theme.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.14f, 0.14f, 0.14f, 1.0f);
+		theme.Colors[ImGuiCol_TitleBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+		theme.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
 		theme.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.14f, 0.14f, 0.14f, 1.0f);
 
 		// Popups
 		theme.Colors[ImGuiCol_PopupBg] = ImVec4(0.22f, 0.22f, 0.22f, 1.0f);
-		theme.Colors[ImGuiCol_Border] = ImVec4(0.22f, 0.22f, 0.22f, 1.0f);
+		theme.Colors[ImGuiCol_Border] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
 
 		theme.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.43f, 0.69f, 1.0f, 1.0f);
 		theme.Colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-		theme.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
+		theme.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+
+		// Scrollbar
+		theme.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+		theme.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
 
 		return theme;
 	}
