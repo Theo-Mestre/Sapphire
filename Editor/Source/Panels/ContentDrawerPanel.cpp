@@ -11,8 +11,8 @@ namespace sph
 	ContentDrawerPanel::ContentDrawerPanel()
 		: m_currentDirectory(g_AssetPath)
 	{
-		m_directoryIcon = Texture2D::Create("Editor/ContentDrawer/DirectoryIcon.png");
-		m_fileIcon = Texture2D::Create("Editor/ContentDrawer/FileIcon.png");
+		m_directoryIcon = Texture2D::Create("Editor/Icons/DirectoryIcon.png");
+		m_fileIcon = Texture2D::Create("Editor/Icons/FileIcon.png");
 	}
 
 	ContentDrawerPanel::~ContentDrawerPanel()

@@ -1,4 +1,6 @@
-﻿#include "Sapphire/ImGui/ImGuiLayer.h"
+﻿#include "imgui_internal.h"
+
+#include "Sapphire/ImGui/ImGuiLayer.h"
 #include "Sapphire/Scene/Entity.h"
 #include "Sapphire/Scene/SceneSerializer.h"
 #include "Sapphire/Scene/Components.h"
@@ -30,7 +32,9 @@ namespace sph
 		SPH_PROFILE_FUNCTION();
 
 		// Renderer
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		RenderCommand::SetClearColor({ 0.12f, 0.12f, 0.12f, 1.0f });
+
+		InitializeIcons();
 
 		// ImGuiLayer
 		m_imguiLayer = m_application->GetLayerOfType<ImGuiLayer>();
@@ -57,10 +61,6 @@ namespace sph
 
 		// Content Drawer
 		m_contentDrawerPanel = CreateRef<ContentDrawerPanel>();
-
-		// Play Button
-		m_iconPlay = Texture2D::Create("Editor/Icons/Play.png");
-		m_iconStop = Texture2D::Create("Editor/Icons/Stop.png");
 	}
 
 	void EditorLayer::OnDetach()
@@ -163,13 +163,20 @@ namespace sph
 		}
 
 		OnMenuBarRender();
-
+		OnSelectionToolRender();
 		m_hierarchyPanel->OnImGuiRender();
 		m_propertiesPanel->OnImGuiRender();
 		m_contentDrawerPanel->OnImGuiRender();
 
 		ImGui::Begin("Debug");
 		{
+			static bool showDemoWindow = false;
+			ImGui::Checkbox("showDemoWindow", &showDemoWindow);
+
+			if (showDemoWindow)
+				ImGui::ShowDemoWindow();
+
+
 			std::string name = "None";
 			if (m_hoveredEntity.IsValid())
 			{
@@ -192,8 +199,6 @@ namespace sph
 			}
 			ImGui::EndDragDropTarget();
 		}
-
-		OnToolbarRender();
 
 		ImGui::End();
 	}
@@ -307,9 +312,33 @@ namespace sph
 				ImGui::EndMenu();
 			}
 
+
 			ImGui::EndMainMenuBar();
 		}
 		ImGui::PopStyleVar();
+
+		//if (ImGui::BeginMenuBar())
+		//{
+		//	if (ImGui::Button("Play"))
+		//	{
+		//		m_sceneState = m_sceneState == SceneState::Edit ? SceneState::Play : SceneState::Edit;
+		//	}
+		//	ImGui::SameLine();
+		//	ImGui::Text("Scene State: %s", m_sceneState == SceneState::Edit ? "Edit" : "Play");
+		//	ImGui::EndMenuBar();
+		//}
+
+		//ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_MenuBar;
+		//float height = ImGui::GetFrameHeight();
+		//
+		//if (ImGui::BeginViewportSideBar("##SecondaryMenuBar", nullptr, ImGuiDir_Up, height, window_flags))
+		//{
+		//	if (ImGui::BeginMenuBar()) {
+		//		ImGui::Text("Happy secondary menu bar");
+		//		ImGui::EndMenuBar();
+		//	}
+		//}
+		//ImGui::End();
 	}
 
 	void EditorLayer::OnRenderViewport()
@@ -396,10 +425,8 @@ namespace sph
 
 	void EditorLayer::OnToolbarRender()
 	{
-		// Style
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(0, 0));
+		static const float padding = 4.0f;
+		float size = ImGui::GetFrameHeight();
 
 		// Color
 		auto& colors = ImGui::GetStyle().Colors;
@@ -410,17 +437,11 @@ namespace sph
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
 
-		auto flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
-		ImGui::Begin("##toolbar", nullptr, flags);
-
-		static const float padding = 4.0f;
-		float size = ImGui::GetWindowHeight() - padding;
-
 		ImTextureID icon = m_sceneState == SceneState::Edit
-			? (ImTextureID)(uint64_t)m_iconPlay->GetRendererID()
-			: (ImTextureID)(uint64_t)m_iconStop->GetRendererID();
+			? (ImTextureID)(uint64_t)m_icons["Play"]->GetRendererID()
+			: (ImTextureID)(uint64_t)m_icons["Stop"]->GetRendererID();
 
-		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		ImGui::SetCursorPosX(ImGui::GetWindowWidth() * 0.5f - size);
 
 		if (ImGui::ImageButton(icon, ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
 		{
@@ -428,9 +449,93 @@ namespace sph
 				? OnScenePlay()
 				: OnSceneStop();
 		}
-		ImGui::PopStyleVar(3);
 		ImGui::PopStyleColor(3);
+	}
+
+	void EditorLayer::OnSelectionToolRender()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
+
+		if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_MenuBar))
+		{
+			if (ImGui::BeginMenuBar())
+			{
+				OnToolbarRender();
+
+				ImGui::EndMenuBar();
+			}
+
+			// Toolbar
+			constexpr int toolbarItems = 4;
+			float padding = 6.0f;
+			float fontSize = (ImGui::CalcTextSize("A").y - padding) * 2.0f;
+
+			ImVec2 selectablesSize = { fontSize, fontSize };
+			ImVec2 toolbarPos = { ImGui::GetWindowPos().x + ImGui::GetCursorPos().x + padding, ImGui::GetWindowPos().y + ImGui::GetCursorPos().y + padding };
+			ImVec2 toolbarSize = { fontSize + padding * 2.0f , (padding + fontSize) * toolbarItems + padding };
+
+			ImGui::SetNextWindowPos(toolbarPos);
+			ImGui::SetNextWindowSize(toolbarSize);
+
+			ImGuiWindowFlags toolbarFlags = ImGuiWindowFlags_NoDecoration
+				| ImGuiWindowFlags_NoMove
+				| ImGuiWindowFlags_NoScrollWithMouse
+				| ImGuiWindowFlags_NoSavedSettings
+				| ImGuiWindowFlags_NoBringToFrontOnFocus;
+
+			ImGuiSelectableFlags selectableFlags = ImGuiSelectableFlags_NoPadWithHalfSpacing;
+
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0.0f, padding });
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 0.0f, 0.0f });
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { padding, padding });
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3.0f);
+
+			void* imageRendererID[toolbarItems] =
+			{ 
+				(void*)m_icons["Neutral"]->GetRendererID(),
+				(void*)m_icons["Translate"]->GetRendererID(),
+				(void*)m_icons["Rotate"]->GetRendererID(),
+				(void*)m_icons["Scale"]->GetRendererID()
+			};
+
+			int32_t guizmoType[toolbarItems] =
+			{
+				-1,
+				ImGuizmo::OPERATION::TRANSLATE,
+				ImGuizmo::OPERATION::ROTATE,
+				ImGuizmo::OPERATION::SCALE
+			};
+
+			if (ImGui::Begin("##ViewportToolbar", nullptr, toolbarFlags))
+			{
+				// Set the window to the front
+				ImGui::BringWindowToDisplayFront(ImGui::GetCurrentWindow());
+
+				ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
+
+				for (int i = 0; i < toolbarItems; i++)
+				{
+					ImGui::PushID(i);
+
+					if (ImGui::Selectable("##", m_gizmoType == guizmoType[i], selectableFlags, selectablesSize))
+						m_gizmoType = guizmoType[i];
+
+					ImGui::SameLine();
+					ImGui::SetCursorPosX(ImGui::GetCursorPosX() - selectablesSize.x);
+					ImGui::Image(imageRendererID[i], selectablesSize);
+
+					ImGui::PopID();
+				}
+
+				ImGui::PopStyleVar();
+			}
+			ImGui::PopStyleVar(4);
+
+			ImGui::End();
+		}
 		ImGui::End();
+
+		ImGui::PopStyleVar();
 	}
 
 	void EditorLayer::NewScene()
@@ -483,5 +588,20 @@ namespace sph
 	void EditorLayer::OnSceneStop()
 	{
 		m_sceneState = SceneState::Edit;
+	}
+
+	void EditorLayer::InitializeIcons()
+	{
+		Texture2D::Properties props;
+		props.flipVertically = 0;
+
+		m_icons["Play"] = Texture2D::Create("Editor/Icons/PlayIcon.png", props);
+		m_icons["Stop"] = Texture2D::Create("Editor/Icons/StopIcon.png", props);
+
+		// Guizmo Icons
+		m_icons["Neutral"] = Texture2D::Create("Editor/Icons/NeutralIcon.png", props);
+		m_icons["Translate"] = Texture2D::Create("Editor/Icons/TranslateIcon.png", props);
+		m_icons["Rotate"] = Texture2D::Create("Editor/Icons/RotateIcon.png", props);
+		m_icons["Scale"] = Texture2D::Create("Editor/Icons/ScaleIcon.png", props);
 	}
 }

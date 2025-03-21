@@ -51,6 +51,7 @@ namespace sph
 			FilterMode MagnificationFilter = FilterMode::Nearest;
 			WrapMode WrapModeS = WrapMode::ClampToEdge;
 			WrapMode WrapModeT = WrapMode::ClampToEdge;
+			int32_t flipVertically = 1;
 		};
 
 	protected:

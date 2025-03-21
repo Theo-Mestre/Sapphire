@@ -17,7 +17,17 @@ namespace sph
 		m_path = _path;
 
 		int channels;
-		stbi_set_flip_vertically_on_load(1);
+		if (!std::filesystem::exists(_path))
+		{
+			LogError("File does not exist: {0}", _path);
+			return;
+		}
+
+		if (_properties.flipVertically == 1)
+		{
+			stbi_set_flip_vertically_on_load(1);
+		}
+
 		auto data = stbi_load(_path.c_str(), (int*)&m_width, (int*)&m_height, &channels, 0);
 
 		if (data == nullptr)

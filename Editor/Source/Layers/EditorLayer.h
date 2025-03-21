@@ -37,12 +37,15 @@ namespace sph
 		void OnScenePlay();
 		void OnSceneStop();
 	private:
+		void InitializeIcons();
+
 		void OnMousePickingUpdate();
 
 		void OnMenuBarRender();
 		void OnRenderViewport();
 		void OnDrawGuizmos();
 		void OnToolbarRender();
+		void OnSelectionToolRender();
 
 		bool OnKeyPressed(KeyPressedEvent& _event);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& _event);
@@ -67,6 +70,8 @@ namespace sph
 
 		Ref<Texture2D> m_iconPlay;
 		Ref<Texture2D> m_iconStop;
+
+		std::unordered_map<std::string, Ref<Texture2D>> m_icons;
 
 		int32_t m_gizmoType = -1;
 

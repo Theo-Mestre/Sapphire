@@ -140,6 +140,7 @@ namespace sph
 		style.WindowMenuButtonPosition = ImGuiDir_Right;
 		style.WindowPadding = ImVec2(5.0f, 5.0f);
 		style.WindowRounding = 5.0f;
+		style.WindowBorderSize = 0.0f;
 
 		style.TabRounding = 4.0f;
 		style.GrabRounding = 4.0f;
@@ -154,6 +155,8 @@ namespace sph
 
 		style.PopupBorderSize = 0.0f;
 		style.PopupRounding = 5.0f;
+
+		style.DockingSeparatorSize = 1.0f;
 	}
 
 	ImGuiThemeColor ImGuiThemeColor::Default()
