@@ -1,8 +1,9 @@
 #include "imgui.h"
 
-#include "ContentDrawerPanel.h"
-
+#include "Sapphire/ImGui/ImGuiLayer.h"
 #include "Sapphire/Renderer/Texture.h"
+
+#include "ContentDrawerPanel.h"
 
 namespace sph
 {
@@ -21,14 +22,19 @@ namespace sph
 
 	void ContentDrawerPanel::OnImGuiRender()
 	{
-		ImGui::Begin("Content Drawer");
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImGuiLayer::WindowColor);
 
-		if (m_currentDirectory != std::filesystem::path(g_AssetPath))
+		ImGui::Begin("Content Drawer", nullptr, ImGuiWindowFlags_MenuBar);
+
+		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::Button("<-"))
+			const float buttonHeight = 25.0f;
+			if (ImGui::Button("<-", { buttonHeight * 2.0f, buttonHeight }) && m_currentDirectory != std::filesystem::path(g_AssetPath))
 			{
 				m_currentDirectory = m_currentDirectory.parent_path();
 			}
+
+			ImGui::EndMenuBar();
 		}
 
 		static float padding = 16.0f;
@@ -51,9 +57,9 @@ namespace sph
 			ImGui::PushID(filenameString.c_str());
 
 			Ref<Texture2D> icon = directoryEntry.is_directory() ? m_directoryIcon : m_fileIcon;
-			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 			ImGui::ImageButton((ImTextureID)icon->GetRendererID(), { thumbnailSize, thumbnailSize }, { 0, 1 }, { 1, 0 });
-			
+
 			if (ImGui::BeginDragDropSource())
 			{
 				const wchar_t* itemPath = relativePath.c_str();
@@ -70,7 +76,7 @@ namespace sph
 					m_currentDirectory /= path.filename();
 				}
 			}
-			
+
 			ImGui::TextWrapped(filenameString.c_str());
 
 			ImGui::NextColumn();
@@ -78,5 +84,7 @@ namespace sph
 		}
 
 		ImGui::End();
+
+		ImGui::PopStyleColor();
 	}
 }

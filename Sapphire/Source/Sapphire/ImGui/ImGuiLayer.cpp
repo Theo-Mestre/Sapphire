@@ -17,6 +17,11 @@
 
 namespace sph
 {
+	ImVec4 ImGuiLayer::BackgroundColor = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
+	ImVec4 ImGuiLayer::WindowColor = ImVec4(0.14f, 0.14f, 0.14f, 1.0f);
+	ImVec4 ImGuiLayer::WindowHoveredColor = ImVec4(0.22f, 0.22f, 0.22f, 1.0f);
+	ImVec4 ImGuiLayer::TextColor = ImVec4(0.86f, 0.86f, 0.86f, 1.0f);
+
 	ImGuiLayer::ImGuiLayer(Window& _window)
 		: Layer("ImGuiLayer")
 		, m_window(_window)
@@ -88,6 +93,15 @@ namespace sph
 	void ImGuiLayer::OnImGuiRender()
 	{
 		SPH_PROFILE_FUNCTION();
+
+		ImGui::Begin("Style Editor");
+		
+		if (ImGui::ColorEdit4("Background", &BackgroundColor.x)) SetThemeColors();
+		if (ImGui::ColorEdit4("Window", &WindowColor.x)) SetThemeColors();
+		if (ImGui::ColorEdit4("Window Hovered", &WindowHoveredColor.x)) SetThemeColors();
+		if (ImGui::ColorEdit4("Text", &TextColor.x)) SetThemeColors();
+
+		ImGui::End();
 	}
 
 	void ImGuiLayer::Begin()
@@ -142,72 +156,72 @@ namespace sph
 		style.WindowRounding = 5.0f;
 		style.WindowBorderSize = 0.0f;
 
-		style.TabRounding = 4.0f;
+		style.TabRounding = 3.0f;
 		style.TabBorderSize = 0.0f;
+		style.TabBarBorderSize = 0.0f;
 		style.GrabRounding = 4.0f;
 
-		style.ScrollbarSize = 10.0f;
-		style.ScrollbarRounding = 10.0f;
+		style.ScrollbarSize = 12.0f;
+		style.ScrollbarRounding = 12.0f;
 
 		style.IndentSpacing = 0.0f;
 		style.ItemSpacing = ImVec2(5.0f, 10.0f);
-		style.FramePadding = ImVec2(5.0f, 2.0f);
+		style.FramePadding = ImVec2(10.0f, 7.0f);
 		style.FrameRounding = 5.0f;
 
 		style.PopupBorderSize = 0.0f;
 		style.PopupRounding = 5.0f;
 
-		style.DockingSeparatorSize = 3.0f;
+		style.DockingSeparatorSize = 5.0f;
 	}
 
 	ImGuiThemeColor ImGuiThemeColor::Default()
 	{
 		ImGuiThemeColor theme;
 
-		theme.Colors[ImGuiCol_WindowBg] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
-
-		theme.Colors[ImGuiCol_Border] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+		theme.Colors[ImGuiCol_Text] = ImGuiLayer::TextColor;
+		theme.Colors[ImGuiCol_WindowBg] = ImGuiLayer::WindowColor;
+		theme.Colors[ImGuiCol_Border] = ImGuiLayer::BackgroundColor;
 
 		// Headers
-		theme.Colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
-		theme.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.305f, 0.31f, 1.0f);
+		theme.Colors[ImGuiCol_Header] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+		theme.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
 		theme.Colors[ImGuiCol_HeaderActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
 
 		// Buttons
-
-		theme.Colors[ImGuiCol_Button] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-		theme.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.3f, 0.305f, 0.31f, 1.0f);
-		theme.Colors[ImGuiCol_ButtonActive] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+		theme.Colors[ImGuiCol_Button] = ImGuiLayer::BackgroundColor;
+		theme.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
+		theme.Colors[ImGuiCol_ButtonActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
 
 		// Frame BG
-		theme.Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
-		theme.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.3f, 0.305f, 0.31f, 1.0f);
-		theme.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+		theme.Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+		theme.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
+		theme.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);	
 
 		// Tabs
-		theme.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.15f, 0.15f, 1.0f);
-		theme.Colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.3805f, 0.381f, 1.0f);
-		theme.Colors[ImGuiCol_TabActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
-		theme.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
-		theme.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		theme.Colors[ImGuiCol_Tab] = ImGuiLayer::WindowColor;
+		theme.Colors[ImGuiCol_TabHovered] = ImGuiLayer::WindowHoveredColor;
+		theme.Colors[ImGuiCol_TabActive] = ImGuiLayer::WindowColor;
+		theme.Colors[ImGuiCol_TabUnfocused] = ImGuiLayer::BackgroundColor;
+		theme.Colors[ImGuiCol_TabUnfocusedActive] = ImGuiLayer::WindowColor;
 
 		// Title
-		theme.Colors[ImGuiCol_TitleBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-		theme.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-		theme.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.14f, 0.14f, 0.14f, 1.0f);
+		theme.Colors[ImGuiCol_TitleBg] = ImGuiLayer::BackgroundColor;
+		theme.Colors[ImGuiCol_TitleBgActive] = ImGuiLayer::BackgroundColor;
+		theme.Colors[ImGuiCol_TitleBgCollapsed] = ImGuiLayer::WindowColor;
 
 		// Popups
 		theme.Colors[ImGuiCol_PopupBg] = ImVec4(0.22f, 0.22f, 0.22f, 1.0f);
-		theme.Colors[ImGuiCol_Border] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+		theme.Colors[ImGuiCol_Border] = ImGuiLayer::BackgroundColor;
 
 		theme.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.43f, 0.69f, 1.0f, 1.0f);
 		theme.Colors[ImGuiCol_CheckMark] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-		theme.Colors[ImGuiCol_MenuBarBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
+		theme.Colors[ImGuiCol_MenuBarBg] = ImGuiLayer::BackgroundColor;
 
 		// Scrollbar
-		theme.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.06f, 0.06f, 0.06f, 1.00f);
-		theme.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
+		theme.Colors[ImGuiCol_ScrollbarBg] = ImGuiLayer::BackgroundColor;
+		theme.Colors[ImGuiCol_ScrollbarGrab] = ImGuiLayer::WindowColor;
 
 		return theme;
 	}

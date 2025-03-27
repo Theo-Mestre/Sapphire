@@ -166,68 +166,70 @@ namespace sph
 		return {};
 	}
 
+
+#define VARIABLE_TO_STRING(var) #var
 	template<typename T>
-	void Scene::OnComponentAdded(Entity _entity, T& component)
+	void Scene::OnComponentAdded(Entity _entity, T& _component)
 	{
-		static_assert(false && "Unknown component type!");
+		LogError("OnComponentAdded not implemented for component type: " VARIABLE_TO_STRING(T));
 	}
 
 	template<>
-	void Scene::OnComponentAdded<TransformComponent>(Entity _entity, TransformComponent& component)
-	{
-	}
-
-	template<>
-	void Scene::OnComponentAdded<CameraComponent>(Entity _entity, CameraComponent& component)
-	{
-		component.Camera.SetViewportSize(m_viewportWidth, m_viewportHeight);
-	}
-
-	template<>
-	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity _entity, SpriteRendererComponent& component)
+	void Scene::OnComponentAdded<TransformComponent>(Entity _entity, TransformComponent& _component)
 	{
 	}
 
 	template<>
-	void Scene::OnComponentAdded<TagComponent>(Entity _entity, TagComponent& component)
+	void Scene::OnComponentAdded<CameraComponent>(Entity _entity, CameraComponent& _component)
+	{
+		_component.Camera.SetViewportSize(m_viewportWidth, m_viewportHeight);
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity _entity, SpriteRendererComponent& _component)
 	{
 	}
 
 	template<>
-	void Scene::OnComponentAdded<NativeScriptComponent>(Entity _entity, NativeScriptComponent& component)
+	void Scene::OnComponentAdded<TagComponent>(Entity _entity, TagComponent& _component)
 	{
 	}
 
 	template<>
-	void Scene::OnComponentAdded<SpriteAnimatorComponent>(Entity _entity, SpriteAnimatorComponent& component)
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity _entity, NativeScriptComponent& _component)
 	{
-		if (component.SpriteRenderer == nullptr)
+	}
+
+	template<>
+	void Scene::OnComponentAdded<SpriteAnimatorComponent>(Entity _entity, SpriteAnimatorComponent& _component)
+	{
+		if (_component.SpriteRenderer == nullptr)
 		{
 			if (_entity.HasComponent<SpriteRendererComponent>())
 			{
-				component.SpriteRenderer = &_entity.GetComponent<SpriteRendererComponent>();
+				_component.SpriteRenderer = &_entity.GetComponent<SpriteRendererComponent>();
 			}
 			else
 			{
-				component.SpriteRenderer = &_entity.AddComponent<SpriteRendererComponent>();
+				_component.SpriteRenderer = &_entity.AddComponent<SpriteRendererComponent>();
 			}
 		}
 
-		component.ApplyTexCoords();
+		_component.ApplyTexCoords();
 	}
 
 	template<>
-	void Scene::OnComponentAdded<ParallaxComponent>(Entity _entity, ParallaxComponent& component)
+	void Scene::OnComponentAdded<ParallaxComponent>(Entity _entity, ParallaxComponent& _component)
 	{
 		auto translation = _entity.GetComponent<TransformComponent>().Translation;
 
-		component.Position = translation;
+		_component.Position = translation;
 
 	}
 
 	template<>
-	void Scene::OnComponentAdded<PlayerController>(Entity _entity, PlayerController& component)
+	void Scene::OnComponentAdded<PlayerController>(Entity _entity, PlayerController& _component)
 	{
-		component.m_registry = &m_registry;
+		_component.m_registry = &m_registry;
 	}
 }

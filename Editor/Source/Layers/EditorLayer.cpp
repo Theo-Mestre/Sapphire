@@ -403,7 +403,7 @@ namespace sph
 	void EditorLayer::OnToolbarRender()
 	{
 		static const float padding = 4.0f;
-		float size = ImGui::GetFrameHeight();
+		float size = ImGui::GetFrameHeight() - padding * 2.0f;
 
 		// Color
 		auto& colors = ImGui::GetStyle().Colors;
@@ -419,8 +419,9 @@ namespace sph
 			: (ImTextureID)(uint64_t)m_icons["Stop"]->GetRendererID();
 
 		ImGui::SetCursorPosX(ImGui::GetWindowWidth() * 0.5f - size);
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() - padding);
 
-		if (ImGui::ImageButton(icon, ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		if (ImGui::ImageButton(icon, ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), padding))
 		{
 			m_sceneState == SceneState::Edit
 				? OnScenePlay()
@@ -432,7 +433,7 @@ namespace sph
 	void EditorLayer::OnSelectionToolRender()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
-		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4(0.17f, 0.17f, 0.17f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImGuiLayer::BackgroundColor);
 
 		if (ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_MenuBar))
 		{

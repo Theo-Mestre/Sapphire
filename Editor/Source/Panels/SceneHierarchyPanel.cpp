@@ -104,13 +104,15 @@ namespace sph
 
 		if (!isOpened) return;
 
-		ImGuiTreeNodeFlags openFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
-		isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, openFlags, tag.c_str());
+		// Draw Children
 
-		if (isOpened)
-		{
-			ImGui::TreePop();
-		}
+		//ImGuiTreeNodeFlags openFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+		//isOpened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)_entity, openFlags, tag.c_str());
+		//
+		//if (isOpened)
+		//{
+		//	ImGui::TreePop();
+		//}
 
 		ImGui::TreePop();
 	}

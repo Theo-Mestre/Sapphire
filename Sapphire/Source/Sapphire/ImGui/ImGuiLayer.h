@@ -73,6 +73,11 @@ namespace sph
 		void SetViewportHovered(bool _hovered) { m_isViewportHovered = _hovered; }
 
 		void SetThemeColors(const ImGuiThemeColor& _themeColor = ImGuiThemeColor::Default());
+
+		static ImVec4 BackgroundColor;
+		static ImVec4 WindowColor;
+		static ImVec4 WindowHoveredColor;
+		static ImVec4 TextColor;
 	private:
 		void SetStyle();
 	private:
