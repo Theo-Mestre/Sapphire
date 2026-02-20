@@ -17,6 +17,8 @@ I wanted to understand how a game engine works under the hood while also tacklin
 3. **Lighting System:** I experimented with a simple shader-based lighting system to push my understanding of real-time rendering.
 4. **Scene Management & Editor:** Currently, I am developing a scene management system and an editor to make the engine more practical for game development.
 
+<img width="2559" height="1326" alt="Untitled" src="https://github.com/user-attachments/assets/0e2ddb14-8b28-4534-ab1b-cabf391fa49d" />
+
 ## Installation
 To get started, clone the repository:
 ```sh
@@ -35,7 +37,9 @@ Then, build the project using the `SetupWindows.bat` script located inside the `
 - [ImGui](https://github.com/ocornut/imgui) & [ImPlot ](https://github.com/epezent/implot) (UI Framework)
 - [GLM](https://github.com/g-truc/glm) (Mathematics Library)
 - [EnTT](https://github.com/skypjack/entt) (Entity Component System)
+- [yaml-cpp]([https://github.com/skypjack/entt](https://github.com/jbeder/yaml-cpp)) (parser and emitter)
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
 
